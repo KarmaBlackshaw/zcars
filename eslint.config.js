@@ -45,6 +45,7 @@ const rules = {
   "@typescript-eslint/no-redeclare": "error",
   "@typescript-eslint/no-explicit-any": "error",
   "@typescript-eslint/consistent-type-assertions": ["error", { assertionStyle: "never" }],
+  "@typescript-eslint/no-import-type-side-effects": "error",
   "unused-imports/no-unused-imports": "error",
   "unused-imports/no-unused-vars": [
     "warn",
@@ -77,6 +78,7 @@ const rules = {
     },
   ],
   "vue/attribute-hyphenation": ["error", "always", { ignore: [], ignoreTags: [] }],
+  "import/no-unresolved": ["error", { ignore: ["^virtual:"] }],
   "import/order": [
     "error",
     {
@@ -136,5 +138,20 @@ export default [
     plugins: { "@typescript-eslint": tsPlugin, "unused-imports": unusedImports },
     settings,
     rules,
+  },
+  {
+    files: ["src/**/*.vue", "src/composables/**/*.ts", "src/utils/**/*.ts"],
+    rules: {
+      "@typescript-eslint/no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            { name: "zod", message: "zod is build-time only (plugins/content.ts)." },
+            { name: "@/types", allowTypeImports: true, message: "Import types only; schema values pull zod into the client bundle." },
+          ],
+          patterns: [{ group: ["@/types/*"], allowTypeImports: true, message: "Import types only; schema values pull zod into the client bundle." }],
+        },
+      ],
+    },
   },
 ];

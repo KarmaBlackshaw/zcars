@@ -27,31 +27,34 @@ npm run dev                   # http://localhost:5173
 | `npm run preview`                                        | Serve `dist/`; use this to check production      |
 | `npm run lint`                                           | ESLint + Prettier, autofixes                     |
 | `npm run type-check`                                     | `vue-tsc` over the app                           |
+| `npm run check:hours`                                    | Check the opening-hours logic                    |
 | `npm run clear:auto-generated` then `npm run build-only` | Regenerate barrels, d.ts and `auto-import.json`  |
 
-- `prepare` runs on `npm install` and builds into `node_modules/.cache/zcars-prepare` only to generate types; only `npm run build` output is deployable.
+- `prepare` runs on `npm install` and builds into `node_modules/.cache/zcars-prepare` only to generate types; only `npm run build` output is deployable. It runs a full vite build, so invalid content also fails `npm ci`.
 - The pre-commit hook runs a full `type-check` (~10 s), then lint-staged.
 
-## Edit content
+## Content: use /admin
 
-| To change                           | Edit                                                            | Also edit                                                                 |
-| ----------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| Phone                               | `src/types/contact.ts` `PHONE_DISPLAY`, `PHONE_HREF`            | `index.html` JSON-LD `telephone` (build checks); meta description by hand |
-| Facebook page                       | `src/types/contact.ts` `FACEBOOK_URL`                           | `index.html` JSON-LD `sameAs` (build checks)                              |
-| Business name                       | `src/types/contact.ts` `BUSINESS_NAME`                          | `index.html` `<title>`, `og:title`, JSON-LD `name`                        |
-| Map / directions                    | `src/types/contact.ts` `MAP_EMBED_URL`, `MAP_DIRECTIONS_URL`    | none                                                                      |
-| Services (cards)                    | `src/types/service.ts` `SERVICES`                               | none (first entry is the tall cell)                                       |
-| Nav links                           | `src/types/navigation.ts` `NAV_LINKS`                           | section `id` in `src/components/Home/*`                                   |
-| Partner names                       | `src/types/partner.ts` `PARTNER_NAMES`                          | `src/assets/images/partners.webp` (logo strip image)                      |
-| Hero / repaint / team / hiring copy | `src/components/Home/{Hero,Repaint,Team/index,Team/Hiring}.vue` | none                                                                      |
-| Footer tagline                      | `src/components/Layout/Footer.vue`                              | none                                                                      |
-| Share preview text/image            | `index.html` `og:*`, `public/og-image.webp`                     | none                                                                      |
+The owner edits the site at `https://<domain>/admin/`: log in with GitHub, edit, save. Each save commits to `master` and Netlify publishes in about 1 to 2 minutes.
 
-"Build checks" means `npm run build` fails if the `index.html` copy and the page links disagree. Renaming any `src/types/*.ts` export requires updating this table.
+- A bad edit fails the build and the live site keeps the last good version. The build log names the file and the field.
+- Deleting a service that a project still uses fails the build. Remove it from the project first.
+- Do not rename slugs (file names) after creating an entry.
+- Content lives as JSON in `src/content/`, validated by zod at build time (`plugins/content.ts`).
+
+### One-time setup (owner)
+
+1. Create a GitHub OAuth App with callback URL `https://api.netlify.com/auth/done`.
+2. In Netlify, go to Site settings, Access control, OAuth, GitHub, and add the OAuth App.
+3. Invite the client as a collaborator on `KarmaBlackshaw/zcars`.
+4. In Netlify, go to Site configuration, Forms, and choose Enable form detection. Then go to Deploys and choose Trigger deploy so Netlify registers the prerendered `quote` form. Without this, submissions are silently dropped.
+5. Under Forms, Form notifications, add an email notification for the `quote` form.
+6. Check the Forms plan limits: monthly submissions, and Netlify's 8 MB per-submission cap, which is why the quote form accepts photos up to 7 MB.
+7. Confirm the Messenger link opens the page chat.
 
 ## Images
 
-Replace `src/assets/images/<name>.webp` and update `width`/`height` where the component lists them. `public/og-image.webp` is a separate copy used for link previews; replace it too if the share image should change.
+Images are uploaded in the CMS to `public/uploads/` (converted to webp, max 2048px). `src/assets/images/logo.webp` and `public/favicon.png` stay in code: replace the file and update `width`/`height` where the component lists them.
 
 ## Deploy
 
@@ -70,7 +73,7 @@ Host-agnostic:
 | ---------------------------------------------------------------------------- | ------------------------------------------------------------------ |
 | `ENOENT ... auto-import.json` or `Cannot find module '@/types'`              | `npm run build-only`                                               |
 | `VITE_SITE_URL is not set`                                                   | Quick start step 3 locally, or set it in the host env (see Deploy) |
-| `head is out of sync`                                                        | Update `index.html` per the Edit content table                     |
+| `Content is invalid`                                                         | Read the listed file and field, then fix it in `/admin`            |
 | Added a file to `src/types`, `src/composables` or `src/utils` while dev runs | Restart `npm run dev`                                              |
 
 ## Upgrading

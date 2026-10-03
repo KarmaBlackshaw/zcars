@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": ">=24"
   },
   "scripts": {
     "dev": "vite",
@@ -12,6 +12,7 @@
     "preview": "vite preview",
     "build-only": "vite-ssg build",
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false && vue-tsc --noEmit -p tsconfig.config.json --composite false",
+    "check:hours": "node scripts/hours.check.ts",
     "lint": "eslint . --max-warnings=0 --fix",
     "prepare": "husky && vite build --outDir node_modules/.cache/zcars-prepare --emptyOutDir",
     "clear:auto-generated": "rm -rf src/types/index.ts src/composables/index.ts src/utils/index.ts ./auto-imports.d.ts ./components.d.ts ./typed-router.d.ts ./auto-import.json"
@@ -62,6 +63,7 @@
     "vite": "^6.0.11",
     "vite-plugin-vue-devtools": "^7.7.0",
     "vite-ssg": "^28.3.0",
-    "vue-tsc": "^2.2.0"
+    "vue-tsc": "^2.2.0",
+    "zod": "^4.6.5"
   }
 }

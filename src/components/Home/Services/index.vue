@@ -1,24 +1,34 @@
 <script setup lang="ts">
-import { SERVICES } from "@/types";
+import { home, services } from "virtual:content";
 
 defineOptions({ name: "HomeServices" });
+
+const STAGGER_CAP = 3;
+
+const copy = home.services;
+
+const deskColumnClasses: Record<number, string> = {
+  1: "desk:grid-cols-1",
+  2: "desk:grid-cols-2",
+  3: "desk:grid-cols-3",
+};
+
+const deskColumns = deskColumnClasses[services.length] ?? "desk:grid-cols-4";
+
+function revealAt(index: number) {
+  return revealFade(Math.min(index, STAGGER_CAP) * 0.09);
+}
 </script>
 
 <template>
-  <section id="services" class="py-24 desk:py-32">
+  <section v-if="services.length" id="services" aria-labelledby="services-title" class="scroll-mt-nav py-24 desk:py-32">
     <BaseContainer>
-      <div class="grid gap-6 desk:grid-cols-12 desk:items-end desk:gap-8">
-        <div v-motion="reveal()" class="desk:col-span-7">
-          <BaseEyebrow>Services</BaseEyebrow>
-          <h2 class="mt-4">Everything your car needs</h2>
-        </div>
-        <p v-motion="reveal()" class="max-w-[44ch] text-lead text-muted desk:col-span-4 desk:col-start-9">
-          From a dented bumper to a mirror finish. Bring it in once and drive out done.
-        </p>
-      </div>
-      <ol role="list" class="mt-14 border-t border-line">
-        <HomeServicesRow v-for="(service, index) in SERVICES" :key="service.id" v-motion="reveal(index * 0.09)" :service="service" :number="index + 1" />
-      </ol>
+      <BaseSectionHeading id="services-title" v-motion="reveal()" :title="copy.title" :eyebrow="copy.eyebrow" :lead="copy.lead" />
+      <ul role="list" :class="['mt-12 grid gap-4 sm:grid-cols-2', deskColumns]">
+        <li v-for="(service, index) in services" :key="service.slug" v-motion="revealAt(index)">
+          <HomeServicesCard :service="service" />
+        </li>
+      </ul>
     </BaseContainer>
   </section>
 </template>

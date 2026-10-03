@@ -1,44 +1,67 @@
 <script setup lang="ts">
-import { PhMapPin, PhPhone } from "@phosphor-icons/vue";
+import { PhMapPin, PhMessengerLogo, PhPhone, PhStar } from "@phosphor-icons/vue";
+import { home, reviews, services, site } from "virtual:content";
+
 import logo from "@/assets/images/logo.webp";
-import montero from "@/assets/images/montero.webp";
-import { BUSINESS_NAME, PHONE_DISPLAY, PHONE_HREF, SERVICES } from "@/types";
 
 defineOptions({ name: "HomeHero" });
 
-const serviceTags = SERVICES.flatMap((service) => service.tags);
+const CHIP_LIMIT = 8;
+const MIN_REVIEWS_FOR_AVERAGE = 3;
+
+const chips = services.slice(0, CHIP_LIMIT).map((service) => ({ href: `#service-${service.slug}`, title: service.title }));
+
+const hasProof = reviews.length >= MIN_REVIEWS_FOR_AVERAGE;
+
+const averageRating = hasProof ? getAverageRating(reviews.map((review) => review.rating)) : 0;
 </script>
 
 <template>
   <section>
     <BaseContainer class="grid gap-10 pb-12 pt-10 desk:min-h-[calc(100dvh-theme(spacing.nav))] desk:grid-cols-12 desk:gap-8 desk:py-10">
-      <div class="flex flex-col desk:col-span-7 desk:pr-8">
+      <div class="flex min-w-0 flex-col desk:col-span-7 desk:pr-8">
         <div class="desk:my-auto">
-          <BaseEyebrow v-motion="enter()">
-            <PhMapPin aria-hidden="true" class="shrink-0" />
-            Sagkahan, Tacloban City
-          </BaseEyebrow>
-          <h1 v-motion="enter(0.09)" class="mt-6 max-w-[13ch]">Paint, protection and shine. <em class="not-italic text-accent-text">One shop.</em></h1>
-          <p v-motion="enter(0.18)" class="mt-6 max-w-[48ch] text-lead text-muted">
-            Repaint, body repair, tint, undercoating, ceramic coating and full detailing, done under one roof by the Zcars crew.
-          </p>
-          <div v-motion="enter(0.27)" class="mt-9 flex flex-wrap gap-3">
-            <BaseButton :href="PHONE_HREF">
-              <PhPhone aria-hidden="true" class="shrink-0" />
-              Call {{ PHONE_DISPLAY }}
-            </BaseButton>
-            <BaseButton variant="ghost" href="#services">See services</BaseButton>
+          <div class="flex min-h-6 flex-wrap items-center gap-x-4 gap-y-2">
+            <BaseEyebrow v-motion="enter()">
+              <PhMapPin aria-hidden="true" class="shrink-0" />
+              {{ site.locality }}
+            </BaseEyebrow>
+            <HomeHoursBadge />
           </div>
+          <h1 v-motion="enter(0.09)" class="mt-6 max-w-[13ch] text-balance">
+            {{ home.hero.title }} <em class="not-italic text-accent-text">{{ home.hero.title_accent }}</em>
+          </h1>
+          <p v-motion="enter(0.18)" class="mt-6 max-w-[48ch] text-lead text-muted">{{ home.hero.lead }}</p>
+          <div id="hero-actions" v-motion="enter(0.27)" class="mt-9 grid grid-cols-2 gap-3 desk:flex desk:flex-wrap">
+            <BaseButton :href="site.tel_href">
+              <PhPhone aria-hidden="true" class="shrink-0" />
+              <span class="desk:hidden">Call</span>
+              <span class="hidden desk:inline">Call {{ site.phone_display }}</span>
+            </BaseButton>
+            <BaseButton :href="site.messenger_url">
+              <PhMessengerLogo aria-hidden="true" class="shrink-0" />
+              Message
+            </BaseButton>
+            <BaseButton variant="ghost" href="#quote" class="col-span-2 desk:col-span-1">Get a quote</BaseButton>
+          </div>
+          <p v-if="hasProof" v-motion="enter(0.3)" class="mt-4 flex items-center gap-1.5 text-small text-muted">
+            <PhStar weight="fill" aria-hidden="true" class="text-accent-text" />
+            {{ averageRating }} from {{ reviews.length }} reviews
+          </p>
         </div>
         <ul
+          v-if="chips.length"
           role="list"
-          aria-label="What we do"
+          aria-label="Jump to a service"
           v-motion="enter(0.36)"
-          class="mt-12 grid grid-cols-2 gap-x-6 gap-y-3 border-t border-line pt-6 text-small text-muted sm:grid-cols-4"
+          class="-mx-4 mt-10 flex snap-x gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0"
         >
-          <li v-for="tag in serviceTags" :key="tag" class="flex items-center gap-2">
-            <span aria-hidden="true" class="size-1 shrink-0 rounded-full bg-accent-text"></span>
-            {{ tag }}
+          <li v-for="chip in chips" :key="chip.href" class="shrink-0 snap-start">
+            <a
+              :href="chip.href"
+              class="inline-flex min-h-11 items-center whitespace-nowrap rounded-full border border-muted/60 px-4 text-small hover:border-fg"
+              >{{ chip.title }}</a
+            >
           </li>
         </ul>
       </div>
@@ -46,22 +69,15 @@ const serviceTags = SERVICES.flatMap((service) => service.tags);
         v-motion="enter(0.18)"
         class="relative aspect-[4/5] max-h-[80dvh] overflow-hidden rounded-card bg-surface desk:col-span-5 desk:aspect-auto desk:max-h-none"
       >
-        <img
-          :src="montero"
-          alt="Black Mitsubishi Montero Sport with a fresh, glossy detail outside the Zcars garage"
-          width="540"
-          height="960"
-          fetchpriority="high"
-          class="absolute inset-0 size-full object-cover"
-        />
+        <img :src="home.hero.image" :alt="home.hero.image_alt" fetchpriority="high" class="absolute inset-0 size-full object-cover" />
         <div
           aria-hidden="true"
-          class="absolute inset-x-4 bottom-4 flex items-center gap-3 rounded-xl border border-white/10 bg-inkBlack/55 p-3 text-sportyWhite shadow-[inset_0_1px_0_theme(colors.white/10%)] backdrop-blur-md"
+          class="absolute inset-x-4 bottom-4 flex items-center gap-3 rounded-xl border border-white/10 bg-inkBlack/65 p-3 text-sportyWhite shadow-[inset_0_1px_0_theme(colors.white/10%)] backdrop-blur-md"
         >
           <img :src="logo" alt="" width="40" height="40" class="size-10 rounded-full" />
           <div class="leading-tight">
-            <strong class="block text-small font-semibold">{{ BUSINESS_NAME }}</strong>
-            <span class="text-micro text-ghost">Sagkahan, Tacloban City</span>
+            <strong class="block text-small font-semibold">{{ site.name }}</strong>
+            <span class="text-micro text-ghost">{{ site.locality }}</span>
           </div>
         </div>
       </figure>

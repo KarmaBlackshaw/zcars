@@ -1,40 +1,33 @@
-import type { Component } from "vue";
+import { z } from "zod";
 
-import { PhShieldCheck } from "@phosphor-icons/vue";
-import polish from "@/assets/images/polish.webp";
-import collision from "@/assets/images/collision.webp";
+import { textSchema } from "./content";
+import { imagePathSchema } from "./image";
 
-import type { TImage } from "./image";
+const serviceIconSchema = z.enum(["spray-bottle", "sparkle", "shield-check", "hammer", "paint-roller", "wrench", "sun-dim", "umbrella"]);
 
-type TServiceBase = {
-  id: string;
-  title: string;
-  description: string;
-  tags: string[];
-};
+export type TServiceIcon = z.infer<typeof serviceIconSchema>;
 
-export type TService = TServiceBase & ({ image: TImage; icon?: never } | { icon: Component; image?: never });
+const optionalNumber = z
+  .number()
+  .int()
+  .min(0)
+  .nullish()
+  .transform((value) => value ?? undefined);
 
-export const SERVICES: TService[] = [
-  {
-    id: "detailing",
-    title: "Detailing and protection",
-    description: "Paint correction, interior and exterior detailing, then a ceramic coat to lock in the gloss.",
-    tags: ["Interior detailing", "Exterior detailing", "Ceramic coating"],
-    image: { src: polish, alt: "Detailer machine-polishing the hood of a red car", width: 540, height: 960 },
-  },
-  {
-    id: "repair",
-    title: "Repair and repaint",
-    description: "Body repair and refinishing with professional-grade paint.",
-    tags: ["Body repair", "Repaint"],
-    image: { src: collision, alt: "Black SUV front end with collision damage before repair", width: 315, height: 315 },
-  },
-  {
-    id: "upkeep",
-    title: "Upkeep and underbody",
-    description: "Preventive maintenance, window tint and undercoating against rust.",
-    tags: ["PMS", "Window tint", "Undercoating"],
-    icon: PhShieldCheck,
-  },
-];
+export const serviceSchema = z
+  .strictObject({
+    title: textSchema,
+    summary: textSchema.max(120),
+    price_from: optionalNumber,
+    price_note: textSchema.optional(),
+    image: imagePathSchema.optional(),
+    image_alt: textSchema.optional(),
+    icon: serviceIconSchema,
+    order: z.number().int(),
+  })
+  .refine((service) => service.image == null || service.image_alt != null, {
+    path: ["image_alt"],
+    error: "Describe the photo for people who cannot see it.",
+  });
+
+export type TService = z.infer<typeof serviceSchema>;

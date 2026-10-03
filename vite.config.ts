@@ -10,6 +10,8 @@ import VueRouter from "unplugin-vue-router/vite";
 import VueDevTools from "vite-plugin-vue-devtools";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
+import content from "./plugins/content";
+import head from "./plugins/head";
 
 const BARREL_DIRS = ["src/composables", "src/types", "src/utils"];
 
@@ -50,27 +52,6 @@ const ssgOptions: ViteSSGOptions = {
 
     return indexHTML;
   },
-  onPageRendered(_route, renderedHTML) {
-    const telephone = renderedHTML.match(/"telephone"\s*:\s*"([^"]+)"/)?.[1];
-    const telHref = renderedHTML.match(/href="tel:([^"]+)"/)?.[1];
-
-    if (telephone && telHref && telephone !== telHref) {
-      throw new Error(
-        `[zcars] index.html head is out of sync with src/types/contact.ts: JSON-LD telephone "${telephone}" but the page links "tel:${telHref}". Update index.html (meta description + JSON-LD) to match contact.ts.`
-      );
-    }
-
-    const sameAs = renderedHTML.match(/"sameAs"\s*:\s*\[\s*"([^"]+)"/)?.[1];
-    const facebookHref = renderedHTML.match(/href="(https:\/\/www\.facebook\.com\/[^"]+)"/)?.[1];
-
-    if (sameAs && facebookHref && sameAs !== facebookHref) {
-      throw new Error(
-        `[zcars] index.html head is out of sync with src/types/contact.ts: JSON-LD sameAs "${sameAs}" but the page links "${facebookHref}". Update index.html JSON-LD sameAs to match contact.ts FACEBOOK_URL.`
-      );
-    }
-
-    return renderedHTML;
-  },
 };
 
 export default defineConfig({
@@ -81,6 +62,8 @@ export default defineConfig({
         await Promise.all(BARREL_DIRS.map(generateBarrel));
       },
     },
+    content(),
+    head(),
     VueRouter({
       routesFolder: "src/pages",
     }),

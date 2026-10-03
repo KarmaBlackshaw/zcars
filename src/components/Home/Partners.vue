@@ -1,35 +1,43 @@
 <script setup lang="ts">
-import { PARTNERS } from "@/types";
+import { home, partners } from "virtual:content";
 
 defineOptions({ name: "HomePartners" });
 
-const names = PARTNERS.map((partner) => partner.name);
-const sentence = `We work with products from ${names.slice(0, -1).join(", ")} and ${names.at(-1)}.`;
-const copies = [1, 2, 3, 4];
-const marquee = { animate: { x: ["0%", "-50%"] }, transition: { duration: 45, repeat: Infinity, ease: "linear" } };
+const names = partners.map((partner) => partner.name);
+const sentence = `We work with products from ${new Intl.ListFormat("en", { type: "conjunction" }).format(names)}.`;
+
+const copies = [
+  { id: 1, isDuplicate: false },
+  { id: 2, isDuplicate: true },
+];
 </script>
 
 <template>
-  <section aria-label="Products we use" class="border-y border-line py-10 desk:py-14">
+  <section v-if="partners.length" aria-label="Products we use" class="border-y border-line py-10 desk:py-14">
     <BaseContainer class="mb-6 flex flex-wrap items-end justify-between gap-x-8 gap-y-2">
-      <BaseEyebrow>Products we trust</BaseEyebrow>
+      <BaseEyebrow v-if="home.partners.eyebrow">{{ home.partners.eyebrow }}</BaseEyebrow>
       <p class="max-w-[60ch] text-small text-muted">{{ sentence }}</p>
     </BaseContainer>
-    <div class="overflow-hidden bg-white py-5 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)] motion-reduce:overflow-x-auto">
-      <div v-motion="marquee" class="flex w-max items-center">
-        <template v-for="copy in copies" :key="copy">
+    <div class="group overflow-hidden bg-white py-5 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
+      <div
+        class="flex w-max items-center group-hover:[animation-play-state:paused] motion-safe:animate-marquee motion-reduce:w-auto motion-reduce:flex-wrap motion-reduce:justify-center"
+      >
+        <div
+          v-for="copy in copies"
+          :key="copy.id"
+          :aria-hidden="copy.isDuplicate || undefined"
+          :inert="copy.isDuplicate"
+          :class="['flex items-center motion-reduce:flex-wrap motion-reduce:justify-center', copy.isDuplicate && 'motion-reduce:hidden']"
+        >
           <img
-            v-for="partner in PARTNERS"
-            :key="`${copy}-${partner.name}`"
+            v-for="partner in partners"
+            :key="partner.slug"
             :src="partner.logo"
-            :alt="copy === 1 ? partner.name : ''"
-            :aria-hidden="copy !== 1"
-            :width="partner.width"
-            :height="partner.height"
+            :alt="partner.name"
             loading="lazy"
             class="mx-8 h-12 w-40 object-contain desk:h-14 desk:w-48"
           />
-        </template>
+        </div>
       </div>
     </div>
   </section>

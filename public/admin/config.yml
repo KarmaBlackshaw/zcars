@@ -1,0 +1,349 @@
+backend:
+  name: github
+  repo: KarmaBlackshaw/zcars
+  branch: master
+
+media_folder: public/uploads
+public_folder: /uploads
+
+media_libraries:
+  default:
+    config:
+      slugify_filename: true
+      transformations:
+        raster_image:
+          format: webp
+          quality: 85
+          width: 2048
+          height: 2048
+
+output:
+  omit_empty_optional_fields: true
+
+slug:
+  encoding: ascii
+  clean_accents: true
+
+collections:
+  - name: settings
+    label: Site settings
+    files:
+      - name: site
+        label: Business info
+        file: src/content/site.json
+        format: json
+        fields:
+          - { name: name, label: Business name, widget: string, hint: "The full shop name shown across the site." }
+          - { name: tagline, label: Tagline, widget: string, hint: "A short slogan shown in the footer." }
+          - { name: phone_display, label: Phone number (as shown), widget: string, hint: "How the number appears on the site, for example 0963 745 7661." }
+          - name: phone_e164
+            label: Phone number (for calling)
+            widget: string
+            pattern: ['^\+639\d{9}$', 'Use the format +639XXXXXXXXX']
+            hint: "The same number in international format, used by the Call buttons. Example: +639637457661."
+          - name: messenger_url
+            label: Messenger link
+            widget: string
+            pattern: ['^https://\S+$', 'Use a full link that starts with https://']
+            hint: "The m.me link that opens a Messenger chat with the shop."
+          - name: facebook_url
+            label: Facebook page link
+            widget: string
+            pattern: ['^https://\S+$', 'Use a full link that starts with https://']
+            hint: "The link to the shop's Facebook page."
+          - { name: address, label: Address, widget: string, hint: "The full address shown in the Visit section." }
+          - { name: locality, label: Area, widget: string, hint: "A short place name shown near the top of the page, for example Sagkahan, Tacloban City." }
+          - { name: map_query, label: Map search, widget: string, hint: "What Google Maps should search for to find the shop. Used for the map and the Directions button." }
+          - name: hours
+            label: Opening hours
+            widget: list
+            required: false
+            hint: "Leave empty to hide opening hours on the site."
+            summary: "{{fields.opens}} to {{fields.closes}}"
+            fields:
+              - name: days
+                label: Days
+                widget: select
+                multiple: true
+                min: 1
+                options: [Mon, Tue, Wed, Thu, Fri, Sat, Sun]
+                hint: "The days these hours apply to."
+              - { name: opens, label: Opens, widget: datetime, type: time, hint: "Opening time." }
+              - { name: closes, label: Closes, widget: datetime, type: time, hint: "Closing time. A time earlier than the opening time means the shop closes after midnight." }
+          - { name: hours_note, label: Hours note, widget: string, required: false, hint: "Optional note shown under the hours, for example Closed on holidays." }
+
+      - name: home
+        label: Home page copy
+        file: src/content/home.json
+        format: json
+        fields:
+          - name: hero
+            label: Top section
+            widget: object
+            hint: "The first thing visitors see."
+            fields:
+              - { name: title, label: Headline, widget: string, hint: "The main headline." }
+              - { name: title_accent, label: Headline highlight, widget: string, hint: "A short phrase shown after the headline in the accent color." }
+              - { name: lead, label: Intro text, widget: text, maxlength: 160, hint: "One or two sentences under the headline. Up to 160 characters." }
+              - { name: image, label: Photo, widget: image, hint: "A wide photo of the shop or a finished car." }
+              - &image_alt { name: image_alt, label: Photo description, widget: string, hint: "Describe the photo for people who cannot see it." }
+          - name: services
+            label: Services section
+            widget: object
+            fields:
+              - &eyebrow { name: eyebrow, label: Small label, widget: string, required: false, hint: "Optional short label shown above the title. Leave empty to hide it." }
+              - &title { name: title, label: Title, widget: string, hint: "The section title." }
+              - &lead_optional { name: lead, label: Intro text, widget: text, required: false, hint: "Optional sentence under the title." }
+          - name: projects
+            label: Recent work section
+            widget: object
+            fields:
+              - *eyebrow
+              - *title
+              - *lead_optional
+          - name: how
+            label: How it works section
+            widget: object
+            fields:
+              - *eyebrow
+              - *title
+              - name: steps
+                label: Steps
+                widget: list
+                min: 3
+                max: 3
+                hint: "Exactly three steps."
+                fields:
+                  - &step_title { name: title, label: Step title, widget: string, hint: "A few words." }
+                  - &step_text { name: text, label: Step text, widget: text, hint: "One short sentence." }
+          - name: repaint
+            label: Repaint section
+            widget: object
+            fields:
+              - *eyebrow
+              - *title
+              - { name: lead, label: Intro text, widget: text, hint: "One or two sentences about how repaints are done." }
+              - { name: image, label: Photo, widget: image, hint: "A photo of a repaint in progress." }
+              - *image_alt
+              - name: steps
+                label: Steps
+                widget: list
+                min: 1
+                max: 4
+                hint: "One to four steps."
+                fields:
+                  - *step_title
+                  - *step_text
+          - name: reviews
+            label: Reviews section
+            widget: object
+            fields:
+              - *eyebrow
+              - *title
+          - name: partners
+            label: Brands section
+            widget: object
+            fields:
+              - *eyebrow
+          - name: faq
+            label: Questions section
+            widget: object
+            fields:
+              - *eyebrow
+              - *title
+          - name: quote
+            label: Quote section
+            widget: object
+            fields:
+              - *eyebrow
+              - *title
+              - *lead_optional
+              - { name: reply_time, label: Reply time, widget: string, required: false, hint: "Optional, for example We usually reply within the day. Leave empty to hide it." }
+          - name: visit
+            label: Visit section
+            widget: object
+            fields:
+              - *eyebrow
+              - *title
+              - *lead_optional
+          - name: team
+            label: Team section
+            widget: object
+            fields:
+              - *eyebrow
+              - *title
+              - { name: lead, label: Intro text, widget: text, hint: "One or two sentences about the team." }
+              - { name: image, label: Photo, widget: image, hint: "A photo of the team." }
+              - *image_alt
+              - { name: caption, label: Photo caption, widget: string, required: false, hint: "Optional caption shown under the photo." }
+          - name: hiring
+            label: Hiring
+            widget: object
+            fields:
+              - { name: is_hiring, label: We are hiring, widget: boolean, default: false, hint: "Turn on to show the open roles in the Team section." }
+              - name: roles
+                label: Open roles
+                widget: list
+                required: false
+                hint: "The jobs you are hiring for."
+                summary: "{{fields.name}}"
+                fields:
+                  - { name: name, label: Role, widget: string, hint: "For example Car painter." }
+                  - { name: level, label: Experience, widget: string, hint: "For example Experienced." }
+              - { name: text, label: How to apply, widget: text, hint: "One sentence telling people how to apply." }
+
+      - name: promo
+        label: Promo banner
+        file: src/content/promo.json
+        format: json
+        fields:
+          - { name: is_enabled, label: Show banner, widget: boolean, default: false, hint: "Turn on to show a banner at the very top of the site." }
+          - { name: text, label: Banner text, widget: string, required: false, maxlength: 90, hint: "Needed when the banner is on. Up to 90 characters." }
+          - { name: link_label, label: Link text, widget: string, required: false, hint: "Optional. Fill in both the link text and the link, or leave both empty." }
+          - name: link_href
+            label: Link
+            widget: string
+            required: false
+            pattern: ['^(#[\w-]+|https://\S+)$', 'Use a full link that starts with https://, or a section link like #quote']
+            hint: "A full link that starts with https://, or a section on this page like #quote."
+          - { name: ends_on, label: End date, widget: datetime, type: date, format: YYYY-MM-DD, required: false, hint: "Optional. The banner hides itself after this date." }
+
+      - name: seo
+        label: SEO and sharing
+        file: src/content/seo.json
+        format: json
+        fields:
+          - { name: title, label: Page title, widget: string, hint: "Shown in the browser tab and in Google results." }
+          - { name: description, label: Page description, widget: text, maxlength: 160, hint: "Shown under the title in Google results. Up to 160 characters." }
+          - { name: og_title, label: Share title, widget: string, hint: "The title shown when the site is shared on Facebook or Messenger." }
+          - { name: og_description, label: Share description, widget: text, maxlength: 200, hint: "The text shown when the site is shared. Up to 200 characters." }
+          - { name: og_image, label: Share image, widget: image, hint: "The picture shown when the site is shared. A wide photo works best." }
+          - { name: og_image_alt, label: Share image description, widget: string, hint: "Describe the photo for people who cannot see it." }
+
+  - name: services
+    label: Services
+    label_singular: Service
+    folder: src/content/services
+    extension: json
+    format: json
+    create: true
+    delete: true
+    identifier_field: title
+    slug: { template: "{{title}}", editable: [create] }
+    sortable_fields: [title, order]
+    fields:
+      - { name: title, label: Name, widget: string, hint: "The service name, for example Window tint." }
+      - { name: summary, label: Summary, widget: text, maxlength: 120, hint: "One sentence about the service. Up to 120 characters." }
+      - { name: price_from, label: Starting price, widget: number, value_type: int, min: 0, required: false, hint: "Starting price in pesos, numbers only. Leave empty to show Ask for a quote." }
+      - { name: price_note, label: Price note, widget: string, required: false, hint: "Optional, for example Depends on car size." }
+      - { name: image, label: Photo, widget: image, required: false, hint: "Optional photo for this service." }
+      - { name: image_alt, label: Photo description, widget: string, required: false, hint: "Describe the photo for people who cannot see it. Needed when there is a photo." }
+      - name: icon
+        label: Icon
+        widget: select
+        hint: "The icon shown when there is no photo."
+        options:
+          - { label: Spray bottle, value: spray-bottle }
+          - { label: Sparkle, value: sparkle }
+          - { label: Shield, value: shield-check }
+          - { label: Hammer, value: hammer }
+          - { label: Paint roller, value: paint-roller }
+          - { label: Wrench, value: wrench }
+          - { label: Sun, value: sun-dim }
+          - { label: Umbrella, value: umbrella }
+      - &order { name: order, label: Position, widget: number, value_type: int, hint: "Lower numbers show first." }
+
+  - name: projects
+    label: Recent work
+    label_singular: Project
+    folder: src/content/projects
+    extension: json
+    format: json
+    create: true
+    delete: true
+    identifier_field: title
+    slug: { template: "{{title}}", editable: [create] }
+    sortable_fields: [title, completed_on, order]
+    fields:
+      - { name: title, label: Title, widget: string, hint: "A short name for the job, for example Montero Sport detail." }
+      - { name: vehicle, label: Vehicle, widget: string, hint: "The car's make and model." }
+      - name: services
+        label: Services done
+        widget: relation
+        collection: services
+        value_field: "{{slug}}"
+        search_fields: [title]
+        display_fields: [title]
+        multiple: true
+        required: false
+        hint: "Pick the services done on this car."
+      - { name: after, label: After photo, widget: image, hint: "The finished car." }
+      - { name: after_alt, label: After photo description, widget: string, hint: "Describe the photo for people who cannot see it." }
+      - { name: before, label: Before photo, widget: image, required: false, hint: "Optional. Add one to show a before and after slider." }
+      - { name: before_alt, label: Before photo description, widget: string, required: false, hint: "Describe the photo for people who cannot see it. Needed when there is a before photo." }
+      - { name: completed_on, label: Finished on, widget: datetime, type: date, format: YYYY-MM-DD, required: false, hint: "Optional. Newer jobs show first." }
+      - *order
+
+  - name: reviews
+    label: Reviews
+    label_singular: Review
+    folder: src/content/reviews
+    extension: json
+    format: json
+    create: true
+    delete: true
+    identifier_field: name
+    slug: { template: "{{name}}-{{year}}-{{month}}-{{day}}", editable: [create] }
+    sortable_fields: [name, date, rating]
+    fields:
+      - { name: name, label: Customer name, widget: string, hint: "The customer's name as they want it shown." }
+      - { name: vehicle, label: Vehicle, widget: string, required: false, hint: "Optional, the customer's car." }
+      - { name: rating, label: Stars, widget: number, value_type: int, min: 1, max: 5, hint: "From 1 to 5." }
+      - { name: quote, label: Review, widget: text, maxlength: 400, hint: "What the customer said. Up to 400 characters." }
+      - name: source
+        label: Where it was posted
+        widget: select
+        hint: "Where the customer left this review."
+        options:
+          - { label: Facebook, value: facebook }
+          - { label: Google, value: google }
+          - { label: In person, value: in-person }
+      - name: source_url
+        label: Review link
+        widget: string
+        required: false
+        pattern: ['^https://\S+$', 'Use a full link that starts with https://']
+        hint: "Optional link to the original review."
+      - { name: date, label: Date, widget: datetime, type: date, format: YYYY-MM-DD, hint: "When the review was posted. Newer reviews show first." }
+
+  - name: faqs
+    label: Questions
+    label_singular: Question
+    folder: src/content/faqs
+    extension: json
+    format: json
+    create: true
+    delete: true
+    identifier_field: question
+    slug: { template: "{{question}}", editable: [create] }
+    sortable_fields: [question, order]
+    fields:
+      - { name: question, label: Question, widget: string, hint: "The question as a customer would ask it." }
+      - { name: answer, label: Answer, widget: text, maxlength: 800, hint: "A short, plain answer. Up to 800 characters." }
+      - *order
+
+  - name: partners
+    label: Brands
+    label_singular: Brand
+    folder: src/content/partners
+    extension: json
+    format: json
+    create: true
+    delete: true
+    identifier_field: name
+    slug: { template: "{{name}}", editable: [create] }
+    sortable_fields: [name, order]
+    fields:
+      - { name: name, label: Brand name, widget: string, hint: "The product brand, for example Menzerna." }
+      - { name: logo, label: Logo, widget: image, hint: "The brand logo. An SVG or a PNG with a clear background works best." }
+      - *order

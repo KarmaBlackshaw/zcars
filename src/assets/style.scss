@@ -11,6 +11,8 @@
     --muted: 163 171 185;
     --accent: 37 99 235;
     --accent-text: 107 155 255;
+    --danger: 252 165 165;
+    --success: 134 239 172;
     color-scheme: dark;
   }
 
@@ -22,16 +24,23 @@
       --fg: 15 20 28;
       --muted: 74 84 102;
       --accent-text: 29 78 216;
+      --danger: 185 28 28;
+      --success: 21 128 61;
       color-scheme: light;
     }
   }
 
   html {
     @apply motion-safe:scroll-smooth;
+    scrollbar-gutter: stable;
   }
 
   body {
     @apply bg-bg font-sans text-base leading-[1.6] text-fg antialiased;
+  }
+
+  body:has(dialog[open]) {
+    overflow: hidden;
   }
 
   h1,

@@ -1,0 +1,93 @@
+{
+  "hero": {
+    "title": "Paint, protection and shine.",
+    "title_accent": "One shop.",
+    "lead": "Repaint, body repair, tint, undercoating, ceramic coating and full detailing, done under one roof by the Zcars crew.",
+    "image": "/uploads/montero.webp",
+    "image_alt": "Black Mitsubishi Montero Sport with a fresh, glossy detail outside the Zcars garage"
+  },
+  "services": {
+    "title": "Everything your car needs",
+    "lead": "From a dented bumper to a mirror finish. Bring it in once and drive out done."
+  },
+  "projects": {
+    "title": "Recent work"
+  },
+  "how": {
+    "title": "How it works",
+    "steps": [
+      {
+        "title": "Message or call",
+        "text": "Tell us about your car, or send a photo through the quote form."
+      },
+      {
+        "title": "Inspect and quote",
+        "text": "We check the car and give you a price before we start."
+      },
+      {
+        "title": "Drive out done",
+        "text": "Pick up your car when the work is finished."
+      }
+    ]
+  },
+  "repaint": {
+    "eyebrow": "Repaint",
+    "title": "Prepped right, painted once.",
+    "lead": "Every repaint starts with proper sanding and primer, the step most shops rush. That is why the finish lasts.",
+    "image": "/uploads/repaint.webp",
+    "image_alt": "White Subaru mid-repaint with primer on the front fender",
+    "steps": [
+      {
+        "title": "Sand",
+        "text": "Proper sanding, never rushed"
+      },
+      {
+        "title": "Prime",
+        "text": "Primer laid before any color"
+      },
+      {
+        "title": "Paint",
+        "text": "Professional-grade refinish"
+      }
+    ]
+  },
+  "reviews": {
+    "title": "What customers say"
+  },
+  "partners": {
+    "eyebrow": "Products we trust"
+  },
+  "faq": {
+    "title": "Common questions"
+  },
+  "quote": {
+    "title": "Get a quote",
+    "lead": "Tell us about your car and what it needs. We will call or message you back."
+  },
+  "visit": {
+    "eyebrow": "Visit the garage",
+    "title": "Drop by Sagkahan",
+    "lead": "Call ahead so we can have a bay ready for you."
+  },
+  "team": {
+    "title": "A garage that trains the next crew",
+    "lead": "Zcars hosts automotive OJT students from EVSU, learning the trade on real cars in our shop.",
+    "image": "/uploads/ojt.webp",
+    "image_alt": "EVSU automotive OJT students with a Zcars detailer inside the garage",
+    "caption": "EVSU Automotive OJT at the Zcars garage."
+  },
+  "hiring": {
+    "is_hiring": true,
+    "roles": [
+      {
+        "name": "Car painter",
+        "level": "Experienced"
+      },
+      {
+        "name": "Car detailer",
+        "level": "Experienced"
+      }
+    ],
+    "text": "Send us a message to apply."
+  }
+}

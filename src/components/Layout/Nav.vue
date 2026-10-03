@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { PhPhone } from "@phosphor-icons/vue";
+import { site } from "virtual:content";
 import logo from "@/assets/images/logo.webp";
-import { BUSINESS_NAME, NAV_LINKS, PHONE_DISPLAY, PHONE_HREF } from "@/types";
 
 defineOptions({ name: "LayoutNav" });
 
-const brandLabel = `${BUSINESS_NAME}, home`;
+const links = useNavLinks();
+const brandLabel = `${site.name}, home`;
+const callLabel = `Call ${site.phone_display}`;
 </script>
 
 <template>
@@ -16,16 +18,19 @@ const brandLabel = `${BUSINESS_NAME}, home`;
         Zcars
       </a>
       <nav aria-label="Primary" class="hidden desk:block">
-        <ul class="flex gap-8">
-          <li v-for="link in NAV_LINKS" :key="link.href">
+        <ul class="flex gap-6">
+          <li v-for="link in links" :key="link.href">
             <a :href="link.href" class="font-medium text-muted hover:text-fg">{{ link.label }}</a>
           </li>
         </ul>
       </nav>
-      <BaseButton size="sm" :href="PHONE_HREF">
-        <PhPhone aria-hidden="true" class="shrink-0" />
-        <span class="max-[480px]:sr-only">Call {{ PHONE_DISPLAY }}</span>
-      </BaseButton>
+      <div class="flex items-center gap-2">
+        <BaseButton size="sm" href="#quote">Get a quote</BaseButton>
+        <BaseButton variant="ghost" size="icon" :href="site.tel_href" :aria-label="callLabel" class="text-small min-[1100px]:w-auto min-[1100px]:px-4">
+          <PhPhone aria-hidden="true" class="shrink-0" />
+          <span class="hidden min-[1100px]:inline">Call {{ site.phone_display }}</span>
+        </BaseButton>
+      </div>
     </BaseContainer>
   </header>
 </template>

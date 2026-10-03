@@ -1,0 +1,11 @@
+{
+  "title": "Hilux ceramic coating and repaint",
+  "vehicle": "Toyota Hilux",
+  "services": [
+    "ceramic-coating",
+    "repaint"
+  ],
+  "after": "/uploads/hilux-red.webp",
+  "after_alt": "Red Toyota Hilux with a fresh repaint and glossy ceramic coat, parked outside the Zcars garage",
+  "order": 1
+}

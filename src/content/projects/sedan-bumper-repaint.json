@@ -1,0 +1,10 @@
+{
+  "title": "Sedan bumper repaint",
+  "vehicle": "Sedan",
+  "services": [
+    "repaint"
+  ],
+  "after": "/uploads/sedan-bumper.webp",
+  "after_alt": "White sedan with a freshly repainted front bumper",
+  "order": 4
+}

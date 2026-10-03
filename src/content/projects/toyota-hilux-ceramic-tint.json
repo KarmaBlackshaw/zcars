@@ -1,0 +1,10 @@
+{
+  "title": "Hilux ceramic tint",
+  "vehicle": "Toyota Hilux",
+  "services": [
+    "window-tint"
+  ],
+  "after": "/uploads/hilux-white.webp",
+  "after_alt": "White Toyota Hilux with dark ceramic tint on the cab windows inside the Zcars garage",
+  "order": 5
+}

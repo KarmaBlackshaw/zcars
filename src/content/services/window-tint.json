@@ -1,7 +1,10 @@
 {
   "title": "Window tint",
   "summary": "Window tint for less heat and glare inside the cabin.",
-  "image": "/uploads/360_f_198254934_jowgylwb14tfvoouo9ilgxud05m3shu2.webp",
+  "photo": {
+    "image": "/uploads/360_f_198254934_jowgylwb14tfvoouo9ilgxud05m3shu2.webp",
+    "alt": "Installer holding a roll of tint film against a wet car side window"
+  },
   "icon": "sun-dim",
   "order": 7
 }

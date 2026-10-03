@@ -5,8 +5,143 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
     <title>Zcars CMS</title>
+    <style>
+      #stale-dialog {
+        box-sizing: border-box;
+        width: calc(100% - 2rem);
+        max-width: 28rem;
+        padding: 1.5rem;
+        border: 0;
+        border-radius: 0.75rem;
+        background: #ffffff;
+        color: #111827;
+        font: 1rem/1.5 system-ui, sans-serif;
+      }
+      #stale-dialog::backdrop {
+        background: rgb(0 0 0 / 0.7);
+      }
+      #stale-dialog h2 {
+        margin: 0 0 0.5rem;
+        font-size: 1.25rem;
+      }
+      #stale-dialog p {
+        margin: 0 0 1.25rem;
+      }
+      #stale-dialog button {
+        min-height: 44px;
+        padding: 0 1.25rem;
+        border: 0;
+        border-radius: 0.5rem;
+        background: #1d4ed8;
+        color: #ffffff;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      #stale-dialog button:hover {
+        background: #1e40af;
+      }
+      #stale-dialog button:active {
+        background: #1e3a8a;
+      }
+      #stale-dialog button:focus-visible {
+        outline: 3px solid #111827;
+        outline-offset: 2px;
+      }
+      @media (max-width: 30rem) {
+        #stale-dialog button {
+          width: 100%;
+        }
+      }
+    </style>
   </head>
   <body>
+    <dialog
+      id="stale-dialog"
+      role="alertdialog"
+      closedby="none"
+      aria-labelledby="stale-title"
+      aria-describedby="stale-body"
+    >
+      <h2 id="stale-title">A new version of the editor is available</h2>
+      <p id="stale-body">Reload to keep editing. Anything you have not saved will be lost.</p>
+      <button type="button" autofocus id="stale-reload">Reload now</button>
+    </dialog>
+    <script>
+      const CONFIG_URL = "/admin/config.yml";
+      const fetchConfig = async () => {
+        try {
+          const response = await fetch(CONFIG_URL, { cache: "no-store" });
+          return response.ok ? await response.text() : undefined;
+        } catch {
+          return undefined;
+        }
+      };
+      window.baselinePromise = fetchConfig();
+      window.fetchConfig = fetchConfig;
+    </script>
     <script src="https://unpkg.com/@sveltia/cms@0.227.3/dist/sveltia-cms.js"></script>
+    <script type="module">
+      const POLL_MS = 60000;
+      const dialog = document.getElementById("stale-dialog");
+      let baseline = await window.baselinePromise;
+      let isShown = false;
+
+      const show = () => {
+        isShown = true;
+        if (!dialog.open) dialog.showModal();
+      };
+
+      const isStale = async () => {
+        const text = await window.fetchConfig();
+        if (text === undefined) return false;
+        if (baseline === undefined) {
+          baseline = text;
+          return false;
+        }
+        return text !== baseline;
+      };
+
+      const check = async () => {
+        if (isShown) return;
+        const isChanged = await isStale();
+        if (isChanged) show();
+      };
+
+      dialog.addEventListener("cancel", (event) => event.preventDefault());
+      dialog.addEventListener("close", () => {
+        if (isShown) dialog.showModal();
+      });
+      dialog.addEventListener("keydown", (event) => event.stopPropagation());
+      window.addEventListener(
+        "keydown",
+        (event) => {
+          const isSave = (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "s";
+          if (!isSave || !isShown) return;
+          event.preventDefault();
+          event.stopImmediatePropagation();
+        },
+        { capture: true },
+      );
+      document
+        .getElementById("stale-reload")
+        .addEventListener("click", () => location.reload());
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") check();
+      });
+      window.addEventListener("focus", check);
+      setInterval(check, POLL_MS);
+
+      window.CMS?.registerEventListener({
+        name: "preSave",
+        handler: async () => {
+          const isChanged = isShown || (await isStale());
+          if (!isChanged) return;
+          show();
+          throw new Error("The editor is out of date. Reload to save.");
+        },
+      });
+      check();
+    </script>
   </body>
 </html>

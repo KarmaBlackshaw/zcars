@@ -17,9 +17,6 @@ const nameRef = useTemplateRef("nameEl");
 const NOT_SURE = "Not sure";
 const serviceOptions = [NOT_SURE, ...services.map(({ title }) => title)];
 
-const controlClasses =
-  "min-h-12 w-full scroll-mt-nav rounded-xl border border-muted/60 bg-bg px-4 text-base text-fg placeholder:text-muted focus:border-accent-text aria-[invalid=true]:border-danger";
-
 const photoButtonClasses =
   "inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full border border-line px-4 py-2.5 text-small font-semibold transition-colors hover:border-muted peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-[3px] peer-focus-visible:outline-accent-text peer-aria-[invalid=true]:border-danger";
 
@@ -151,13 +148,12 @@ async function startNewRequest() {
       <label>Company <input name="company" tabindex="-1" autocomplete="off" /></label>
     </p>
     <HomeQuoteField v-slot="{ describedBy }" id="quote-name" label="Name" is-required :error="errors.name">
-      <input
+      <BaseInput
         id="quote-name"
         ref="nameEl"
         name="name"
         required
         autocomplete="name"
-        :class="controlClasses"
         :aria-invalid="isInvalid('name')"
         :aria-describedby="describedBy"
         @input="onInput('name')"
@@ -165,14 +161,13 @@ async function startNewRequest() {
       />
     </HomeQuoteField>
     <HomeQuoteField v-slot="{ describedBy }" id="quote-phone" label="Phone" is-required helper="We will call or text this number." :error="errors.phone">
-      <input
+      <BaseInput
         id="quote-phone"
         name="phone"
         type="tel"
         inputmode="tel"
         required
         autocomplete="tel"
-        :class="controlClasses"
         :aria-invalid="isInvalid('phone')"
         :aria-describedby="describedBy"
         @input="onInput('phone')"
@@ -180,12 +175,11 @@ async function startNewRequest() {
       />
     </HomeQuoteField>
     <HomeQuoteField v-slot="{ describedBy }" id="quote-vehicle" label="Vehicle" is-required :error="errors.vehicle">
-      <input
+      <BaseInput
         id="quote-vehicle"
         name="vehicle"
         required
         placeholder="e.g. 2019 Toyota Vios"
-        :class="controlClasses"
         :aria-invalid="isInvalid('vehicle')"
         :aria-describedby="describedBy"
         @input="onInput('vehicle')"
@@ -193,15 +187,13 @@ async function startNewRequest() {
       />
     </HomeQuoteField>
     <HomeQuoteField v-slot="{ describedBy }" id="quote-service" label="Service">
-      <select id="quote-service" name="service" :class="controlClasses" :value="serviceValue" :aria-describedby="describedBy" @change="onServiceChange">
-        <option v-for="option in serviceOptions" :key="option" :value="option">{{ option }}</option>
-      </select>
+      <BaseSelect id="quote-service" name="service" :options="serviceOptions" :value="serviceValue" :aria-describedby="describedBy" @change="onServiceChange" />
     </HomeQuoteField>
     <HomeQuoteField v-slot="{ describedBy }" id="quote-date" label="Preferred date">
-      <input id="quote-date" name="preferred_date" type="date" :min="minDate" :class="controlClasses" :aria-describedby="describedBy" />
+      <BaseInput id="quote-date" name="preferred_date" type="date" :min="minDate" :aria-describedby="describedBy" />
     </HomeQuoteField>
     <HomeQuoteField v-slot="{ describedBy }" id="quote-message" label="Message">
-      <textarea id="quote-message" name="message" rows="4" :class="[controlClasses, 'resize-y py-3']" :aria-describedby="describedBy"></textarea>
+      <BaseTextarea id="quote-message" name="message" rows="4" :aria-describedby="describedBy" />
     </HomeQuoteField>
     <HomeQuoteField id="quote-photo" label="Photo" :error="errors.photo">
       <template #label="{ requirementText }">

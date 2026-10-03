@@ -3,7 +3,7 @@ import { home, projects } from "virtual:content";
 
 defineOptions({ name: "HomeProjects" });
 
-const VISIBLE_LIMIT = 6;
+const PAGE_SIZE = 6;
 const STAGGER_CAP = 4;
 
 const gridClasses = {
@@ -15,11 +15,12 @@ const gridClasses = {
 const copy = home.projects;
 const gridId = useId();
 const heading = useTemplateRef("heading");
-const isExpanded = ref(false);
+const visibleCount = ref(PAGE_SIZE);
 const openIndex = ref<number>();
 const returnFocusTo = shallowRef<HTMLElement>();
 
-const visibleProjects = computed(() => (isExpanded.value ? projects : projects.slice(0, VISIBLE_LIMIT)));
+const visibleProjects = computed(() => projects.slice(0, visibleCount.value));
+const hasMore = computed(() => visibleCount.value < projects.length);
 
 const gridClass = computed(() => {
   if (projects.length === 1) {
@@ -28,7 +29,7 @@ const gridClass = computed(() => {
 
   return projects.length === 2 ? gridClasses.pair : gridClasses.many;
 });
-const toggleLabel = computed(() => (isExpanded.value ? "Show fewer" : `Show all (${projects.length})`));
+const toggleLabel = computed(() => (hasMore.value ? "Show more" : "Show fewer"));
 const headingFocusTarget = computed(() => heading.value ?? undefined);
 
 function revealAt(index: number) {
@@ -40,8 +41,8 @@ function openProject(index: number, trigger: HTMLElement) {
   openIndex.value = index;
 }
 
-function toggleExpanded() {
-  isExpanded.value = !isExpanded.value;
+function toggleVisible() {
+  visibleCount.value = hasMore.value ? visibleCount.value + PAGE_SIZE : PAGE_SIZE;
 }
 </script>
 
@@ -56,17 +57,11 @@ function toggleExpanded() {
           <HomeProjectsCard :project="project" @open="openProject(index, $event)" />
         </li>
       </ul>
-      <BaseButton
-        v-if="projects.length > VISIBLE_LIMIT"
-        variant="ghost"
-        size="sm"
-        :aria-expanded="isExpanded"
-        :aria-controls="gridId"
-        class="mt-8"
-        @click="toggleExpanded"
-      >
-        {{ toggleLabel }}
-      </BaseButton>
+      <div v-if="projects.length > PAGE_SIZE" class="mt-8 text-center">
+        <BaseButton variant="ghost" size="sm" :aria-controls="gridId" @click="toggleVisible">
+          {{ toggleLabel }}
+        </BaseButton>
+      </div>
     </BaseContainer>
     <HomeProjectsLightbox v-model="openIndex" :projects="projects" :return-focus-to="returnFocusTo" :fallback-focus-to="headingFocusTarget" />
   </section>

@@ -11,12 +11,7 @@ const emit = defineEmits<{ open: [trigger: HTMLElement] }>();
 
 const openLabel = computed(() => `${project.title}, ${project.vehicle}. Open photo`);
 
-const serviceTitles = computed(() =>
-  services
-    .filter((service) => project.services.includes(service.slug))
-    .map((service) => service.title)
-    .join(", ")
-);
+const serviceTitles = computed(() => services.filter((service) => project.services.includes(service.slug)).map((service) => service.title));
 
 function onClick(event: MouseEvent) {
   if (event.currentTarget instanceof HTMLElement) {
@@ -38,7 +33,9 @@ function onClick(event: MouseEvent) {
     <div class="mt-3">
       <p class="font-semibold">{{ project.title }}</p>
       <p class="text-small text-muted">{{ project.vehicle }}</p>
-      <p v-if="serviceTitles" class="mt-1 text-micro text-muted">{{ serviceTitles }}</p>
+      <ul v-if="serviceTitles.length" class="mt-2 flex flex-wrap gap-1.5">
+        <li v-for="title in serviceTitles" :key="title" class="rounded-full bg-surface px-2 py-0.5 text-micro text-muted">{{ title }}</li>
+      </ul>
       <span v-if="project.before" class="mt-2 inline-block rounded-full border border-muted/60 px-2 py-0.5 text-micro">Before and after</span>
     </div>
   </button>

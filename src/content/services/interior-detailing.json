@@ -1,8 +1,10 @@
 {
   "title": "Interior detailing",
   "summary": "Deep cleaning for seats, carpets, dash and trim.",
-  "image": "/uploads/auto-detailing-car-interior-eps-2048x1367-1.webp",
-  "image_alt": "Gloved hands wiping a car dashboard and brushing the air vents",
+  "photo": {
+    "image": "/uploads/auto-detailing-car-interior-eps-2048x1367-1.webp",
+    "alt": "Gloved hands wiping a car dashboard and brushing the air vents"
+  },
   "icon": "spray-bottle",
   "order": 1
 }

@@ -98,7 +98,7 @@ export function loadContent(root: string): TContent {
   checkImage("home.json", "repaint.image", home?.repaint.image);
   checkImage("home.json", "team.image", home?.team.image);
   checkImage("seo.json", "og_image", seo?.og_image);
-  services.forEach((service) => checkImage(`services/${service.slug}.json`, "image", service.image));
+  services.forEach((service) => checkImage(`services/${service.slug}.json`, "photo.image", service.photo?.image));
   partners.forEach((partner) => checkImage(`partners/${partner.slug}.json`, "logo", partner.logo));
 
   const serviceSlugs = new Set(listJson("services").map((name) => path.basename(name, ".json")));
@@ -107,7 +107,7 @@ export function loadContent(root: string): TContent {
     const file = `projects/${project.slug}.json`;
 
     checkImage(file, "after", project.after);
-    checkImage(file, "before", project.before);
+    checkImage(file, "before.image", project.before?.image);
 
     project.services.forEach((slug, index) => {
       if (!serviceSlugs.has(slug)) {
@@ -120,12 +120,12 @@ export function loadContent(root: string): TContent {
     throw new Error(`[zcars] Content is invalid. Fix these in the CMS (or src/content) and publish again:\n\n${problems.join("\n\n")}`);
   }
 
-  const isPromoExpired = promo.ends_on != null && promo.ends_on < getTodayInManila();
+  const isPromoExpired = promo.banner?.ends_on != null && promo.banner.ends_on < getTodayInManila();
 
   return {
     site,
     home,
-    promo: { ...promo, is_enabled: promo.is_enabled && !isPromoExpired },
+    promo: isPromoExpired ? { banner: undefined } : promo,
     seo,
     services,
     projects,

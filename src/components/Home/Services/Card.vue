@@ -44,9 +44,9 @@ function requestQuote() {
   >
     <div class="aspect-square overflow-hidden rounded-xl bg-bg sm:aspect-[4/3]">
       <img
-        v-if="service.image && !hasImageError"
-        :src="service.image"
-        :alt="service.image_alt"
+        v-if="service.photo && !hasImageError"
+        :src="service.photo.image"
+        :alt="service.photo.alt"
         loading="lazy"
         class="size-full object-cover"
         @error="onImageError"

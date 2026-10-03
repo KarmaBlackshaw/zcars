@@ -1,8 +1,10 @@
 {
   "title": "Ceramic coating",
   "summary": "A ceramic coat over corrected paint to lock in the gloss.",
-  "image": "/uploads/360_f_288497655_xv0fjshnwlpumtxxeaqafyamh9whosdc.webp",
-  "image_alt": "Water beading on a ceramic coated car panel",
+  "photo": {
+    "image": "/uploads/360_f_288497655_xv0fjshnwlpumtxxeaqafyamh9whosdc.webp",
+    "alt": "Water beading on a ceramic coated car panel"
+  },
   "icon": "shield-check",
   "order": 3
 }

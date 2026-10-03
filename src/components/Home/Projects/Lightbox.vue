@@ -139,9 +139,9 @@ function onImageError() {
       </button>
       <div class="relative min-h-0 w-full flex-1 overflow-hidden rounded-xl bg-surface desk:aspect-[4/3] desk:max-h-[70dvh] desk:flex-none">
         <HomeProjectsCompare
-          v-if="project.before != null && project.before_alt != null"
-          :before="project.before"
-          :before-alt="project.before_alt"
+          v-if="project.before"
+          :before="project.before.image"
+          :before-alt="project.before.alt"
           :after="project.after"
           :after-alt="project.after_alt"
         />

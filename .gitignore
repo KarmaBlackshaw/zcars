@@ -1,0 +1,50 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+.vite-ssg-temp
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+# Windows mark-of-the-web sidecars, materialized when copying downloads into WSL
+*:Zone.Identifier
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+*.map
+*.tsbuildinfo
+
+.env
+
+# Auto-generated type declarations
+auto-import.json
+auto-imports.d.ts
+components.d.ts
+typed-router.d.ts
+src/composables/index.ts
+src/types/index.ts
+src/utils/index.ts
+
+# Claude local memory pointer (machine-specific Obsidian paths)
+CLAUDE.local.md
+.claude
+.gstack
+
+scratchpad
+
+.playwright-mcp

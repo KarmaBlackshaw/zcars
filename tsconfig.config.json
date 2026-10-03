@@ -1,0 +1,7 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.json",
+  "include": ["vite.config.*", "cypress.config.*", "playwright.config.*", "./plugins/**/*.ts"],
+  "compilerOptions": {
+    "types": ["node"]
+  }
+}

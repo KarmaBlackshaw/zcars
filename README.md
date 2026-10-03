@@ -58,7 +58,7 @@ Images are uploaded in the CMS to `public/uploads/` (converted to webp, max 2048
 
 ## Deploy
 
-Host-agnostic:
+Netlify reads `netlify.toml` (build command, `dist`, `VITE_SITE_URL`), which overrides the dashboard build settings. Change the domain there if it moves. Other hosts:
 
 - Build command: `npm run build`
 - Output directory: `dist`

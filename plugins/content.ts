@@ -8,7 +8,7 @@ import { faqsSchema } from "../src/types/faq";
 import { homeSchema } from "../src/types/home";
 import { partnerSchema } from "../src/types/partner";
 import { projectSchema } from "../src/types/project";
-import { promoSchema } from "../src/types/promo";
+import { promosSchema } from "../src/types/promo";
 import { reviewSchema } from "../src/types/review";
 import { seoSchema } from "../src/types/seo";
 import { serviceSchema } from "../src/types/service";
@@ -85,7 +85,7 @@ export function loadContent(root: string): TContent {
 
   const site = parseFile(siteSchema, "site.json");
   const home = parseFile(homeSchema, "home.json");
-  const promo = parseFile(promoSchema, "promo.json");
+  const promosFile = parseFile(promosSchema, "promos.json");
   const seo = parseFile(seoSchema, "seo.json");
   const services = parseCollection("services", serviceSchema).sort(byOrder);
 
@@ -105,6 +105,14 @@ export function loadContent(root: string): TContent {
 
   const serviceSlugs = new Set(listJson("services").map((name) => path.basename(name, ".json")));
 
+  promosFile?.promos.forEach((promo, index) => {
+    checkImage("promos.json", `promos[${index}].photo`, promo.photo);
+
+    if (promo.service != null && !serviceSlugs.has(promo.service)) {
+      problems.push(`${CONTENT_DIR}/promos.json: promos[${index}].service "${promo.service}" is not a service. Was it renamed or deleted?`);
+    }
+  });
+
   projects.forEach((project) => {
     const file = `projects/${project.slug}.json`;
 
@@ -117,16 +125,18 @@ export function loadContent(root: string): TContent {
     });
   });
 
-  if (site == null || home == null || promo == null || seo == null || faqs == null || problems.length > 0) {
+  if (site == null || home == null || promosFile == null || seo == null || faqs == null || problems.length > 0) {
     throw new Error(`[zcars] Content is invalid. Fix these in the CMS (or src/content) and publish again:\n\n${problems.join("\n\n")}`);
   }
 
-  const isPromoExpired = promo.banner?.ends_on != null && promo.banner.ends_on < getTodayInManila();
+  const builtOn = getTodayInManila();
+  const promos = promosFile.promos.filter((promo) => promo.ends_on == null || promo.ends_on >= builtOn);
 
   return {
     site,
     home,
-    promo: isPromoExpired ? { banner: undefined } : promo,
+    promos,
+    builtOn,
     seo,
     services,
     projects,

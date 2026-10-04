@@ -21,7 +21,8 @@ export type TEntry<T> = T & { slug: string };
 export type TContent = {
   site: TSite;
   home: THome;
-  promo: TPromo;
+  promos: TPromo[];
+  builtOn: string;
   seo: TSeo;
   services: TEntry<TService>[];
   projects: TEntry<TProject>[];

@@ -1,0 +1,16 @@
+{
+  "promos": [
+    {
+      "title": "Full interior and exterior detailing",
+      "text": "Massive promo for all car units. Interior deep clean, odor and bacteria removal, machine buffing, scratch reduction, headlight restoration and paint protection wax.",
+      "price_label": "₱6,299",
+      "photo": "/uploads/promo-full-detailing.jpg"
+    },
+    {
+      "title": "Free inspection and quote",
+      "text": "Message us a photo of your car and we will send you a price.",
+      "price_label": "Free",
+      "ends_on": "2026-10-31"
+    }
+  ]
+}

@@ -9,6 +9,7 @@ defineOptions({ name: "IndexPage" });
   <main id="main" tabindex="-1" class="focus:outline-none">
     <HomeHero />
     <HomeTrust />
+    <HomePromos />
     <HomeServices />
     <HomeProjects />
     <HomeReviews />

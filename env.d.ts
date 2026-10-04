@@ -5,7 +5,8 @@ declare module "virtual:content" {
 
   export const site: TContent["site"];
   export const home: TContent["home"];
-  export const promo: TContent["promo"];
+  export const promos: TContent["promos"];
+  export const builtOn: TContent["builtOn"];
   export const seo: TContent["seo"];
   export const services: TContent["services"];
   export const projects: TContent["projects"];

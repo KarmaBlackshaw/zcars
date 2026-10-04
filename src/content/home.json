@@ -25,6 +25,9 @@
       "text": "Sample text, replace in admin: tell customers what you fix for free if something goes wrong."
     }
   },
+  "promos": {
+    "title": "Current promos"
+  },
   "services": {
     "title": "Everything your car needs",
     "lead": "From a dented bumper to a mirror finish. Bring it in once and drive out done."

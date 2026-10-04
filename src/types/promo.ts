@@ -1,24 +1,23 @@
 import { z } from "zod";
 
-import { textSchema } from "./content";
+import { slugSchema, textSchema } from "./content";
+import { imagePathSchema } from "./image";
 
-const linkSchema = z
+export const promoSchema = z
   .strictObject({
-    label: textSchema,
-    href: z.string().regex(/^(#[\w-]+|https:\/\/\S+)$/),
-  })
-  .nullish()
-  .transform((link) => link ?? undefined);
-
-const bannerSchema = z
-  .strictObject({
-    text: textSchema.max(90),
-    link: linkSchema,
+    title: textSchema.max(60),
+    text: textSchema.max(200),
+    price_label: textSchema.max(24).optional(),
+    photo: imagePathSchema.nullish().transform((photo) => photo ?? undefined),
+    service: slugSchema.optional(),
+    starts_on: z.iso.date().optional(),
     ends_on: z.iso.date().optional(),
   })
-  .nullish()
-  .transform((banner) => banner ?? undefined);
+  .refine((promo) => promo.starts_on == null || promo.ends_on == null || promo.starts_on <= promo.ends_on, {
+    error: "The start date must be on or before the end date",
+    path: ["ends_on"],
+  });
 
-export const promoSchema = z.strictObject({ banner: bannerSchema });
+export const promosSchema = z.strictObject({ promos: z.array(promoSchema).default([]) });
 
 export type TPromo = z.infer<typeof promoSchema>;

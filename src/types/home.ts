@@ -13,6 +13,7 @@ export const homeSchema = z.strictObject({
     image: imagePathSchema,
   }),
   services: z.strictObject({ eyebrow: textSchema.optional(), title: textSchema, lead: textSchema.optional() }),
+  promos: z.strictObject({ title: textSchema, lead: textSchema.optional() }),
   projects: z.strictObject({ eyebrow: textSchema.optional(), title: textSchema, lead: textSchema.optional() }),
   how: z.strictObject({ eyebrow: textSchema.optional(), title: textSchema, steps: z.array(stepSchema).length(3) }),
   repaint: z.strictObject({

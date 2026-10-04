@@ -109,13 +109,19 @@ collections:
                 fields:
                   - { name: title, label: Title, widget: string, hint: "For example Workmanship warranty." }
                   - { name: text, label: Text, widget: text, maxlength: 160, hint: "One or two sentences. Up to 160 characters." }
+          - name: promos
+            label: Promos section
+            widget: object
+            fields:
+              - &title { name: title, label: Title, widget: string, hint: "The section title." }
+              - &lead_optional { name: lead, label: Intro text, widget: text, required: false, hint: "Optional sentence under the title." }
           - name: services
             label: Services section
             widget: object
             fields:
               - &eyebrow { name: eyebrow, label: Small label, widget: string, required: false, hint: "Optional short label shown above the title. Leave empty to hide it." }
-              - &title { name: title, label: Title, widget: string, hint: "The section title." }
-              - &lead_optional { name: lead, label: Intro text, widget: text, required: false, hint: "Optional sentence under the title." }
+              - *title
+              - *lead_optional
           - name: projects
             label: Recent work section
             widget: object
@@ -212,31 +218,34 @@ collections:
                   - { name: level, label: Experience, widget: string, hint: "For example Experienced." }
               - { name: text, label: How to apply, widget: text, hint: "One sentence telling people how to apply." }
 
-      - name: promo
-        label: Promo banner
-        file: src/content/promo.json
+      - name: promos
+        label: Promos
+        file: src/content/promos.json
         format: json
         fields:
-          - name: banner
-            label: Show banner
-            widget: object
+          - name: promos
+            label: Promos
+            label_singular: Promo
+            widget: list
             required: false
-            hint: "Tick to show a banner at the very top of the site. Untick to hide it."
+            summary: "{{fields.title}}"
+            hint: "Drag to change the order. The top one shows first and in the top banner."
             fields:
-              - { name: text, label: Banner text, widget: string, maxlength: 90, hint: "Up to 90 characters." }
-              - name: link
-                label: Add a link
-                widget: object
+              - { name: title, label: Title, widget: string, maxlength: 60, hint: "A short name for the promo. Up to 60 characters." }
+              - { name: text, label: Details, widget: text, maxlength: 200, hint: "One or two sentences. Up to 200 characters." }
+              - { name: price_label, label: Price or discount, widget: string, maxlength: 24, required: false, hint: "Optional. For example 20% off or ₱3,500." }
+              - { name: photo, label: Photo, widget: image, choose_url: false, required: false, hint: "Optional. A photo that shows the promo." }
+              - name: service
+                label: Service
+                widget: relation
+                collection: services
+                value_field: "{{slug}}"
+                search_fields: [title]
+                display_fields: [title]
                 required: false
-                hint: "Optional. Tick to add a link after the text."
-                fields:
-                  - { name: label, label: Link text, widget: string, hint: "For example Get a quote." }
-                  - name: href
-                    label: Link
-                    widget: string
-                    pattern: ['^(#[\w-]+|https://\S+)$', 'Use a full link that starts with https://, or a section link like #quote']
-                    hint: "A full link that starts with https://, or a section on this page like #quote."
-              - { name: ends_on, label: End date, widget: datetime, type: date, format: YYYY-MM-DD, required: false, hint: "Optional. The banner hides itself after this date." }
+                hint: "Optional. The service this promo is for. The quote form will pick it for the customer."
+              - { name: starts_on, label: Show from, widget: datetime, type: date, format: YYYY-MM-DD, required: false, hint: "Optional. The promo shows from this date." }
+              - { name: ends_on, label: Hide after, widget: datetime, type: date, format: YYYY-MM-DD, required: false, hint: "Optional. The promo hides itself after this date." }
 
       - name: seo
         label: SEO and sharing

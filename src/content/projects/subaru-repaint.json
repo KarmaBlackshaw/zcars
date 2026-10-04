@@ -5,10 +5,6 @@
     "repaint"
   ],
   "photos": [
-    {
-      "image": "/uploads/repaint.webp",
-      "alt": "White Subaru mid-repaint with primer on the front fender"
-    }
-  ],
-  "order": 9
+    "/uploads/repaint.webp"
+  ]
 }

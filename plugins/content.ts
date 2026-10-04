@@ -4,7 +4,7 @@ import type { Plugin } from "vite";
 import { z } from "zod";
 import { slugSchema } from "../src/types/content";
 import type { TContent, TEntry } from "../src/types/content";
-import { faqSchema } from "../src/types/faq";
+import { faqsSchema } from "../src/types/faq";
 import { homeSchema } from "../src/types/home";
 import { partnerSchema } from "../src/types/partner";
 import { projectSchema } from "../src/types/project";
@@ -89,16 +89,18 @@ export function loadContent(root: string): TContent {
   const seo = parseFile(seoSchema, "seo.json");
   const services = parseCollection("services", serviceSchema).sort(byOrder);
 
-  const projects = parseCollection("projects", projectSchema).sort((a, b) => (b.completed_on ?? "").localeCompare(a.completed_on ?? "") || a.order - b.order);
+  const projects = parseCollection("projects", projectSchema).sort(
+    (a, b) => (b.completed_on ?? "").localeCompare(a.completed_on ?? "") || a.title.localeCompare(b.title)
+  );
   const reviews = parseCollection("reviews", reviewSchema).sort((a, b) => b.date.localeCompare(a.date));
-  const faqs = parseCollection("faqs", faqSchema).sort(byOrder);
-  const partners = parseCollection("partners", partnerSchema).sort(byOrder);
+  const faqs = parseFile(faqsSchema, "faqs.json");
+  const partners = parseCollection("partners", partnerSchema).sort((a, b) => a.name.localeCompare(b.name));
 
   checkImage("home.json", "hero.image", home?.hero.image);
   checkImage("home.json", "repaint.image", home?.repaint.image);
   checkImage("home.json", "team.image", home?.team.image);
   checkImage("seo.json", "og_image", seo?.og_image);
-  services.forEach((service) => checkImage(`services/${service.slug}.json`, "photo.image", service.photo?.image));
+  services.forEach((service) => checkImage(`services/${service.slug}.json`, "photo.image", service.photo));
   partners.forEach((partner) => checkImage(`partners/${partner.slug}.json`, "logo", partner.logo));
 
   const serviceSlugs = new Set(listJson("services").map((name) => path.basename(name, ".json")));
@@ -106,7 +108,7 @@ export function loadContent(root: string): TContent {
   projects.forEach((project) => {
     const file = `projects/${project.slug}.json`;
 
-    project.photos.forEach((photo, index) => checkImage(file, `photos[${index}].image`, photo.image));
+    project.photos.forEach((photo, index) => checkImage(file, `photos[${index}]`, photo));
 
     project.services.forEach((slug, index) => {
       if (!serviceSlugs.has(slug)) {
@@ -115,7 +117,7 @@ export function loadContent(root: string): TContent {
     });
   });
 
-  if (site == null || home == null || promo == null || seo == null || problems.length > 0) {
+  if (site == null || home == null || promo == null || seo == null || faqs == null || problems.length > 0) {
     throw new Error(`[zcars] Content is invalid. Fix these in the CMS (or src/content) and publish again:\n\n${problems.join("\n\n")}`);
   }
 
@@ -129,7 +131,7 @@ export function loadContent(root: string): TContent {
     services,
     projects,
     reviews,
-    faqs,
+    faqs: faqs.questions,
     partners,
   };
 }

@@ -9,7 +9,6 @@ export const seoSchema = z.strictObject({
   og_title: textSchema,
   og_description: textSchema.max(200),
   og_image: imagePathSchema,
-  og_image_alt: textSchema,
 });
 
 export type TSeo = z.infer<typeof seoSchema>;

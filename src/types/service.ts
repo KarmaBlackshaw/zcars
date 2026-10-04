@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { textSchema } from "./content";
-import { photoSchema } from "./image";
+import { imagePathSchema } from "./image";
 
 const serviceIconSchema = z.enum(["spray-bottle", "sparkle", "shield-check", "hammer", "paint-roller", "wrench", "sun-dim", "umbrella"]);
 
@@ -19,7 +19,7 @@ export const serviceSchema = z.strictObject({
   summary: textSchema.max(120),
   price_from: optionalNumber,
   price_note: textSchema.optional(),
-  photo: photoSchema.nullish().transform((photo) => photo ?? undefined),
+  photo: imagePathSchema.nullish().transform((photo) => photo ?? undefined),
   icon: serviceIconSchema,
   order: z.number().int(),
 });

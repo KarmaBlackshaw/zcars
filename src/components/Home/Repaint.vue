@@ -9,7 +9,7 @@ defineOptions({ name: "HomeRepaint" });
     <BaseContainer>
       <div v-motion="reveal()" class="grid overflow-hidden rounded-card bg-bunker text-sportyWhite desk:grid-cols-12">
         <figure class="relative aspect-[4/3] overflow-hidden desk:col-span-6 desk:aspect-auto desk:min-h-[560px]">
-          <BaseParallaxImage :src="home.repaint.image" :alt="home.repaint.image_alt" loading="lazy" class="absolute inset-0 size-full object-cover" />
+          <BaseParallaxImage :src="home.repaint.image" :alt="home.repaint.title" loading="lazy" class="absolute inset-0 size-full object-cover" />
         </figure>
         <div class="flex flex-col justify-center gap-10 p-7 desk:col-span-6 desk:p-14">
           <BaseSectionHeading

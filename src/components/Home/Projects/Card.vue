@@ -27,8 +27,8 @@ function onClick(event: MouseEvent) {
   <button type="button" aria-haspopup="dialog" :aria-label="openLabel" class="group block w-full scroll-mt-nav text-left" @click="onClick">
     <div class="aspect-square overflow-hidden rounded-card bg-surface sm:aspect-[4/3]">
       <img
-        :src="project.photos[0].image"
-        :alt="project.photos[0].alt"
+        :src="project.photos[0]"
+        :alt="project.title"
         loading="lazy"
         class="size-full object-cover transition-transform duration-800 ease-settle motion-safe:group-hover:scale-[1.03]"
       />

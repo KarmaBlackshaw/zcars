@@ -1,10 +1,7 @@
 {
   "title": "PMS",
   "summary": "Preventive maintenance to keep your car in shape between bigger jobs.",
-  "photo": {
-    "image": "/uploads/pngtree-auto-mechanic-working-in-garage-repair-service-image_15647939.webp",
-    "alt": "PMS"
-  },
+  "photo": "/uploads/pngtree-auto-mechanic-working-in-garage-repair-service-image_15647939.webp",
   "icon": "wrench",
   "order": 6
 }

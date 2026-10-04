@@ -5,10 +5,6 @@
     "exterior-detailing"
   ],
   "photos": [
-    {
-      "image": "/uploads/montero.webp",
-      "alt": "Black Mitsubishi Montero Sport with a fresh, glossy detail outside the Zcars garage"
-    }
-  ],
-  "order": 8
+    "/uploads/montero.webp"
+  ]
 }

@@ -9,7 +9,7 @@ defineOptions({ name: "HomeTeam" });
     <BaseContainer class="grid gap-12 desk:grid-cols-12 desk:items-center desk:gap-8">
       <figure v-motion="reveal()" class="desk:col-span-5">
         <div class="aspect-[4/5] overflow-hidden rounded-card bg-surface">
-          <BaseParallaxImage :src="home.team.image" :alt="home.team.image_alt" loading="lazy" class="size-full object-cover" />
+          <BaseParallaxImage :src="home.team.image" :alt="home.team.title" loading="lazy" class="size-full object-cover" />
         </div>
         <figcaption v-if="home.team.caption" class="mt-3 text-sm text-muted">{{ home.team.caption }}</figcaption>
       </figure>

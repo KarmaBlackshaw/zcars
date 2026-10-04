@@ -3,8 +3,7 @@
     "title": "Paint, protection and shine.",
     "title_accent": "One shop.",
     "lead": "Repaint, body repair, tint, undercoating, ceramic coating and full detailing, done under one roof by the Zcars crew.",
-    "image": "/uploads/montero.webp",
-    "image_alt": "Black Mitsubishi Montero Sport with a fresh, glossy detail outside the Zcars garage"
+    "image": "/uploads/montero.webp"
   },
   "trust": {
     "stats": [
@@ -62,7 +61,6 @@
     "title": "Prepped right, painted once.",
     "lead": "Every repaint starts with proper sanding and primer, the step most shops rush. That is why the finish lasts.",
     "image": "/uploads/repaint.webp",
-    "image_alt": "White Subaru mid-repaint with primer on the front fender",
     "steps": [
       {
         "title": "Sand",
@@ -93,7 +91,6 @@
     "title": "A garage that trains the next crew",
     "lead": "Zcars hosts automotive OJT students from EVSU, learning the trade on real cars in our shop.",
     "image": "/uploads/ojt.webp",
-    "image_alt": "EVSU automotive OJT students with a Zcars detailer inside the garage",
     "caption": "EVSU Automotive OJT at the Zcars garage."
   },
   "hiring": {

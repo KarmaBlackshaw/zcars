@@ -6,10 +6,6 @@
     "repaint"
   ],
   "photos": [
-    {
-      "image": "/uploads/hilux-red.webp",
-      "alt": "Red Toyota Hilux with a fresh repaint and glossy ceramic coat, parked outside the Zcars garage"
-    }
-  ],
-  "order": 1
+    "/uploads/hilux-red.webp"
+  ]
 }

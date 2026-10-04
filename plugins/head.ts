@@ -55,7 +55,7 @@ const renderHead = ({ site, seo, faqs }: TContent) => {
     meta("property", "og:type", "website"),
     meta("property", "og:url", url),
     meta("property", "og:image", image),
-    meta("property", "og:image:alt", seo.og_image_alt),
+    meta("property", "og:image:alt", seo.og_title),
     meta("name", "twitter:card", "summary_large_image"),
     jsonLd(shop),
     ...(faqs.length > 0 ? [jsonLd(faqPage)] : []),

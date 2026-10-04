@@ -1,15 +1,14 @@
 import { z } from "zod";
 
 import { slugSchema, textSchema } from "./content";
-import { photoSchema } from "./image";
+import { imagePathSchema } from "./image";
 
 export const projectSchema = z.strictObject({
   title: textSchema,
   vehicle: textSchema,
   services: z.array(slugSchema).default([]),
-  photos: z.tuple([photoSchema], photoSchema),
+  photos: z.tuple([imagePathSchema], imagePathSchema),
   completed_on: z.iso.date().optional(),
-  order: z.number().int(),
 });
 
 export type TProject = z.infer<typeof projectSchema>;

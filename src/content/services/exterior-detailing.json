@@ -1,10 +1,7 @@
 {
   "title": "Exterior detailing",
   "summary": "Wash, decontamination and machine polishing that bring back the gloss.",
-  "photo": {
-    "image": "/uploads/polish.webp",
-    "alt": "Detailer machine-polishing the hood of a red car"
-  },
+  "photo": "/uploads/polish.webp",
   "icon": "sparkle",
   "order": 2
 }

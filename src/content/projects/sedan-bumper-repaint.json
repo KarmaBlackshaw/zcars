@@ -5,10 +5,6 @@
     "repaint"
   ],
   "photos": [
-    {
-      "image": "/uploads/sedan-bumper.webp",
-      "alt": "White sedan with a freshly repainted front bumper"
-    }
-  ],
-  "order": 4
+    "/uploads/sedan-bumper.webp"
+  ]
 }

@@ -58,7 +58,7 @@ const averageRating = getAverageRating(reviews.map((review) => review.rating));
         v-motion="enter(0.18)"
         class="relative aspect-[4/5] max-h-[80dvh] overflow-hidden rounded-card bg-surface desk:col-span-5 desk:aspect-auto desk:max-h-none"
       >
-        <img :src="home.hero.image" :alt="home.hero.image_alt" fetchpriority="high" class="absolute inset-0 size-full object-cover" />
+        <img :src="home.hero.image" :alt="site.name" fetchpriority="high" class="absolute inset-0 size-full object-cover" />
         <div
           aria-hidden="true"
           class="absolute inset-x-4 bottom-4 flex items-center gap-3 rounded-xl border border-white/10 bg-inkBlack/65 p-3 text-sportyWhite shadow-[inset_0_1px_0_theme(colors.white/10%)] backdrop-blur-md"

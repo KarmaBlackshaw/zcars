@@ -25,6 +25,7 @@ const photos = computed(() => project.value?.photos ?? []);
 const photo = computed(() => photos.value[photoIndex.value]);
 const hasMultiplePhotos = computed(() => photos.value.length > 1);
 const positionText = computed(() => `${photoIndex.value + 1} of ${photos.value.length}`);
+const photoAlt = computed(() => (hasMultiplePhotos.value ? `${project.value?.title}, photo ${positionText.value}` : project.value?.title));
 const statusText = computed(() => (hasMultiplePhotos.value ? `Photo ${positionText.value}` : ""));
 const isFirst = computed(() => photoIndex.value === 0);
 const isLast = computed(() => photoIndex.value === photos.value.length - 1);
@@ -67,7 +68,7 @@ function preload(at: number) {
   const neighbor = photos.value[at];
 
   if (neighbor) {
-    new Image().src = neighbor.image;
+    new Image().src = neighbor;
   }
 }
 
@@ -143,17 +144,16 @@ function onImageError() {
       <figure class="flex min-h-0 flex-1 flex-col gap-2 desk:flex-none">
         <div class="relative min-h-0 w-full flex-1 overflow-hidden rounded-xl bg-surface desk:flex-none">
           <p v-if="hasImageError" class="grid size-full place-items-center p-6 text-center text-muted desk:aspect-[4/3] desk:h-[60dvh] desk:w-auto">
-            {{ photo?.alt }}
+            {{ photoAlt }}
           </p>
           <img
             v-else-if="photo"
-            :src="photo.image"
-            alt=""
+            :src="photo"
+            :alt="photoAlt"
             class="size-full object-contain desk:mx-auto desk:h-auto desk:max-h-[70dvh] desk:w-auto"
             @error="onImageError"
           />
         </div>
-        <figcaption v-if="photo && !hasImageError" class="text-small text-muted">{{ photo.alt }}</figcaption>
       </figure>
       <div class="flex items-center justify-between gap-4">
         <div>

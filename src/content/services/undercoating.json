@@ -1,10 +1,7 @@
 {
   "title": "Undercoating",
   "summary": "Underbody coating that protects against rust.",
-  "photo": {
-    "image": "/uploads/solution.webp",
-    "alt": "Car underbody shown rusted before and coated black after undercoating"
-  },
+  "photo": "/uploads/solution.webp",
   "icon": "umbrella",
   "order": 8
 }

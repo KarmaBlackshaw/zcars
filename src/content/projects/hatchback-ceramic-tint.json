@@ -5,10 +5,6 @@
     "window-tint"
   ],
   "photos": [
-    {
-      "image": "/uploads/hatchback-tint.webp",
-      "alt": "Grey hatchback with dark ceramic tint on the side windows"
-    }
-  ],
-  "order": 2
+    "/uploads/hatchback-tint.webp"
+  ]
 }

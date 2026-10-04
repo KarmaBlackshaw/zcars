@@ -5,10 +5,6 @@
     "undercoating"
   ],
   "photos": [
-    {
-      "image": "/uploads/colt-undercoat.webp",
-      "alt": "Zcars technician spraying 3M rubberized coating on the stripped floor of a Mitsubishi Colt"
-    }
-  ],
-  "order": 6
+    "/uploads/colt-undercoat.webp"
+  ]
 }

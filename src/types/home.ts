@@ -11,7 +11,6 @@ export const homeSchema = z.strictObject({
     title_accent: textSchema,
     lead: textSchema.max(160),
     image: imagePathSchema,
-    image_alt: textSchema,
   }),
   services: z.strictObject({ eyebrow: textSchema.optional(), title: textSchema, lead: textSchema.optional() }),
   projects: z.strictObject({ eyebrow: textSchema.optional(), title: textSchema, lead: textSchema.optional() }),
@@ -21,7 +20,6 @@ export const homeSchema = z.strictObject({
     title: textSchema,
     lead: textSchema,
     image: imagePathSchema,
-    image_alt: textSchema,
     steps: z.array(stepSchema).min(1).max(4),
   }),
   trust: z.strictObject({
@@ -49,7 +47,6 @@ export const homeSchema = z.strictObject({
     title: textSchema,
     lead: textSchema,
     image: imagePathSchema,
-    image_alt: textSchema,
     caption: textSchema.optional(),
   }),
   hiring: z.strictObject({

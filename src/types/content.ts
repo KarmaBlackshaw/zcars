@@ -26,6 +26,6 @@ export type TContent = {
   services: TEntry<TService>[];
   projects: TEntry<TProject>[];
   reviews: TEntry<TReview>[];
-  faqs: TEntry<TFaq>[];
+  faqs: TFaq[];
   partners: TEntry<TPartner>[];
 };

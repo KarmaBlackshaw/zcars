@@ -86,7 +86,6 @@ collections:
               - { name: title_accent, label: Headline highlight, widget: string, hint: "A short phrase shown after the headline in the accent color." }
               - { name: lead, label: Intro text, widget: text, maxlength: 160, hint: "One or two sentences under the headline. Up to 160 characters." }
               - { name: image, label: Photo, widget: image, choose_url: false, hint: "A wide photo of the shop or a finished car." }
-              - &image_alt { name: image_alt, label: Photo description, widget: string, hint: "Describe the photo for people who cannot see it." }
           - name: trust
             label: Trust strip
             widget: object
@@ -161,7 +160,6 @@ collections:
               - *title
               - { name: lead, label: Intro text, widget: text, hint: "One or two sentences about how repaints are done." }
               - { name: image, label: Photo, widget: image, choose_url: false, hint: "A photo of a repaint in progress." }
-              - *image_alt
               - name: steps
                 label: Steps
                 widget: list
@@ -177,7 +175,7 @@ collections:
             fields:
               - *eyebrow
           - name: faq
-            label: Questions section
+            label: FAQs section
             widget: object
             fields:
               - *eyebrow
@@ -197,7 +195,6 @@ collections:
               - *title
               - { name: lead, label: Intro text, widget: text, hint: "One or two sentences about the team." }
               - { name: image, label: Photo, widget: image, choose_url: false, hint: "A photo of the team." }
-              - *image_alt
               - { name: caption, label: Photo caption, widget: string, required: false, hint: "Optional caption shown under the photo." }
           - name: hiring
             label: Hiring
@@ -251,7 +248,6 @@ collections:
           - { name: og_title, label: Share title, widget: string, hint: "The title shown when the site is shared on Facebook or Messenger." }
           - { name: og_description, label: Share description, widget: text, maxlength: 200, hint: "The text shown when the site is shared. Up to 200 characters." }
           - { name: og_image, label: Share image, widget: image, choose_url: false, hint: "The picture shown when the site is shared. A wide photo works best." }
-          - { name: og_image_alt, label: Share image description, widget: string, hint: "Describe the photo for people who cannot see it." }
 
   - name: services
     label: Services
@@ -269,14 +265,7 @@ collections:
       - { name: summary, label: Summary, widget: text, maxlength: 120, hint: "One sentence about the service. Up to 120 characters." }
       - { name: price_from, label: Starting price, widget: number, value_type: int, min: 0, required: false, hint: "Starting price in pesos, numbers only. Leave empty to show Ask for a quote." }
       - { name: price_note, label: Price note, widget: string, required: false, hint: "Optional, for example Depends on car size." }
-      - name: photo
-        label: Add a photo
-        widget: object
-        required: false
-        hint: "Optional. Tick to add a photo. Without one, the icon below is shown."
-        fields:
-          - { name: image, label: Photo, widget: image, choose_url: false, hint: "A photo of this service." }
-          - { name: alt, label: Photo description, widget: string, hint: "Describe the photo for people who cannot see it." }
+      - { name: photo, label: Photo, widget: image, choose_url: false, required: false, hint: "Optional. Without one, the icon below is shown." }
       - name: icon
         label: Icon
         widget: select
@@ -290,7 +279,7 @@ collections:
           - { label: Wrench, value: wrench }
           - { label: Sun, value: sun-dim }
           - { label: Umbrella, value: umbrella }
-      - &order { name: order, label: Position, widget: number, value_type: int, hint: "Lower numbers show first." }
+      - { name: order, label: Position, widget: number, value_type: int, hint: "Lower numbers show first." }
 
   - name: projects
     label: Recent work
@@ -302,7 +291,7 @@ collections:
     delete: true
     identifier_field: title
     slug: { template: "{{title}}", editable: [create] }
-    sortable_fields: [title, completed_on, order]
+    sortable_fields: [title, completed_on]
     fields:
       - { name: title, label: Title, widget: string, hint: "A short name for the job, for example Montero Sport detail." }
       - { name: vehicle, label: Vehicle, widget: string, hint: "The car's make and model." }
@@ -321,12 +310,8 @@ collections:
         widget: list
         min: 1
         hint: "Add as many photos of the job as you like. The first one is the cover."
-        summary: "{{fields.alt}}"
-        fields:
-          - { name: image, label: Photo, widget: image, choose_url: false, hint: "A photo of the job." }
-          - { name: alt, label: Photo description, widget: string, hint: "Describe the photo for people who cannot see it." }
+        field: { name: image, label: Photo, widget: image, choose_url: false, hint: "A photo of the job." }
       - { name: completed_on, label: Finished on, widget: datetime, type: date, format: YYYY-MM-DD, required: false, hint: "Optional. Newer jobs show first." }
-      - *order
 
   - name: reviews
     label: Reviews
@@ -361,20 +346,23 @@ collections:
       - { name: date, label: Date, widget: datetime, type: date, format: YYYY-MM-DD, hint: "When the review was posted. Newer reviews show first." }
 
   - name: faqs
-    label: Questions
-    label_singular: Question
-    folder: src/content/faqs
-    extension: json
-    format: json
-    create: true
-    delete: true
-    identifier_field: question
-    slug: { template: "{{question}}", editable: [create] }
-    sortable_fields: [question, order]
-    fields:
-      - { name: question, label: Question, widget: string, hint: "The question as a customer would ask it." }
-      - { name: answer, label: Answer, widget: text, maxlength: 800, hint: "A short, plain answer. Up to 800 characters." }
-      - *order
+    label: FAQs
+    files:
+      - name: faqs
+        label: FAQs
+        file: src/content/faqs.json
+        format: json
+        fields:
+          - name: questions
+            label: FAQs
+            label_singular: FAQ
+            widget: list
+            required: false
+            summary: "{{fields.question}}"
+            hint: "Drag to change the order. The top one shows first."
+            fields:
+              - { name: question, label: Question, widget: string, hint: "The question as a customer would ask it." }
+              - { name: answer, label: Answer, widget: text, maxlength: 800, hint: "A short, plain answer. Up to 800 characters." }
 
   - name: partners
     label: Brands
@@ -386,8 +374,7 @@ collections:
     delete: true
     identifier_field: name
     slug: { template: "{{name}}", editable: [create] }
-    sortable_fields: [name, order]
+    sortable_fields: [name]
     fields:
       - { name: name, label: Brand name, widget: string, hint: "The product brand, for example Menzerna." }
       - { name: logo, label: Logo, widget: image, choose_url: false, hint: "The brand logo. An SVG or a PNG with a clear background works best." }
-      - *order

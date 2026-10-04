@@ -1,10 +1,7 @@
 {
   "title": "Repaint",
   "summary": "Panel or full repaints, prepped with proper sanding and primer.",
-  "photo": {
-    "image": "/uploads/istockphoto-1203343517-612x612.webp",
-    "alt": "Painter spraying fresh red paint on a car door in a paint booth"
-  },
+  "photo": "/uploads/istockphoto-1203343517-612x612.webp",
   "icon": "paint-roller",
   "order": 5
 }

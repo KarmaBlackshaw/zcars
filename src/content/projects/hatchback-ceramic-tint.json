@@ -4,7 +4,11 @@
   "services": [
     "window-tint"
   ],
-  "after": "/uploads/hatchback-tint.webp",
-  "after_alt": "Grey hatchback with dark ceramic tint on the side windows",
+  "photos": [
+    {
+      "image": "/uploads/hatchback-tint.webp",
+      "alt": "Grey hatchback with dark ceramic tint on the side windows"
+    }
+  ],
   "order": 2
 }

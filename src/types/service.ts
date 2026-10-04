@@ -19,7 +19,7 @@ export const serviceSchema = z.strictObject({
   summary: textSchema.max(120),
   price_from: optionalNumber,
   price_note: textSchema.optional(),
-  photo: photoSchema,
+  photo: photoSchema.nullish().transform((photo) => photo ?? undefined),
   icon: serviceIconSchema,
   order: z.number().int(),
 });

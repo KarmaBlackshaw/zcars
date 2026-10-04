@@ -8,14 +8,15 @@ defineOptions({ name: "IndexPage" });
   <LayoutNav />
   <main id="main" tabindex="-1" class="focus:outline-none">
     <HomeHero />
+    <HomeTrust />
     <HomeServices />
     <HomeProjects />
-    <HomeRepaint />
-    <HomeHow />
     <HomeReviews />
+    <HomeHow />
+    <HomeQuote />
+    <HomeRepaint />
     <HomePartners />
     <HomeFaq />
-    <HomeQuote />
     <HomeVisit />
     <HomeTeam />
   </main>

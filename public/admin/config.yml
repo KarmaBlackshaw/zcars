@@ -87,6 +87,29 @@ collections:
               - { name: lead, label: Intro text, widget: text, maxlength: 160, hint: "One or two sentences under the headline. Up to 160 characters." }
               - { name: image, label: Photo, widget: image, choose_url: false, hint: "A wide photo of the shop or a finished car." }
               - &image_alt { name: image_alt, label: Photo description, widget: string, hint: "Describe the photo for people who cannot see it." }
+          - name: trust
+            label: Trust strip
+            widget: object
+            hint: "Short proof points shown near the top of the page."
+            fields:
+              - name: stats
+                label: Numbers
+                widget: list
+                required: false
+                max: 4
+                hint: "Up to four. Leave empty to hide them."
+                summary: "{{fields.value}} {{fields.label}}"
+                fields:
+                  - { name: value, label: Number, widget: string, hint: "For example 12+." }
+                  - { name: label, label: Label, widget: string, hint: "For example years in business." }
+              - name: warranty
+                label: Add a warranty note
+                widget: object
+                required: false
+                hint: "Optional. Tick to add a short promise to customers."
+                fields:
+                  - { name: title, label: Title, widget: string, hint: "For example Workmanship warranty." }
+                  - { name: text, label: Text, widget: text, maxlength: 160, hint: "One or two sentences. Up to 160 characters." }
           - name: services
             label: Services section
             widget: object
@@ -101,6 +124,12 @@ collections:
               - *eyebrow
               - *title
               - *lead_optional
+          - name: reviews
+            label: Reviews section
+            widget: object
+            fields:
+              - *eyebrow
+              - *title
           - name: how
             label: How it works section
             widget: object
@@ -116,6 +145,14 @@ collections:
                 fields:
                   - &step_title { name: title, label: Step title, widget: string, hint: "A few words." }
                   - &step_text { name: text, label: Step text, widget: text, hint: "One short sentence." }
+          - name: quote
+            label: Quote section
+            widget: object
+            fields:
+              - *eyebrow
+              - *title
+              - *lead_optional
+              - { name: reply_time, label: Reply time, widget: string, required: false, hint: "Optional, for example We usually reply within the day. Leave empty to hide it." }
           - name: repaint
             label: Repaint section
             widget: object
@@ -134,12 +171,6 @@ collections:
                 fields:
                   - *step_title
                   - *step_text
-          - name: reviews
-            label: Reviews section
-            widget: object
-            fields:
-              - *eyebrow
-              - *title
           - name: partners
             label: Brands section
             widget: object
@@ -151,14 +182,6 @@ collections:
             fields:
               - *eyebrow
               - *title
-          - name: quote
-            label: Quote section
-            widget: object
-            fields:
-              - *eyebrow
-              - *title
-              - *lead_optional
-              - { name: reply_time, label: Reply time, widget: string, required: false, hint: "Optional, for example We usually reply within the day. Leave empty to hide it." }
           - name: visit
             label: Visit section
             widget: object
@@ -293,16 +316,15 @@ collections:
         multiple: true
         required: false
         hint: "Pick the services done on this car."
-      - { name: after, label: After photo, widget: image, choose_url: false, hint: "The finished car." }
-      - { name: after_alt, label: After photo description, widget: string, hint: "Describe the photo for people who cannot see it." }
-      - name: before
-        label: Add a before photo
-        widget: object
-        required: false
-        hint: "Optional. Tick to add a before photo and show a before and after slider."
+      - name: photos
+        label: Photos
+        widget: list
+        min: 1
+        hint: "Add as many photos of the job as you like. The first one is the cover."
+        summary: "{{fields.alt}}"
         fields:
-          - { name: image, label: Before photo, widget: image, choose_url: false, hint: "The car before the work." }
-          - { name: alt, label: Before photo description, widget: string, hint: "Describe the photo for people who cannot see it." }
+          - { name: image, label: Photo, widget: image, choose_url: false, hint: "A photo of the job." }
+          - { name: alt, label: Photo description, widget: string, hint: "Describe the photo for people who cannot see it." }
       - { name: completed_on, label: Finished on, widget: datetime, type: date, format: YYYY-MM-DD, required: false, hint: "Optional. Newer jobs show first." }
       - *order
 

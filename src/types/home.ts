@@ -24,6 +24,16 @@ export const homeSchema = z.strictObject({
     image_alt: textSchema,
     steps: z.array(stepSchema).min(1).max(4),
   }),
+  trust: z.strictObject({
+    stats: z
+      .array(z.strictObject({ value: textSchema, label: textSchema }))
+      .max(4)
+      .default([]),
+    warranty: z
+      .strictObject({ title: textSchema, text: textSchema.max(160) })
+      .nullish()
+      .transform((warranty) => warranty ?? undefined),
+  }),
   reviews: z.strictObject({ eyebrow: textSchema.optional(), title: textSchema }),
   partners: z.strictObject({ eyebrow: textSchema.optional() }),
   faq: z.strictObject({ eyebrow: textSchema.optional(), title: textSchema }),

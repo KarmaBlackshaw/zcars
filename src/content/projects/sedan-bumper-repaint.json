@@ -4,7 +4,11 @@
   "services": [
     "repaint"
   ],
-  "after": "/uploads/sedan-bumper.webp",
-  "after_alt": "White sedan with a freshly repainted front bumper",
+  "photos": [
+    {
+      "image": "/uploads/sedan-bumper.webp",
+      "alt": "White sedan with a freshly repainted front bumper"
+    }
+  ],
   "order": 4
 }

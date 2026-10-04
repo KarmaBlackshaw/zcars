@@ -106,8 +106,7 @@ export function loadContent(root: string): TContent {
   projects.forEach((project) => {
     const file = `projects/${project.slug}.json`;
 
-    checkImage(file, "after", project.after);
-    checkImage(file, "before.image", project.before?.image);
+    project.photos.forEach((photo, index) => checkImage(file, `photos[${index}].image`, photo.image));
 
     project.services.forEach((slug, index) => {
       if (!serviceSlugs.has(slug)) {

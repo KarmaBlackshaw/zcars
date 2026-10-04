@@ -5,11 +5,15 @@
     "body-repair",
     "repaint"
   ],
-  "after": "/uploads/wigo-after.webp",
-  "after_alt": "Grey Toyota Wigo front bumper corner, smooth and repainted after repair",
-  "before": {
-    "image": "/uploads/wigo-before.webp",
-    "alt": "Toyota Wigo front bumper corner with deep scratches and scuffs"
-  },
+  "photos": [
+    {
+      "image": "/uploads/wigo-after.webp",
+      "alt": "Grey Toyota Wigo front bumper corner, smooth and repainted after repair"
+    },
+    {
+      "image": "/uploads/wigo-before.webp",
+      "alt": "Before: Toyota Wigo front bumper corner with deep scratches and scuffs"
+    }
+  ],
   "order": 3
 }

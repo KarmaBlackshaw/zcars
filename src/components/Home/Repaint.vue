@@ -26,6 +26,7 @@ defineOptions({ name: "HomeRepaint" });
               <span class="mt-1 block text-small text-ghost">{{ step.text }}</span>
             </li>
           </ol>
+          <BaseButton href="#quote" class="self-start focus-visible:outline-sportyWhite">Get a quote</BaseButton>
         </div>
       </div>
     </BaseContainer>

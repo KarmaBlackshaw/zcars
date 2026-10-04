@@ -19,7 +19,7 @@ const rel = computed(() => (isExternal.value ? "noopener" : undefined));
 
 const variantClasses = {
   primary: "bg-accent text-white hover:bg-brilliantBlue focus-visible:outline-fg",
-  ghost: "border border-line hover:border-muted",
+  ghost: "border border-muted/70 hover:border-fg",
 };
 
 const sizeClasses = {

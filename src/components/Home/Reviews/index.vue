@@ -4,7 +4,6 @@ import { home, reviews } from "virtual:content";
 defineOptions({ name: "HomeReviews" });
 
 const VISIBLE_LIMIT = 6;
-const MIN_REVIEWS_FOR_AVERAGE = 3;
 const STAGGER_CAP = 3;
 
 const visibleReviews = reviews.slice(0, VISIBLE_LIMIT);
@@ -12,8 +11,10 @@ const count = reviews.length;
 const isScrollable = count >= 2;
 
 function getSummary() {
-  if (count >= MIN_REVIEWS_FOR_AVERAGE) {
-    return `${getAverageRating(reviews.map(({ rating }) => rating))} average from ${count} reviews`;
+  const averageRating = getAverageRating(reviews.map(({ rating }) => rating));
+
+  if (averageRating) {
+    return `${averageRating} average from ${count} reviews`;
   }
 
   return count === 1 ? "1 review" : `${count} reviews`;

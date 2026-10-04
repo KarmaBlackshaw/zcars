@@ -59,7 +59,6 @@ function requestQuote() {
       <h3 class="text-h3">{{ service.title }}</h3>
       <p class="line-clamp-2 text-small text-muted sm:line-clamp-none">{{ service.summary }}</p>
       <p v-if="priceLabel" class="font-semibold">{{ priceLabel }}</p>
-      <p v-else class="text-muted">Ask for a quote</p>
       <p v-if="service.price_note" class="text-micro text-muted">{{ service.price_note }}</p>
       <BaseButton variant="ghost" size="sm" :aria-label="quoteLabel" class="mt-auto self-start" @click="requestQuote">Get a quote</BaseButton>
     </div>

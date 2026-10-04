@@ -4,7 +4,11 @@
   "services": [
     "window-tint"
   ],
-  "after": "/uploads/hilux-white.webp",
-  "after_alt": "White Toyota Hilux with dark ceramic tint on the cab windows inside the Zcars garage",
+  "photos": [
+    {
+      "image": "/uploads/hilux-white.webp",
+      "alt": "White Toyota Hilux with dark ceramic tint on the cab windows inside the Zcars garage"
+    }
+  ],
   "order": 5
 }

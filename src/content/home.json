@@ -6,12 +6,35 @@
     "image": "/uploads/montero.webp",
     "image_alt": "Black Mitsubishi Montero Sport with a fresh, glossy detail outside the Zcars garage"
   },
+  "trust": {
+    "stats": [
+      {
+        "value": "10+",
+        "label": "years in business"
+      },
+      {
+        "value": "1,000+",
+        "label": "cars serviced"
+      },
+      {
+        "value": "8",
+        "label": "pro product brands"
+      }
+    ],
+    "warranty": {
+      "title": "Workmanship warranty",
+      "text": "Sample text, replace in admin: tell customers what you fix for free if something goes wrong."
+    }
+  },
   "services": {
     "title": "Everything your car needs",
     "lead": "From a dented bumper to a mirror finish. Bring it in once and drive out done."
   },
   "projects": {
     "title": "Recent work"
+  },
+  "reviews": {
+    "title": "What customers say"
   },
   "how": {
     "title": "How it works",
@@ -29,6 +52,10 @@
         "text": "Pick up your car when the work is finished."
       }
     ]
+  },
+  "quote": {
+    "title": "Get a quote",
+    "lead": "Tell us about your car and what it needs. We will call or message you back."
   },
   "repaint": {
     "eyebrow": "Repaint",
@@ -51,18 +78,11 @@
       }
     ]
   },
-  "reviews": {
-    "title": "What customers say"
-  },
   "partners": {
     "eyebrow": "Products we trust"
   },
   "faq": {
     "title": "Common questions"
-  },
-  "quote": {
-    "title": "Get a quote",
-    "lead": "Tell us about your car and what it needs. We will call or message you back."
   },
   "visit": {
     "eyebrow": "Visit the garage",

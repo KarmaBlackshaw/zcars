@@ -7,13 +7,10 @@ import logo from "@/assets/images/logo.webp";
 defineOptions({ name: "HomeHero" });
 
 const CHIP_LIMIT = 8;
-const MIN_REVIEWS_FOR_AVERAGE = 3;
 
 const chips = services.slice(0, CHIP_LIMIT).map((service) => ({ href: `#service-${service.slug}`, title: service.title }));
 
-const hasProof = reviews.length >= MIN_REVIEWS_FOR_AVERAGE;
-
-const averageRating = hasProof ? getAverageRating(reviews.map((review) => review.rating)) : 0;
+const averageRating = getAverageRating(reviews.map((review) => review.rating));
 </script>
 
 <template>
@@ -44,24 +41,16 @@ const averageRating = hasProof ? getAverageRating(reviews.map((review) => review
             </BaseButton>
             <BaseButton variant="ghost" href="#quote" class="col-span-2 desk:col-span-1">Get a quote</BaseButton>
           </div>
-          <p v-if="hasProof" v-motion="enter(0.3)" class="mt-4 flex items-center gap-1.5 text-small text-muted">
+          <p v-if="averageRating" v-motion="enter(0.3)" class="mt-4 flex items-center gap-1.5 text-small text-muted">
             <PhStar weight="fill" aria-hidden="true" class="text-accent-text" />
             {{ averageRating }} from {{ reviews.length }} reviews
           </p>
         </div>
-        <ul
-          v-if="chips.length"
-          role="list"
-          aria-label="Jump to a service"
-          v-motion="enter(0.36)"
-          class="-mx-4 mt-10 flex snap-x gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0"
-        >
-          <li v-for="chip in chips" :key="chip.href" class="shrink-0 snap-start">
-            <a
-              :href="chip.href"
-              class="inline-flex min-h-11 items-center whitespace-nowrap rounded-full border border-muted/60 px-4 text-small hover:border-fg"
-              >{{ chip.title }}</a
-            >
+        <ul v-if="chips.length" role="list" aria-label="Jump to a service" v-motion="enter(0.36)" class="mt-10 hidden flex-wrap gap-2 desk:flex">
+          <li v-for="chip in chips" :key="chip.href">
+            <a :href="chip.href" class="inline-flex min-h-11 items-center whitespace-nowrap rounded-full border border-muted px-4 text-small hover:border-fg">{{
+              chip.title
+            }}</a>
           </li>
         </ul>
       </div>

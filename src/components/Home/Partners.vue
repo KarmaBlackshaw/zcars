@@ -18,7 +18,7 @@ const copies = [
       <BaseEyebrow v-if="home.partners.eyebrow">{{ home.partners.eyebrow }}</BaseEyebrow>
       <p class="max-w-[60ch] text-small text-muted">{{ sentence }}</p>
     </BaseContainer>
-    <div class="group overflow-hidden bg-white py-5 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
+    <div class="group overflow-hidden bg-surface py-5 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
       <div
         class="flex w-max items-center group-hover:[animation-play-state:paused] motion-safe:animate-marquee motion-reduce:w-auto motion-reduce:flex-wrap motion-reduce:justify-center"
       >

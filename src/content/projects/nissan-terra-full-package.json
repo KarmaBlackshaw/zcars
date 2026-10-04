@@ -6,7 +6,11 @@
     "window-tint",
     "interior-detailing"
   ],
-  "after": "/uploads/terra.webp",
-  "after_alt": "Grey Nissan Terra, front view, freshly ceramic coated and tinted at the Zcars garage",
+  "photos": [
+    {
+      "image": "/uploads/terra.webp",
+      "alt": "Grey Nissan Terra, front view, freshly ceramic coated and tinted at the Zcars garage"
+    }
+  ],
   "order": 7
 }

@@ -8,5 +8,18 @@
   "address": "Sagkahan, Tacloban City, Leyte, Philippines",
   "locality": "Sagkahan, Tacloban City",
   "map_query": "Zcars Auto Detailing Garage, Sagkahan, Tacloban City",
-  "hours": []
+  "hours": [
+    {
+      "days": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat"
+      ],
+      "opens": "08:00",
+      "closes": "17:00"
+    }
+  ]
 }

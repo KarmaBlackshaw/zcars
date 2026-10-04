@@ -4,7 +4,11 @@
   "services": [
     "repaint"
   ],
-  "after": "/uploads/repaint.webp",
-  "after_alt": "White Subaru mid-repaint with primer on the front fender",
+  "photos": [
+    {
+      "image": "/uploads/repaint.webp",
+      "alt": "White Subaru mid-repaint with primer on the front fender"
+    }
+  ],
   "order": 9
 }

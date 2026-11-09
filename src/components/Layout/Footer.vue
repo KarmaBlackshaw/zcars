@@ -11,7 +11,7 @@ const linkClass = "inline-flex min-h-11 items-center gap-[.4rem] transition-colo
 </script>
 
 <template>
-  <footer class="border-t border-line pb-[calc(5rem+env(safe-area-inset-bottom))] pt-12 text-small text-muted desk:pb-10">
+  <footer class="overflow-hidden border-t border-line pb-[calc(5rem+env(safe-area-inset-bottom))] pt-12 text-small text-muted desk:pb-0">
     <BaseContainer>
       <div class="grid gap-8 desk:grid-cols-3">
         <div class="flex items-start gap-3">
@@ -45,6 +45,11 @@ const linkClass = "inline-flex min-h-11 items-center gap-[.4rem] transition-colo
       </div>
       <p class="mt-10 border-t border-line pt-6">
         &copy; <span data-allow-mismatch="text">{{ year }}</span> {{ site.name }}
+      </p>
+      <p
+        class="mt-6 translate-y-[18%] select-none text-[clamp(4.5rem,17vw,15rem)] font-extrabold leading-[.8] tracking-[-0.04em] text-line [font-stretch:125%]"
+      >
+        Zcars
       </p>
     </BaseContainer>
   </footer>

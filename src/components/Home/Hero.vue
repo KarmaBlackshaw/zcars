@@ -7,13 +7,23 @@ defineOptions({ name: "HomeHero" });
 const quoteDrawer = useQuoteDrawer();
 const { activePromos } = usePromos();
 
-const showcase = projects.find((project) => project.before_photo != null) ?? projects[0];
+const pairs = projects.filter((project) => project.before_photo != null);
+const hasMultiplePairs = pairs.length > 1;
+const pairThumbnails = pairs.map(({ photos, title }) => ({ src: photos[0], alt: title }));
+const sliderHeightClass = hasMultiplePairs ? "desk:max-h-[calc(100dvh-theme(spacing.nav)-10rem)]" : "desk:max-h-[calc(100dvh-theme(spacing.nav)-5rem)]";
+const selectedPair = ref(0);
 
-const showcaseServices = services
-  .filter((service) => showcase?.services.includes(service.slug))
-  .map((service) => service.title)
-  .join(", ");
-const showcaseCaption = showcaseServices ? `${showcase?.vehicle} · ${showcaseServices}` : showcase?.vehicle;
+const showcase = computed(() => pairs[selectedPair.value] ?? projects[0]);
+
+const showcaseCaption = computed(() => {
+  const showcaseServices = services
+    .filter((service) => showcase.value?.services.includes(service.slug))
+    .map((service) => service.title)
+    .join(", ");
+
+  return showcaseServices ? `${showcase.value?.vehicle} · ${showcaseServices}` : showcase.value?.vehicle;
+});
+
 const averageRating = getAverageRating(reviews.map((review) => review.rating));
 
 const promo = computed(() => activePromos.value[0]);
@@ -46,7 +56,8 @@ function openQuote() {
           :before="showcase.before_photo"
           :after="showcase.photos[0]"
           :alt="showcase.title"
-          class="aspect-[4/3] rounded-card bg-surface desk:aspect-[4/5] desk:max-h-[calc(100dvh-theme(spacing.nav)-5rem)] desk:w-full"
+          class="aspect-[4/3] rounded-card bg-surface desk:aspect-[4/5] desk:w-full"
+          :class="sliderHeightClass"
         />
         <img
           v-else
@@ -59,6 +70,7 @@ function openQuote() {
           <span>{{ showcaseCaption }}</span>
           <span v-if="showcase.before_photo" class="shrink-0">Drag to compare</span>
         </figcaption>
+        <BaseThumbnails v-if="hasMultiplePairs" v-model="selectedPair" :items="pairThumbnails" class="mt-3" />
       </figure>
       <div v-motion="enter(0.06)" class="desk:col-span-6 desk:row-start-2 desk:self-start">
         <p class="max-w-[46ch] text-lead text-muted">{{ home.hero_lead }}</p>

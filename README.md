@@ -46,7 +46,7 @@ All content lives in the Supabase project `zcars` (`tmggonbqvkolagmzwtpe`). The 
 | `stats`, `hiring_roles`          | Hero proof numbers; open roles (no rows hides "We're hiring")                        |
 | `quotes`                         | Quote requests from the site. Photos are in the `quote-photos` bucket (`photo_path`) |
 
-- The hero before/after slider shows the newest project with a `before_photo`.
+- The hero before/after slider shows the newest project with a `before_photo`. With two or more such projects, a thumbnail strip under it switches between them.
 - A bad edit fails the build and the live site keeps the last good version. The build log names the table and the row.
 - Do not rename a service `slug` that a project lists in `services`; the build fails until the project is updated.
 - Rows are validated by zod at build time (`plugins/content.ts`); locally, restart `npm run dev` to see Supabase edits.

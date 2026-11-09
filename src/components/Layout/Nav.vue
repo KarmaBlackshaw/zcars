@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PhPhone } from "@phosphor-icons/vue";
+import { PhMessengerLogo, PhPhone } from "@phosphor-icons/vue";
 import { site } from "virtual:content";
 import logo from "@/assets/images/logo.webp";
 
@@ -25,10 +25,13 @@ const callLabel = `Call ${site.phone_display}`;
         </ul>
       </nav>
       <div class="flex items-center gap-2">
-        <BaseButton size="sm" href="#quote">Get a quote</BaseButton>
         <BaseButton variant="ghost" size="icon" :href="site.tel_href" :aria-label="callLabel" class="text-small min-[1100px]:w-auto min-[1100px]:px-4">
           <PhPhone aria-hidden="true" class="shrink-0" />
           <span class="hidden min-[1100px]:inline">Call {{ site.phone_display }}</span>
+        </BaseButton>
+        <BaseButton size="sm" :href="site.messenger_url" class="hidden desk:inline-flex">
+          <PhMessengerLogo class="shrink-0" />
+          Message us
         </BaseButton>
       </div>
     </BaseContainer>

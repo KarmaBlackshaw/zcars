@@ -30,13 +30,13 @@ const listAttrs = isScrollable ? { role: "region", "aria-label": "Customer revie
 </script>
 
 <template>
-  <section v-if="count" id="reviews" aria-labelledby="reviews-title" class="scroll-mt-nav py-24 desk:py-32">
+  <section v-if="count" id="reviews" aria-labelledby="reviews-title" class="scroll-mt-nav py-16 desk:py-24">
     <BaseContainer>
-      <BaseSectionHeading id="reviews-title" :title="home.reviews.title" :eyebrow="home.reviews.eyebrow">
+      <BaseSectionHeading id="reviews-title" :title="home.reviews_title">
         <p class="mt-3 text-muted">{{ summary }}</p>
       </BaseSectionHeading>
       <div v-bind="listAttrs" :class="listClasses">
-        <div v-for="(review, index) in visibleReviews" :key="review.slug" v-motion="stagger(index, STAGGER_CAP)" :class="itemClasses">
+        <div v-for="(review, index) in visibleReviews" :key="review.id" v-motion="stagger(index, STAGGER_CAP)" :class="itemClasses">
           <HomeReviewsCard :review="review" />
         </div>
       </div>

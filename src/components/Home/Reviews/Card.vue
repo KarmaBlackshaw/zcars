@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { TEntry, TReview, TReviewSource } from "@/types";
+import type { TReview, TReviewSource } from "@/types";
 
 defineOptions({ name: "HomeReviewsCard" });
 
-const { review } = defineProps<{ review: TEntry<TReview> }>();
+const { review } = defineProps<{ review: TReview }>();
 
 const sourceLabels: Record<TReviewSource, string> = { facebook: "on Facebook", google: "on Google", "in-person": "in person" };
 

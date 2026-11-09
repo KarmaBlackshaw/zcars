@@ -4,23 +4,20 @@ defineOptions({ name: "IndexPage" });
 
 <template>
   <a href="#main" class="sr-only z-30 rounded-full bg-bg px-4 py-2 focus:not-sr-only focus:fixed focus:left-4 focus:top-4"> Skip to content </a>
-  <LayoutPromoStrip />
   <LayoutNav />
   <main id="main" tabindex="-1" class="focus:outline-none">
     <HomeHero />
-    <HomeTrust />
-    <HomePromos />
+    <HomePartners />
     <HomeServices />
     <HomeProjects />
     <HomeReviews />
-    <HomeHow />
-    <HomeQuote />
-    <HomeRepaint />
-    <HomePartners />
+    <HomePromos />
     <HomeFaq />
-    <HomeVisit />
+    <HomeContact />
     <HomeTeam />
   </main>
   <LayoutFooter />
   <LayoutActionBar />
+  <LayoutQuoteTab />
+  <HomeQuoteDrawer />
 </template>

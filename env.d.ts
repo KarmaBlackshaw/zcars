@@ -1,5 +1,11 @@
 /// <reference types="vite/client" />
 
+interface ImportMetaEnv {
+  readonly VITE_SITE_URL: string;
+  readonly VITE_SUPABASE_URL: string;
+  readonly VITE_SUPABASE_PUBLISHABLE_KEY: string;
+}
+
 declare module "virtual:content" {
   import type { TContent } from "@/types/content";
 
@@ -13,4 +19,6 @@ declare module "virtual:content" {
   export const reviews: TContent["reviews"];
   export const faqs: TContent["faqs"];
   export const partners: TContent["partners"];
+  export const stats: TContent["stats"];
+  export const hiringRoles: TContent["hiringRoles"];
 }

@@ -5,7 +5,6 @@ defineOptions({ name: "HomePromos" });
 
 const STAGGER_CAP = 3;
 
-const copy = home.promos;
 const { activePromos } = usePromos();
 
 const featured = computed(() => activePromos.value[0]);
@@ -17,9 +16,9 @@ function revealAt(index: number) {
 </script>
 
 <template>
-  <section v-if="featured" id="promos" aria-labelledby="promos-title" class="scroll-mt-nav py-24 desk:py-32">
+  <section v-if="featured" id="promos" aria-labelledby="promos-title" class="scroll-mt-nav py-16 desk:py-24">
     <BaseContainer>
-      <BaseSectionHeading id="promos-title" v-motion="reveal()" :title="copy.title" :lead="copy.lead" />
+      <BaseSectionHeading id="promos-title" v-motion="reveal()" :title="home.promos_title" :lead="home.promos_lead" />
       <div v-motion="revealFade(0)" class="mt-12">
         <HomePromosCard :promo="featured" is-featured />
       </div>

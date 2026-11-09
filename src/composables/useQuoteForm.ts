@@ -1,3 +1,4 @@
+import { createQuote, uploadQuotePhoto } from "@/services/quote";
 import type { TQuoteErrors, TQuoteField, TQuoteStatus } from "@/types";
 
 const MAX_PHOTO_BYTES = 7 * 1024 * 1024;
@@ -21,6 +22,12 @@ function getFieldError(form: HTMLFormElement, field: TQuoteField) {
       return file != null && file.size > MAX_PHOTO_BYTES ? "That photo is over 7 MB. Choose a smaller one." : undefined;
     }
   }
+}
+
+function readText(data: FormData, key: string) {
+  const value = data.get(key);
+
+  return typeof value === "string" ? value.trim() : "";
 }
 
 export function useQuoteForm() {
@@ -59,12 +66,36 @@ export function useQuoteForm() {
       return;
     }
 
+    const data = new FormData(form);
+    const isBot = readText(data, "company") !== "";
+
+    if (isBot) {
+      status.value = "success";
+
+      return;
+    }
+
     status.value = "submitting";
 
     try {
-      const response = await fetch("/", { method: "POST", body: new FormData(form) });
+      const photo = data.get("photo");
+      let photoPath: string | undefined;
 
-      status.value = response.ok ? "success" : "error";
+      if (photo instanceof File && photo.size > 0) {
+        photoPath = `${crypto.randomUUID()}.${photo.type.split("/")[1] || "jpg"}`;
+        await uploadQuotePhoto(photoPath, photo);
+      }
+
+      await createQuote({
+        name: readText(data, "name"),
+        phone: readText(data, "phone"),
+        vehicle: readText(data, "vehicle"),
+        service: readText(data, "service") || undefined,
+        message: readText(data, "message") || undefined,
+        photo_path: photoPath,
+      });
+
+      status.value = "success";
     } catch (error) {
       console.error(error);
       status.value = "error";

@@ -1,11 +1,11 @@
 import { z } from "zod";
 
-import { textSchema } from "./content";
-import { imagePathSchema } from "./image";
+import { httpsUrlSchema, slugSchema, textSchema } from "./content";
 
-export const partnerSchema = z.strictObject({
+export const partnerSchema = z.object({
+  slug: slugSchema,
   name: textSchema,
-  logo: imagePathSchema,
+  logo: httpsUrlSchema,
 });
 
 export type TPartner = z.infer<typeof partnerSchema>;

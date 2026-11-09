@@ -15,7 +15,7 @@ const jsonLd = (data: object) => `<script type="application/ld+json">${JSON.stri
 
 const renderHead = ({ site, seo, faqs }: TContent) => {
   const url = `${SITE_URL}/`;
-  const image = `${SITE_URL}${seo.og_image}`;
+  const image = seo.og_image;
 
   const shop = {
     "@context": "https://schema.org",
@@ -49,6 +49,7 @@ const renderHead = ({ site, seo, faqs }: TContent) => {
 
   return [
     `<title>${escapeHtml(seo.title)}</title>`,
+    `<link rel="preconnect" href="${new URL(image).origin}" />`,
     meta("name", "description", seo.description),
     meta("property", "og:title", seo.og_title),
     meta("property", "og:description", seo.og_description),
@@ -63,21 +64,21 @@ const renderHead = ({ site, seo, faqs }: TContent) => {
 };
 
 export default function head(): Plugin {
-  let root = process.cwd();
+  let env: unknown;
 
   return {
     name: "zcars-head",
     configResolved(config) {
-      root = config.root;
+      env = config.env;
     },
     transformIndexHtml: {
       order: "pre",
-      handler(html) {
+      async handler(html) {
         if (!html.includes(PLACEHOLDER)) {
           throw new Error(`[zcars] index.html is missing the ${PLACEHOLDER} placeholder, so the page head cannot be generated.`);
         }
 
-        const content = loadContent(root);
+        const content = await loadContent(env);
         const tags = renderHead(content);
 
         return html.replace(PLACEHOLDER, () => tags);

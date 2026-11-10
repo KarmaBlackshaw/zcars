@@ -30,9 +30,6 @@ const escapeHtml = (value: string) =>
 
 const meta = (attribute: "name" | "property", key: string, value: string) => `<meta ${attribute}="${key}" content="${escapeHtml(value)}" />`;
 
-const preloadImage = ({ href, srcset, sizes }: { href?: string; srcset?: string; sizes?: string }) =>
-  `<link rel="preload" as="image"${href == null ? "" : ` href="${escapeHtml(href)}"`}${srcset == null ? "" : ` imagesrcset="${escapeHtml(srcset)}"`}${sizes == null ? "" : ` imagesizes="${escapeHtml(sizes)}"`} fetchpriority="high" />`;
-
 const jsonLd = (data: object) => `<script type="application/ld+json">${JSON.stringify(data).replace(/</g, "\\u003c")}</script>`;
 
 const renderTags = ({ title, description, url, image, preload, ogTitle, ogDescription, structuredData }: THeadTags) =>
@@ -40,7 +37,6 @@ const renderTags = ({ title, description, url, image, preload, ogTitle, ogDescri
     HEAD_START,
     `<title>${escapeHtml(title)}</title>`,
     `<link rel="canonical" href="${escapeHtml(url)}" />`,
-    `<link rel="preconnect" href="${new URL(image).origin}" />`,
     ...(preload == null ? [] : [preload]),
     meta("name", "description", description),
     meta("property", "og:title", ogTitle),
@@ -94,9 +90,18 @@ const getBusiness = ({ site, seo, projects }: TContent, siteUrl: string) => ({
       : undefined,
 });
 
+const preloadHeroImage = (images: TContent["images"], src?: string) => {
+  const image = src == null ? undefined : images[src];
+
+  return image == null
+    ? undefined
+    : `<link rel="preload" as="image" href="${escapeHtml(image.src)}" imagesrcset="${escapeHtml(image.srcset)}" imagesizes="${escapeHtml(HERO_PHOTO.sizes)}" fetchpriority="high" />`;
+};
+
 const renderHomeHead = (content: TContent) => {
-  const { site, seo, faqs, services } = content;
+  const { site, seo, faqs, services, projects, images } = content;
   const url = `${SITE_URL}/`;
+  const heroProject = projects.find(({ slug }) => slug === HERO_PHOTO.slug);
 
   const business = {
     ...getBusiness(content, SITE_URL),
@@ -117,7 +122,7 @@ const renderHomeHead = (content: TContent) => {
     description: seo.description,
     url,
     image: seo.og_image,
-    preload: preloadImage({ href: HERO_PHOTO.src, srcset: HERO_PHOTO.srcset, sizes: HERO_PHOTO.sizes }),
+    preload: preloadHeroImage(images, heroProject?.photos[0]),
     ogTitle: seo.og_title,
     ogDescription: seo.og_description,
     structuredData: [{ "@context": "https://schema.org", "@graph": [business, website] }, ...(faqs.length > 0 ? [getFaqPage(faqs)] : [])],
@@ -160,7 +165,7 @@ const renderServiceHead = (content: TContent, service: TService, siteUrl: string
     description,
     url,
     image: src ?? seo.og_image,
-    preload: src == null ? undefined : preloadImage({ href: src }),
+    preload: preloadHeroImage(content.images, src),
     ogTitle: title,
     ogDescription: description,
     structuredData: [{ "@context": "https://schema.org", "@graph": [serviceNode, breadcrumb] }, ...(service.faqs.length > 0 ? [getFaqPage(service.faqs)] : [])],

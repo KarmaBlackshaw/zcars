@@ -65,7 +65,7 @@ All content lives in the Supabase project `zcars` (`tmggonbqvkolagmzwtpe`). The 
 
 ### Images
 
-Upload to the public `uploads` Storage bucket (webp, max 2048px), copy its public URL, paste it into the row. The logo lives at `public/logo.webp` (served at `/logo.webp`; the nav, footer and business structured data use it). `public/favicon.png` stays in code. The home hero photo is a local copy of the Terra photo in `public/images/hero/` (`terra-800.webp` and `terra-1200.webp`), chosen in `src/constants/hero.ts`; to change it, replace both files and the constant. `site.tagline` is the giant wordmark in the footer, the first word of `site.name` is the header wordmark, and each service's `icon` picks its icon in the service strip.
+Upload to the public `uploads` Storage bucket (webp, max 2048px), copy its public URL, paste it into the row. The build downloads every project, service and team photo and serves WebP copies at 480, 800, 1200 and 1600px wide (never wider than the upload) from `/images/content/`, so each page picks the size it needs. Widths and quality are set in `plugins/images.ts`; a photo URL that does not load fails the build. The logo lives at `public/logo.webp` (served at `/logo.webp`; the nav, footer and business structured data use it). `public/favicon.png` stays in code. The home hero photo is the first photo of the project whose slug is in `src/constants/hero.ts`. `site.tagline` is the giant wordmark in the footer, the first word of `site.name` is the header wordmark, and each service's `icon` picks its icon in the service strip.
 
 ### One-time setup (owner)
 

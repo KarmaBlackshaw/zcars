@@ -15,6 +15,7 @@ import { serviceSchema } from "../src/types/service";
 import { siteSchema } from "../src/types/site";
 import { statSchema } from "../src/types/stat";
 import { getTodayInManila } from "../src/utils/date";
+import { resizeImages } from "./images";
 
 const VIRTUAL_ID = "virtual:content";
 const RESOLVED_ID = `\0${VIRTUAL_ID}`;
@@ -163,7 +164,9 @@ async function fetchContent(env: unknown): Promise<TContent> {
     throw new Error(`[zcars] Content is invalid. Fix these rows in the Supabase Table Editor and save again:\n\n${problems.join("\n\n")}`);
   }
 
-  return { ...content, site, home, seo };
+  const photos = new Set([...projects.flatMap(({ gallery }) => gallery), ...services.flatMap(({ photo }) => (photo == null ? [] : [photo])), home.team_image]);
+
+  return { ...content, site, home, seo, images: await resizeImages([...photos]) };
 }
 
 export default function content(): Plugin {

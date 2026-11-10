@@ -13,6 +13,20 @@ export const useOpenNow = createSharedComposable(() => {
     today.value = next.day;
   }
 
+  const label = computed(() => {
+    const current = status.value;
+
+    if (current == null) {
+      return "";
+    }
+
+    if (current.isOpen) {
+      return `Open until ${current.closesAt}`;
+    }
+
+    return current.opensNext ? `Closed, opens ${current.opensNext.day} ${current.opensNext.time}` : "Closed";
+  });
+
   const interval = useIntervalFn(refresh, 60_000, { immediate: false });
 
   onMounted(() => {
@@ -22,5 +36,5 @@ export const useOpenNow = createSharedComposable(() => {
     }
   });
 
-  return { status: readonly(status), today: readonly(today) };
+  return { status: readonly(status), today: readonly(today), label };
 });

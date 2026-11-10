@@ -50,7 +50,7 @@ function onClick(event: MouseEvent) {
 <template>
   <dialog
     ref="dialogEl"
-    class="left-auto right-0 m-0 h-dvh max-h-none w-full max-w-md overscroll-contain bg-bg p-0 text-fg shadow-2xl backdrop:bg-inkBlack/60 motion-safe:open:animate-drawer-in"
+    class="left-auto right-0 m-0 h-dvh max-h-none w-full max-w-md overscroll-contain bg-bg p-0 text-fg shadow-2xl backdrop:bg-fg/60 motion-safe:open:animate-drawer-in"
     @close="onClose"
     @pointerdown="onPointerdown"
     @click="onClick"
@@ -58,7 +58,7 @@ function onClick(event: MouseEvent) {
     <div class="flex h-full flex-col">
       <div class="flex items-center justify-between gap-4 border-b border-line px-5 py-3">
         <h2 class="text-h3">{{ title }}</h2>
-        <button type="button" class="grid size-11 shrink-0 place-items-center rounded-full border border-line hover:border-muted" @click="close">
+        <button type="button" class="grid size-11 shrink-0 place-items-center rounded border border-line hover:border-muted" @click="close">
           <PhX :size="20" />
         </button>
       </div>

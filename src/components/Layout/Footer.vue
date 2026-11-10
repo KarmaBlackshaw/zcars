@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { PhFacebookLogo, PhMessengerLogo, PhPhone } from "@phosphor-icons/vue";
 import { site } from "virtual:content";
-import logo from "@/assets/images/logo.webp";
+
+import { LOGO_PATH } from "@/constants/brand";
 
 defineOptions({ name: "LayoutFooter" });
 
 const links = useNavLinks();
 const year = new Date().getFullYear();
-const linkClass = "inline-flex min-h-11 items-center gap-[.4rem] transition-colors hover:text-fg";
+const linkClass = "inline-flex min-h-11 items-center transition-colors hover:text-fg";
 </script>
 
 <template>
@@ -15,24 +15,24 @@ const linkClass = "inline-flex min-h-11 items-center gap-[.4rem] transition-colo
     <BaseContainer>
       <div class="grid gap-8 desk:grid-cols-3">
         <div class="flex items-start gap-3">
-          <img :src="logo" alt="" width="40" height="40" class="size-10 rounded-full" />
+          <img :src="LOGO_PATH" alt="" width="40" height="40" class="size-10 mix-blend-multiply" />
           <div class="leading-tight">
             <strong class="block font-semibold text-fg">{{ site.name }}</strong>
             {{ site.tagline }}
-            <address class="mt-2 not-italic">{{ site.address }}</address>
+            <address class="mt-2 not-italic">
+              <BaseExternalLink :href="site.map_directions_url" :class="linkClass">{{ site.address }}</BaseExternalLink>
+            </address>
           </div>
         </div>
         <ul role="list">
           <li>
-            <a :href="site.tel_href" :class="linkClass"> <PhPhone aria-hidden="true" class="shrink-0" />Call {{ site.phone_display }} </a>
+            <a :href="site.tel_href" :class="linkClass">Call {{ site.phone_display }}</a>
           </li>
           <li>
-            <BaseExternalLink :href="site.messenger_url" :class="linkClass">
-              <PhMessengerLogo aria-hidden="true" class="shrink-0" />Message us
-            </BaseExternalLink>
+            <BaseExternalLink :href="site.messenger_url" :class="linkClass">Messenger</BaseExternalLink>
           </li>
           <li>
-            <BaseExternalLink :href="site.facebook_url" :class="linkClass"> <PhFacebookLogo aria-hidden="true" class="shrink-0" />Facebook </BaseExternalLink>
+            <BaseExternalLink :href="site.facebook_url" :class="linkClass">Facebook</BaseExternalLink>
           </li>
         </ul>
         <nav aria-label="Footer">
@@ -47,7 +47,7 @@ const linkClass = "inline-flex min-h-11 items-center gap-[.4rem] transition-colo
         &copy; <span data-allow-mismatch="text">{{ year }}</span> {{ site.name }}
       </p>
       <p
-        class="mt-6 translate-y-[18%] select-none text-[clamp(4.5rem,17vw,15rem)] font-extrabold leading-[.8] tracking-[-0.04em] text-line [font-stretch:125%]"
+        class="mt-6 translate-y-[18%] select-none font-display text-[clamp(4rem,12vw,12rem)] font-extrabold leading-[.8] tracking-[-0.04em] text-line [font-stretch:150%]"
       >
         Zcars
       </p>

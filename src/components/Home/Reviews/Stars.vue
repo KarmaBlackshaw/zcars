@@ -13,7 +13,7 @@ function starWeight(index: number): "fill" | "regular" {
 }
 
 function starClass(index: number) {
-  return index < rating ? "text-accent-text" : "text-muted";
+  return index < rating ? "text-fg" : "text-muted";
 }
 </script>
 

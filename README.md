@@ -37,30 +37,34 @@ npm run dev                   # http://localhost:5173
 
 All content lives in the Supabase project `zcars` (`tmggonbqvkolagmzwtpe`). The owner edits rows in the Table Editor. Each save triggers a Netlify rebuild, live in about 1 to 2 minutes.
 
-| Table                            | What it holds                                                                        |
-| -------------------------------- | ------------------------------------------------------------------------------------ |
-| `site`, `opening_hours`, `seo`   | Name, phone, Messenger/Facebook links, address, hours, page title and link preview   |
-| `home`                           | Page copy: headline, section titles and leads, contact text, warranty, team blurb    |
-| `services`, `projects`, `promos` | Service cards, recent work, promos (`ends_on` hides a promo after that date)         |
-| `reviews`, `faqs`, `partners`    | Reviews, questions, brand logos                                                      |
-| `stats`, `hiring_roles`          | Hero proof numbers; open roles (no rows hides "We're hiring")                        |
-| `quotes`                         | Quote requests from the site. Photos are in the `quote-photos` bucket (`photo_path`) |
+| Table                            | What it holds                                                                                                          |
+| -------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `site`, `opening_hours`, `seo`   | Name, phone, Messenger/Facebook links, address, hours, page title and link preview                                     |
+| `home`                           | Page copy: headline, section titles and leads, contact text, team blurb                                                |
+| `services`, `projects`, `promos` | Service cards, recent work, promos (`ends_on` hides a promo after that date)                                           |
+| `reviews`, `faqs`, `partners`    | Reviews (shown only when the row has a `source_url`), questions, product brand names (shown as one sentence, no logos) |
+| `stats`, `hiring_roles`          | `stats` is no longer shown; open roles (no rows hides the roles block)                                                 |
+| `quotes`                         | Quote requests from the site. Photos are in the `quote-photos` bucket (`photo_path`)                                   |
 
 - The hero before/after slider shows the newest project with a `before_photo`. With two or more such projects, a thumbnail strip under it switches between them.
+- A service page's hero picture is the newest project tagged with that service: its before/after compare panel when it has a `before_photo`, otherwise its first photo. With no tagged project it uses the service's own `photo`. The hero project is not repeated in that page's work grid.
 - A bad edit fails the build and the live site keeps the last good version. The build log names the table and the row.
 - Do not rename a service `slug` that a project lists in `services`; the build fails until the project is updated.
 - Rows are validated by zod at build time (`plugins/content.ts`); locally, restart `npm run dev` to see Supabase edits.
+- Partners show as one sentence (e.g. "Products we trust: a, b and c"), in order of `name`, which is alphabetical today.
+- The `stats` table and the `home.warranty_*` fields are not shown on the page.
+- Reviews show only when the row has a `source_url`. Delete the "Sample customer" rows, then add real reviews with their links.
 
 ### Search (SEO)
 
 - Each service gets its own page at `/services/<slug>`, titled "<Service> in <city> | <site name>". Its text comes from the `services` row: `page_description` (Google snippet, max 160 characters), `intro`, `includes` (bullet list) and `faqs` (a JSON list of `{"question", "answer"}`). Empty fields fall back to the `summary` or hide their section.
-- `home.hero_heading` is the page's main heading for Google. It shows as the small line above the big slogan, so keep a service and the city in it.
+- `home.hero_heading` is the page's main heading for Google and the big headline on the page, so keep a service and the city in it. `home.hero_title` and `home.hero_title_accent` form the one-line closing message at the bottom of the page.
 - `site.city`, `region`, `postal_code`, `latitude`, `longitude` and `google_maps_url` feed the business details Google reads. Copy the pin from the shop's Google Maps listing.
 - The build writes `sitemap.xml` and `robots.txt`. Submit `https://<domain>/sitemap.xml` once in Google Search Console.
 
 ### Images
 
-Upload to the public `uploads` Storage bucket (webp, max 2048px), copy its public URL, paste it into the row. `src/assets/images/logo.webp` and `public/favicon.png` stay in code: replace the file and update `width`/`height` where the component lists them.
+Upload to the public `uploads` Storage bucket (webp, max 2048px), copy its public URL, paste it into the row. The logo lives at `public/logo.webp` (served at `/logo.webp`; the nav, footer and business structured data use it). `public/favicon.png` and `src/assets/images/polish.webp` (the services section photo) stay in code: replace the file and update `width`/`height` where the component lists them.
 
 ### One-time setup (owner)
 

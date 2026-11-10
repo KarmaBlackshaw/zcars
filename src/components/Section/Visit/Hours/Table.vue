@@ -3,7 +3,7 @@ import { site } from "virtual:content";
 
 import type { TWeekday } from "@/types";
 
-defineOptions({ name: "HomeHoursTable" });
+defineOptions({ name: "SectionVisitHoursTable" });
 
 const openNow = useOpenNow();
 
@@ -19,10 +19,10 @@ const rowAttrs = (day: TWeekday): { "aria-current"?: "date" } => (day === openNo
         Opening hours
       </caption>
       <tbody class="divide-y divide-line">
-        <tr v-for="row in schedule" :key="row.day" v-bind="rowAttrs(row.day)" :class="{ 'bg-surface font-semibold': row.day === openNow.today.value }">
+        <tr v-for="row in schedule" :key="row.day" v-bind="rowAttrs(row.day)" :class="{ 'font-semibold': row.day === openNow.today.value }">
           <th scope="row" class="h-11 px-3 py-3 text-left font-[inherit]">
             {{ WEEKDAY_NAMES[row.day] }}
-            <span v-if="row.day === openNow.today.value" class="ml-2 text-micro uppercase tracking-eyebrow text-accent-text">Today</span>
+            <span v-if="row.day === openNow.today.value" class="ml-2 text-micro text-muted">Today</span>
           </th>
           <td class="px-3 py-3" :class="{ 'text-muted': row.label === 'Closed' }">{{ row.label }}</td>
         </tr>

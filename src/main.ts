@@ -1,4 +1,5 @@
-import "@fontsource-variable/archivo/wdth.css";
+import "@fontsource-variable/archivo";
+import "@fontsource-variable/anybody/wdth.css";
 import "@/assets/style.scss";
 import { MotionPlugin } from "motion-v";
 import { ViteSSG } from "vite-ssg";

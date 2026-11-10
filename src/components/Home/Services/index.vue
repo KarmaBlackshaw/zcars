@@ -1,32 +1,28 @@
 <script setup lang="ts">
 import { home, services } from "virtual:content";
 
+import polish from "@/assets/images/polish.webp";
+import { sectionClasses } from "@/constants/section";
+
 defineOptions({ name: "HomeServices" });
-
-const STAGGER_CAP = 3;
-
-const deskColumnClasses: Record<number, string> = {
-  1: "desk:grid-cols-1",
-  2: "desk:grid-cols-2",
-  3: "desk:grid-cols-3",
-};
-
-const deskColumns = deskColumnClasses[services.length] ?? "desk:grid-cols-4";
-
-function revealAt(index: number) {
-  return revealFade(Math.min(index, STAGGER_CAP) * 0.09);
-}
 </script>
 
 <template>
-  <section v-if="services.length" id="services" aria-labelledby="services-title" class="scroll-mt-nav py-16 desk:py-24">
+  <section v-if="services.length" id="services" :class="sectionClasses">
     <BaseContainer>
-      <BaseSectionHeading id="services-title" v-motion="reveal()" :title="home.services_title" :lead="home.services_lead" />
-      <ul role="list" :class="['mt-10 grid gap-4 sm:grid-cols-2', deskColumns]">
-        <li v-for="(service, index) in services" :key="service.slug" v-motion="revealAt(index)">
-          <HomeServicesCard :service="service" />
-        </li>
-      </ul>
+      <div v-motion="revealFade()">
+        <BaseSectionHeading :title="home.services_title" :lead="home.services_lead" />
+      </div>
+      <div class="mt-12 grid gap-10 desk:mt-14 desk:grid-cols-12 desk:gap-x-8">
+        <ul class="border-t border-line desk:col-span-7">
+          <li v-for="(service, index) in services" :key="service.slug" v-motion="stagger(index)">
+            <ServiceRow :service="service" />
+          </li>
+        </ul>
+        <div v-motion="revealFade(0.12)" class="max-desk:max-w-photo desk:col-span-5">
+          <img :src="polish" alt="Machine polishing on red paint" loading="lazy" class="aspect-[4/5] w-full rounded-none bg-surface object-cover" />
+        </div>
+      </div>
     </BaseContainer>
   </section>
 </template>

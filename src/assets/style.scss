@@ -4,13 +4,23 @@
 
 @layer base {
   :root {
-    --bg: 244 246 249;
-    --surface: 255 255 255;
-    --line: 221 226 234;
-    --fg: 15 20 28;
-    --muted: 74 84 102;
-    --accent: 37 99 235;
-    --accent-text: 29 78 216;
+    --boneChina: 242 242 239;
+    --platinum: 228 229 225;
+    --softGrey: 210 212 208;
+    --frostedBlack: 14 21 33;
+    --midGray: 90 98 112;
+    --earthBlue: 42 116 189;
+    --blueZodiac: 18 39 70;
+    --botticelli: 199 218 230;
+    --bg: var(--boneChina);
+    --surface: var(--platinum);
+    --line: var(--softGrey);
+    --fg: var(--frostedBlack);
+    --muted: var(--midGray);
+    --accent: var(--earthBlue);
+    --accent-text: var(--earthBlue);
+    --brand: var(--blueZodiac);
+    --brand-highlight: var(--botticelli);
     --danger: 185 28 28;
     --success: 21 128 61;
     color-scheme: light;
@@ -29,22 +39,16 @@
     overflow: hidden;
   }
 
-  h1,
-  h2,
-  h3 {
-    @apply font-extrabold tracking-heading [font-stretch:125%];
-  }
-
   h1 {
-    @apply text-h1;
+    @apply font-display text-h1 font-[720];
   }
 
   h2 {
-    @apply text-h2;
+    @apply text-balance font-display text-h2 font-bold;
   }
 
   h3 {
-    @apply text-h3;
+    @apply font-sans text-h3 font-[650];
   }
 
   :focus-visible {

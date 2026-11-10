@@ -7,7 +7,7 @@ const {
   size = "md",
 } = defineProps<{
   href?: string;
-  variant?: "primary" | "ghost";
+  variant?: "primary" | "ghost" | "text" | "onBrand";
   size?: "md" | "sm" | "icon";
 }>();
 
@@ -17,9 +17,13 @@ const isExternal = computed(() => href?.startsWith("https://") ?? false);
 const target = computed(() => (isExternal.value ? "_blank" : undefined));
 const rel = computed(() => (isExternal.value ? "noopener" : undefined));
 
+const lift = "motion-safe:hover:-translate-y-px motion-safe:active:scale-[.98]";
+
 const variantClasses = {
-  primary: "bg-accent text-white hover:bg-brilliantBlue focus-visible:outline-fg",
-  ghost: "border border-muted/70 hover:border-fg",
+  primary: `bg-accent text-white hover:bg-brand focus-visible:outline-fg ${lift}`,
+  ghost: `border border-muted/70 hover:border-fg ${lift}`,
+  text: "text-accent-text underline-offset-4 hover:underline",
+  onBrand: `bg-accent text-white hover:bg-brand-highlight hover:text-brand focus-visible:outline-brand-highlight ${lift}`,
 };
 
 const sizeClasses = {
@@ -27,6 +31,14 @@ const sizeClasses = {
   sm: "min-h-11 px-4 py-2.5 text-small",
   icon: "size-11 p-0",
 };
+
+const textSizeClasses = {
+  md: "min-h-12",
+  sm: "min-h-11 text-small",
+  icon: "size-11",
+};
+
+const sizeClass = computed(() => (variant === "text" ? textSizeClasses[size] : sizeClasses[size]));
 </script>
 
 <template>
@@ -37,9 +49,9 @@ const sizeClasses = {
     :target="target"
     :rel="rel"
     :class="[
-      'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-semibold transition-[transform,background-color,border-color] duration-300 ease-settle aria-disabled:cursor-not-allowed aria-disabled:opacity-70 motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-[.98]',
+      'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded font-semibold transition-[transform,background-color,border-color,color] duration-300 ease-settle aria-disabled:cursor-not-allowed aria-disabled:opacity-70',
       variantClasses[variant],
-      sizeClasses[size],
+      sizeClass,
     ]"
   >
     <slot></slot>

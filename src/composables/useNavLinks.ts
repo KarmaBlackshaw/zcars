@@ -9,19 +9,19 @@ export function useNavLinks() {
     links.push({ label: "Services", href: "/#services" });
   }
 
-  if (projects.length > 0) {
+  if (splitHomeProjects(projects).workProjects.length > 0) {
     links.push({ label: "Work", href: "/#work" });
   }
 
-  if (reviews.length > 0) {
+  if (getLinkedReviews(reviews).length > 0) {
     links.push({ label: "Reviews", href: "/#reviews" });
   }
+
+  links.push({ label: "Visit", href: "/#visit" });
 
   if (faqs.length > 0) {
     links.push({ label: "FAQ", href: "/#faq" });
   }
-
-  links.push({ label: "Contact", href: "/#contact" });
 
   return links;
 }

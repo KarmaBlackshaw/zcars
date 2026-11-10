@@ -3,12 +3,11 @@ import { PhCaretLeft, PhCaretRight, PhX } from "@phosphor-icons/vue";
 
 import type { TProject } from "@/types";
 
-defineOptions({ name: "HomeProjectsLightbox" });
+defineOptions({ name: "SectionWorkLightbox" });
 
-const { projects, returnFocusTo, fallbackFocusTo } = defineProps<{
+const { projects, returnFocusTo } = defineProps<{
   projects: TProject[];
   returnFocusTo?: HTMLElement;
-  fallbackFocusTo?: HTMLElement | null;
 }>();
 
 const index = defineModel<number>();
@@ -86,11 +85,7 @@ function onClose() {
 
   if (returnFocusTo?.isConnected) {
     returnFocusTo.focus();
-
-    return;
   }
-
-  fallbackFocusTo?.focus();
 }
 
 function close() {
@@ -124,7 +119,7 @@ function onImageError() {
   <dialog
     ref="dialogEl"
     :aria-labelledby="titleId"
-    class="m-0 h-dvh max-h-none w-screen max-w-none overscroll-contain bg-bg p-0 text-fg backdrop:bg-inkBlack/80 desk:m-auto desk:h-auto desk:max-h-[90dvh] desk:w-auto desk:max-w-5xl desk:rounded-card"
+    class="m-0 h-dvh max-h-none w-screen max-w-none overscroll-contain bg-bg p-0 text-fg shadow-2xl backdrop:bg-fg/80 desk:m-auto desk:h-auto desk:max-h-[90dvh] desk:w-auto desk:max-w-5xl desk:rounded"
     @close="onClose"
     @pointerdown="onPointerdown"
     @click="onBackdropClick"
@@ -136,13 +131,13 @@ function onImageError() {
         type="button"
         autofocus
         aria-label="Close"
-        class="grid size-11 shrink-0 place-items-center self-end rounded-full border border-line hover:border-muted"
+        class="grid size-11 shrink-0 place-items-center self-end rounded border border-line hover:border-muted"
         @click="close"
       >
         <PhX :size="20" aria-hidden="true" />
       </button>
       <figure class="flex min-h-0 flex-1 flex-col gap-2 desk:flex-none">
-        <div class="relative min-h-0 w-full flex-1 overflow-hidden rounded-xl bg-surface desk:flex-none">
+        <div class="relative min-h-0 w-full flex-1 overflow-hidden rounded-none bg-surface desk:flex-none">
           <p v-if="hasImageError" class="grid size-full place-items-center p-6 text-center text-muted desk:aspect-[4/3] desk:h-[60dvh] desk:w-auto">
             {{ photoAlt }}
           </p>
@@ -166,7 +161,7 @@ function onImageError() {
             type="button"
             aria-label="Previous photo"
             :aria-disabled="isFirst"
-            class="grid size-11 place-items-center rounded-full border border-line hover:border-muted aria-disabled:cursor-not-allowed aria-disabled:opacity-40"
+            class="grid size-11 place-items-center rounded border border-line hover:border-muted aria-disabled:cursor-not-allowed aria-disabled:opacity-40"
             @click="go(-1)"
           >
             <PhCaretLeft :size="20" aria-hidden="true" />
@@ -175,7 +170,7 @@ function onImageError() {
             type="button"
             aria-label="Next photo"
             :aria-disabled="isLast"
-            class="grid size-11 place-items-center rounded-full border border-line hover:border-muted aria-disabled:cursor-not-allowed aria-disabled:opacity-40"
+            class="grid size-11 place-items-center rounded border border-line hover:border-muted aria-disabled:cursor-not-allowed aria-disabled:opacity-40"
             @click="go(1)"
           >
             <PhCaretRight :size="20" aria-hidden="true" />

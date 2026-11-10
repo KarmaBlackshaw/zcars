@@ -47,7 +47,7 @@ All content lives in the Supabase project `zcars` (`tmggonbqvkolagmzwtpe`). The 
 | `quotes`                         | Quote requests from the site. Photos are in the `quote-photos` bucket (`photo_path`)                                   |
 
 - The home process band's before/after card shows the newest project with a `before_photo`. Other before/after projects appear in the work grid instead.
-- A service page's hero is the full-width photo of the newest project tagged with that service (its first photo; with no tagged project, the service's own `photo`). The next tagged project that has a `before_photo` is that page's before/after card in the band and is not repeated in its work grid.
+- A service page's hero is the full-width photo of the newest project tagged with that service (its first photo; with no tagged project, the service's own `photo`). The next tagged project that has a `before_photo` is that page's before/after card in the band and is not repeated in its work grid. If no other tagged project has one, the hero project's own before/after becomes the band card.
 - The first active promo (lowest `position`) shows as the gold line in the top bar and as the promo card, the 4th card in the work grid. Other active promos are not shown.
 - A bad edit fails the build and the live site keeps the last good version. The build log names the table and the row.
 - Do not rename a service `slug` that a project lists in `services`; the build fails until the project is updated.

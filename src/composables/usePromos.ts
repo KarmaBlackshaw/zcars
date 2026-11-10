@@ -7,9 +7,9 @@ export function usePromos() {
     today.value = getTodayInManila();
   });
 
-  const activePromos = computed(() =>
-    promos.filter((promo) => (promo.starts_on == null || promo.starts_on <= today.value) && (promo.ends_on == null || promo.ends_on >= today.value))
+  const featuredPromo = computed(() =>
+    promos.find((promo) => (promo.starts_on == null || promo.starts_on <= today.value) && (promo.ends_on == null || promo.ends_on >= today.value))
   );
 
-  return { activePromos };
+  return { featuredPromo };
 }

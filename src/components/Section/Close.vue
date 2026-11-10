@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { home, site } from "virtual:content";
-import { sectionClasses } from "@/constants/section";
 
 defineOptions({ name: "SectionClose" });
 
@@ -8,17 +7,17 @@ const brandLine = computed(() => (home.hero_title_accent == null ? home.hero_tit
 </script>
 
 <template>
-  <section id="close" class="bg-surface" :class="sectionClasses">
-    <BaseContainer v-motion="revealFade()" class="grid gap-6 desk:grid-cols-12 desk:items-end desk:gap-8">
-      <div class="desk:col-span-8">
-        <h2>{{ brandLine }}</h2>
-        <p class="mt-4 text-lead text-muted">
-          {{ site.name }} in {{ site.locality }}.
-          <a :href="site.tel_href" class="font-semibold text-accent-text hover:underline">Call {{ site.phone_display }}</a
-          >.
-        </p>
+  <BasePanel>
+    <div class="py-20 desk:py-28">
+      <h2 class="text-display desk:max-w-[75%]">{{ brandLine }}</h2>
+      <p class="mt-6 text-lead text-muted">
+        {{ site.name }} in {{ site.locality }}. <a :href="site.tel_href" class="font-semibold text-link hover:underline">Call {{ site.phone_display }}</a
+        >.
+      </p>
+      <div class="mt-10 flex flex-col gap-3 desk:flex-row">
+        <LayoutMainAction class="w-full desk:w-auto" />
+        <LayoutCallAction class="w-full desk:w-auto" />
       </div>
-      <LayoutMainAction class="w-full desk:col-span-4 desk:w-auto desk:justify-self-end" />
-    </BaseContainer>
-  </section>
+    </div>
+  </BasePanel>
 </template>

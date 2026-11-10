@@ -9,22 +9,29 @@ const openNow = useOpenNow();
 
 const schedule = getWeekSchedule(site.hours);
 
-const rowAttrs = (day: TWeekday): { "aria-current"?: "date" } => (day === openNow.today.value ? { "aria-current": "date" } : {});
+function isToday(day: TWeekday) {
+  return day === openNow.today.value;
+}
+
+function rowClass(day: TWeekday) {
+  return isToday(day) ? "font-semibold" : "";
+}
+
+function labelClass(label: string) {
+  return label === "Closed" ? "text-muted" : "";
+}
 </script>
 
 <template>
   <div v-if="site.hours.length">
     <table class="w-full text-small">
-      <caption class="sr-only">
-        Opening hours
-      </caption>
-      <tbody class="divide-y divide-line">
-        <tr v-for="row in schedule" :key="row.day" v-bind="rowAttrs(row.day)" :class="{ 'font-semibold': row.day === openNow.today.value }">
+      <tbody class="divide-y divide-fg/10">
+        <tr v-for="row in schedule" :key="row.day" :class="rowClass(row.day)">
           <th scope="row" class="h-11 px-3 py-3 text-left font-[inherit]">
             {{ WEEKDAY_NAMES[row.day] }}
-            <span v-if="row.day === openNow.today.value" class="ml-2 text-micro text-muted">Today</span>
+            <span v-if="isToday(row.day)" class="ml-2 text-micro text-muted">Today</span>
           </th>
-          <td class="px-3 py-3" :class="{ 'text-muted': row.label === 'Closed' }">{{ row.label }}</td>
+          <td class="px-3 py-3" :class="labelClass(row.label)">{{ row.label }}</td>
         </tr>
       </tbody>
     </table>

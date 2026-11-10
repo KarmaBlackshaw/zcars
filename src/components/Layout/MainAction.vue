@@ -8,7 +8,7 @@ const { size = "md" } = defineProps<{ size?: "md" | "sm" }>();
 </script>
 
 <template>
-  <BaseButton :href="site.messenger_url" :size="size">
+  <BaseButton data-main-action :href="site.messenger_url" :size="size">
     <PhMessengerLogo class="shrink-0" />
     Send a photo on Messenger
   </BaseButton>

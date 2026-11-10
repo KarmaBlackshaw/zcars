@@ -8,8 +8,10 @@ defineOptions({ name: "HomeTeamHiring" });
 <template>
   <div v-if="hiringRoles.length" class="mt-10">
     <h3>Open roles at Zcars</h3>
-    <ul class="mt-3 border-t border-line">
-      <li v-for="role in hiringRoles" :key="role.id" class="border-b border-line py-3">{{ role.name }}, {{ role.level }}</li>
+    <ul class="mt-4 flex flex-wrap gap-2">
+      <li v-for="role in hiringRoles" :key="role.id">
+        <BaseChip size="md">{{ role.name }}, {{ role.level }}</BaseChip>
+      </li>
     </ul>
     <p v-if="home.hiring_text" class="mt-4 text-muted">{{ home.hiring_text }}</p>
     <BaseButton variant="text" :href="site.messenger_url">

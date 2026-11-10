@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { animate } from "motion-v";
 
+import { services } from "virtual:content";
+
 import { settle } from "@/constants/motion";
 import type { TProject } from "@/types";
 
@@ -13,6 +15,8 @@ const FOCUS = "50% 60%";
 
 const position = ref(50);
 const before = computed(() => project?.before_photo);
+
+const chipText = computed(() => (project == null ? "" : [project.vehicle, formatProjectServices(project, services)].filter(Boolean).join(" · ")));
 
 let sweep: ReturnType<typeof animate> | undefined;
 let isSweeping = false;
@@ -52,24 +56,20 @@ onBeforeUnmount(stopSweep);
 </script>
 
 <template>
-  <div>
-    <BaseCompareSlider
-      v-if="before != null"
-      v-model:position="position"
-      :before="before"
-      :after="src"
-      :alt="alt"
-      :focus="FOCUS"
-      class="aspect-[4/3] desk:aspect-[4/5] desk:max-h-[calc(100svh-theme(spacing.nav)-7rem)]"
-      @pointerdown.once="stopSweep"
-    />
-    <img
-      v-else
-      :src="src"
-      :alt="alt"
-      fetchpriority="high"
-      class="aspect-[4/3] w-full rounded-none bg-surface object-cover object-[50%_60%] desk:aspect-[4/5] desk:max-h-[calc(100svh-theme(spacing.nav)-7rem)]"
-    />
-    <ProjectBadgeRow v-if="project" :project="project" class="mt-3" />
-  </div>
+  <BaseTile padding="none" class="aspect-[4/5] max-w-photo desk:aspect-auto desk:max-w-none">
+    <div class="relative size-full">
+      <BaseCompareSlider
+        v-if="before != null"
+        v-model:position="position"
+        :before="before"
+        :after="src"
+        :alt="alt"
+        :focus="FOCUS"
+        class="size-full"
+        @pointerdown.once="stopSweep"
+      />
+      <img v-else :src="src" :alt="alt" fetchpriority="high" class="size-full object-cover object-[50%_60%]" />
+      <BaseChip v-if="chipText" size="sm" class="absolute bottom-3 left-3">{{ chipText }}</BaseChip>
+    </div>
+  </BaseTile>
 </template>

@@ -4,25 +4,24 @@
 
 @layer base {
   :root {
-    --boneChina: 242 242 239;
-    --platinum: 228 229 225;
-    --softGrey: 210 212 208;
-    --frostedBlack: 14 21 33;
-    --midGray: 90 98 112;
-    --earthBlue: 42 116 189;
+    --tampa: 31 122 224;
+    --windsorBlue: 10 19 34;
+    --athensGray: 238 241 245;
     --blueZodiac: 18 39 70;
+    --earthBlue: 42 116 189;
     --botticelli: 199 218 230;
-    --bg: var(--boneChina);
-    --surface: var(--platinum);
-    --line: var(--softGrey);
-    --fg: var(--frostedBlack);
+    --midGray: 90 98 112;
+    --bg: var(--athensGray);
+    --surface: 255 255 255;
+    --fg: var(--windsorBlue);
     --muted: var(--midGray);
-    --accent: var(--earthBlue);
-    --accent-text: var(--earthBlue);
-    --brand: var(--blueZodiac);
-    --brand-highlight: var(--botticelli);
+    --accent: var(--tampa);
+    --accent-hover: var(--earthBlue);
+    --link: var(--tampa);
     --danger: 185 28 28;
     --success: 21 128 61;
+    --shadow-tile: 0 1px 2px rgb(10 19 34 / 0.05), 0 12px 32px -16px rgb(10 19 34 / 0.18);
+    --shadow-lift: 0 2px 4px rgb(10 19 34 / 0.06), 0 24px 48px -20px rgb(10 19 34 / 0.28);
     color-scheme: light;
   }
 
@@ -40,18 +39,75 @@
   }
 
   h1 {
-    @apply font-display text-h1 font-[720];
+    @apply text-balance text-display;
   }
 
   h2 {
-    @apply text-balance font-display text-h2 font-bold;
+    @apply text-balance text-h2;
   }
 
   h3 {
-    @apply font-sans text-h3 font-[650];
+    @apply text-h3;
   }
 
   :focus-visible {
-    @apply outline outline-2 outline-offset-[3px] outline-accent-text;
+    @apply outline outline-2 outline-offset-[3px] outline-accent;
+  }
+}
+
+@layer components {
+  .night {
+    --bg: var(--windsorBlue);
+    --surface: var(--blueZodiac);
+    --fg: 255 255 255;
+    --muted: var(--botticelli);
+    --link: 255 255 255;
+    --shadow-tile: 0 0 transparent;
+    --shadow-lift: 0 0 transparent;
+    color: rgb(var(--fg));
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+@keyframes cover {
+  to {
+    transform: scale(0.96);
+    opacity: 0.7;
+  }
+}
+
+@layer utilities {
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .reveal {
+        animation-name: reveal;
+        animation-fill-mode: both;
+        animation-timing-function: linear;
+        animation-timeline: view();
+        animation-range: entry 0% cover 25%;
+      }
+
+      .stack {
+        view-timeline: --stack block;
+      }
+
+      .stack-card {
+        animation-name: cover;
+        animation-fill-mode: both;
+        animation-timing-function: linear;
+        animation-timeline: --stack;
+        animation-range: exit-crossing calc(var(--i) / var(--n) * 100%) exit-crossing calc((var(--i) + 1) / var(--n) * 100%);
+      }
+
+      .stack-card:last-child {
+        animation: none;
+      }
+    }
   }
 }

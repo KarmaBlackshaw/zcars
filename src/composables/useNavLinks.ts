@@ -13,6 +13,8 @@ export function useNavLinks() {
     links.push({ label: "Work", href: "/#work" });
   }
 
+  links.push({ label: "Process", href: "/#process" });
+
   if (getLinkedReviews(reviews).length > 0) {
     links.push({ label: "Reviews", href: "/#reviews" });
   }

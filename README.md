@@ -42,16 +42,19 @@ All content lives in the Supabase project `zcars` (`tmggonbqvkolagmzwtpe`). The 
 | `site`, `opening_hours`, `seo`   | Name, phone, Messenger/Facebook links, address, hours, page title and link preview                                     |
 | `home`                           | Page copy: headline, section titles and leads, contact text, team blurb                                                |
 | `services`, `projects`, `promos` | Service cards, recent work, promos (`ends_on` hides a promo after that date)                                           |
-| `reviews`, `faqs`, `partners`    | Reviews (shown only when the row has a `source_url`), questions, product brand names (shown as one sentence, no logos) |
+| `reviews`, `faqs`, `partners`    | Reviews (shown only when the row has a `source_url`), questions, product brands (as logos under `home.partners_title`) |
 | `stats`, `hiring_roles`          | `stats` is no longer shown; open roles (no rows hides the roles block)                                                 |
 | `quotes`                         | Quote requests from the site. Photos are in the `quote-photos` bucket (`photo_path`)                                   |
 
-- The hero before/after slider shows the newest project with a `before_photo`. With two or more such projects, a thumbnail strip under it switches between them.
+- The hero before/after slider shows the newest project with a `before_photo`. Other before/after projects appear in the work grid instead.
 - A service page's hero picture is the newest project tagged with that service: its before/after compare panel when it has a `before_photo`, otherwise its first photo. With no tagged project it uses the service's own `photo`. The hero project is not repeated in that page's work grid.
+- The first project after the hero pair is the large tile of the work grid; set `completed_on` on a project to choose which one leads.
+- Each service's hover thumbnail on the services list is the first photo of its newest tagged project (a service with no tagged project, like PMS, has none).
+- Only the first active promo (lowest `position`) shows, as the price tile in the hero and the blue promo panel. Other active promos are not shown.
 - A bad edit fails the build and the live site keeps the last good version. The build log names the table and the row.
 - Do not rename a service `slug` that a project lists in `services`; the build fails until the project is updated.
 - Rows are validated by zod at build time (`plugins/content.ts`); locally, restart `npm run dev` to see Supabase edits.
-- Partners show as one sentence (e.g. "Products we trust: a, b and c"), in order of `name`, which is alphabetical today.
+- Partners show as a logo grid in order of `name`, which is alphabetical today.
 - The `stats` table and the `home.warranty_*` fields are not shown on the page.
 - Reviews show only when the row has a `source_url`. Delete the "Sample customer" rows, then add real reviews with their links.
 
@@ -64,7 +67,7 @@ All content lives in the Supabase project `zcars` (`tmggonbqvkolagmzwtpe`). The 
 
 ### Images
 
-Upload to the public `uploads` Storage bucket (webp, max 2048px), copy its public URL, paste it into the row. The logo lives at `public/logo.webp` (served at `/logo.webp`; the nav, footer and business structured data use it). `public/favicon.png` and `src/assets/images/polish.webp` (the services section photo) stay in code: replace the file and update `width`/`height` where the component lists them.
+Upload to the public `uploads` Storage bucket (webp, max 2048px), copy its public URL, paste it into the row. The logo lives at `public/logo.webp` (served at `/logo.webp`; the nav, footer and business structured data use it). `public/favicon.png` and `src/assets/images/polish.webp` (the desktop hero tile, hidden on phones) stay in code: replace the file and update `width`/`height` where the component lists them.
 
 ### One-time setup (owner)
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { PhCheck } from "@phosphor-icons/vue";
 import { projects, services, site } from "virtual:content";
-import { ruledSectionClasses } from "@/constants/section";
+import { gridClasses } from "@/constants/section";
 
 defineOptions({ name: "ServicePage" });
 
@@ -20,17 +20,30 @@ const pictureAlt = computed(() => showcase.value?.project?.title ?? title.value)
 const includedTitle = computed(() => `What ${toMidSentence(title.value)} includes`);
 const faqTitle = computed(() => `${title.value} questions`);
 const visitTitle = `Visit the shop in ${site.locality}`;
+const workTitle = computed(() => `${title.value} jobs from our shop`);
+const hasIncludes = computed(() => (service.value?.includes.length ?? 0) > 0);
+const hasPicture = computed(() => showcase.value?.src != null);
+const pictureSpanClass = computed(() => (hasIncludes.value ? "desk:col-span-5" : "desk:col-span-8"));
+
+const sideSpanClass = computed(() => {
+  if (!hasPicture.value) {
+    return "desk:col-span-12";
+  }
+
+  return hasIncludes.value ? "desk:col-span-7" : "desk:col-span-4";
+});
+const sideRowsClass = computed(() => (hasIncludes.value ? "desk:grid-rows-[1fr_auto]" : ""));
 </script>
 
 <template>
-  <main id="main" tabindex="-1" class="focus:outline-none">
+  <main>
     <template v-if="service">
       <SectionHero :heading="heading" :lead="lead" :quote-service="service.title">
         <template #top>
-          <p class="mb-4 flex flex-wrap gap-2 text-small text-muted">
+          <p class="mb-4 flex flex-wrap gap-2 text-micro text-muted/70">
             <a href="/" class="hover:text-fg">Home</a>
             <span>/</span>
-            <span class="text-fg">{{ service.title }}</span>
+            <span>{{ service.title }}</span>
           </p>
         </template>
         <template #facts>
@@ -40,41 +53,31 @@ const visitTitle = `Visit the shop in ${site.locality}`;
           </p>
           <p>Free quote. We confirm the price before any work starts.</p>
         </template>
-        <template v-if="showcase?.src != null" #picture>
-          <SectionHeroPicture :src="showcase.src" :alt="pictureAlt" :project="showcase.project" />
+        <template #bento>
+          <div :class="[gridClasses, 'desk:h-[32.5rem]']">
+            <SectionHeroPicture v-if="showcase?.src != null" :src="showcase.src" :alt="pictureAlt" :project="showcase.project" :class="pictureSpanClass" />
+            <div class="grid gap-3 desk:gap-4" :class="[sideSpanClass, sideRowsClass]">
+              <BaseTile v-if="hasIncludes" padding="md" class="[--delay:160ms] motion-safe:animate-rise">
+                <h2 class="text-h3">{{ includedTitle }}</h2>
+                <ul class="mt-5 grid gap-x-8 gap-y-3 desk:grid-cols-2">
+                  <li v-for="item in service.includes" :key="item" class="flex items-start gap-3">
+                    <PhCheck :size="20" weight="bold" class="mt-0.5 shrink-0 text-accent" />
+                    {{ item }}
+                  </li>
+                </ul>
+              </BaseTile>
+              <SectionHeroVisitTile class="[--delay:220ms] motion-safe:animate-rise" />
+            </div>
+          </div>
         </template>
       </SectionHero>
-      <section v-if="service.includes.length > 0" id="included" :class="ruledSectionClasses">
-        <BaseContainer class="grid gap-8 desk:grid-cols-12 desk:gap-x-8">
-          <div v-motion="revealFade()" class="desk:col-span-4">
-            <BaseSectionHeading :title="includedTitle" />
-          </div>
-          <ul v-motion="revealFade(0.08)" class="grid desk:col-span-8 desk:grid-cols-2 desk:gap-x-8">
-            <li v-for="item in service.includes" :key="item" class="flex items-start gap-3 border-b border-line py-4">
-              <PhCheck :size="20" weight="bold" class="mt-0.5 shrink-0 text-fg" />
-              {{ item }}
-            </li>
-          </ul>
-        </BaseContainer>
-      </section>
-      <SectionWork title="Recent work" :projects="workProjects" />
+      <SectionWork :title="workTitle" :projects="workProjects" />
       <SectionFaq :title="faqTitle" :items="service.faqs" />
       <SectionVisit :title="visitTitle" />
-      <section id="other-services" :class="ruledSectionClasses">
-        <BaseContainer>
-          <div v-motion="revealFade()">
-            <BaseSectionHeading title="Other services at Zcars" />
-          </div>
-          <ul class="mt-12 border-t border-line desk:mt-14 desk:grid desk:grid-cols-2 desk:gap-x-8">
-            <li v-for="(other, index) in otherServices" :key="other.slug" v-motion="stagger(index)">
-              <ServiceRow :service="other" />
-            </li>
-          </ul>
-        </BaseContainer>
-      </section>
+      <SectionServices id="other-services" title="Other services at Zcars" :services="otherServices" />
       <SectionClose />
     </template>
-    <section v-else class="py-24">
+    <section v-else class="pb-24 pt-32">
       <BaseContainer>
         <h2>Service not found</h2>
         <BaseButton variant="text" href="/#services" class="mt-4">See all services</BaseButton>

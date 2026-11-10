@@ -20,7 +20,7 @@ const linkClass = "inline-flex min-h-11 items-center transition-colors hover:tex
           </span>
           <strong class="mt-4 block font-display text-card-title uppercase italic text-fg">{{ site.name }}</strong>
           <address class="mt-2 not-italic">
-            <BaseExternalLink :href="site.map_directions_url" class="text-muted hover:text-fg">{{ site.address }}</BaseExternalLink>
+            <a :href="site.map_directions_url" v-bind="getLinkAttrs(site.map_directions_url)" :class="linkClass">{{ site.address }}</a>
           </address>
         </div>
         <div>
@@ -34,7 +34,7 @@ const linkClass = "inline-flex min-h-11 items-center transition-colors hover:tex
         <div>
           <h3 class="text-fg">Visit</h3>
           <p v-if="hoursSummary" class="mt-2">{{ hoursSummary }}</p>
-          <BaseExternalLink :href="site.map_directions_url" :class="linkClass">Get directions</BaseExternalLink>
+          <a :href="site.map_directions_url" v-bind="getLinkAttrs(site.map_directions_url)" :class="linkClass">Get directions</a>
         </div>
         <div>
           <h3 class="text-fg">Contact</h3>
@@ -43,10 +43,10 @@ const linkClass = "inline-flex min-h-11 items-center transition-colors hover:tex
               <a :href="site.tel_href" :class="linkClass">Call {{ site.phone_display }}</a>
             </li>
             <li>
-              <BaseExternalLink :href="site.messenger_url" :class="linkClass">Messenger</BaseExternalLink>
+              <a :href="site.messenger_url" v-bind="getLinkAttrs(site.messenger_url)" :class="linkClass">Messenger</a>
             </li>
             <li>
-              <BaseExternalLink :href="site.facebook_url" :class="linkClass">Facebook</BaseExternalLink>
+              <a :href="site.facebook_url" v-bind="getLinkAttrs(site.facebook_url)" :class="linkClass">Facebook</a>
             </li>
           </ul>
         </div>

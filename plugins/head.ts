@@ -4,7 +4,7 @@ import type { TFaqItem } from "../src/types/faq";
 import type { TService } from "../src/types/service";
 import { LOGO_PATH } from "../src/constants/brand";
 import { HERO_PHOTO } from "../src/constants/hero";
-import { WEEKDAY_NAMES } from "../src/utils/hours";
+import { WEEKDAY_NAMES } from "../src/constants/hours";
 import { getServicePath } from "../src/utils/service/getServicePath";
 import { getServiceShowcase } from "../src/utils/service/getServiceShowcase";
 import { loadContent } from "./content";

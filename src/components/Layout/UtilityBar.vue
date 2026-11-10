@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { PhArrowRight } from "@phosphor-icons/vue";
 import { site } from "virtual:content";
 
 import { PROMO_ANCHOR } from "@/constants/promo";
+import PhArrowRight from "~icons/ph/arrow-right";
 
 defineOptions({ name: "LayoutUtilityBar" });
 
@@ -42,7 +42,7 @@ const phoneText = computed(() => {
       >
         <span class="hidden desk:inline">{{ deskText }}</span>
         <span class="desk:hidden">{{ phoneText }}</span>
-        <PhArrowRight :size="12" class="shrink-0" />
+        <PhArrowRight class="size-3 shrink-0" />
       </a>
     </BaseContainer>
   </div>

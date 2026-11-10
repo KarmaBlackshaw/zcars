@@ -10,6 +10,7 @@ import VueRouter from "unplugin-vue-router/vite";
 import VueDevTools from "vite-plugin-vue-devtools";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
+import Icons from "unplugin-icons/vite";
 import content, { loadContent } from "./plugins/content";
 import head, { replaceNotFoundHead, replaceServiceHead } from "./plugins/head";
 import images from "./plugins/images";
@@ -127,6 +128,7 @@ export default defineConfig(({ mode }) => ({
       directoryAsNamespace: true,
       collapseSamePrefixes: true,
     }),
+    Icons({ compiler: "vue3", scale: 1 }),
   ],
   server: {
     watch: {

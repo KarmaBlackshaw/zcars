@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import { PhCamera, PhChatText, PhMapPin, PhPaintRoller } from "@phosphor-icons/vue";
 import type { TProject } from "@/types";
+import PhCamera from "~icons/ph/camera";
+import PhChatText from "~icons/ph/chat-text";
+import PhMapPin from "~icons/ph/map-pin";
+import PhPaintRoller from "~icons/ph/paint-roller";
 
 defineOptions({ name: "HomeProcess" });
 

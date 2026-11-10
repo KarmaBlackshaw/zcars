@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PhX } from "@phosphor-icons/vue";
+import PhX from "~icons/ph/x";
 
 defineOptions({ name: "BaseDrawer" });
 
@@ -27,7 +27,7 @@ function onClose() {
       <div class="flex items-center justify-between gap-4 border-b border-line px-5 py-3">
         <h2 class="text-tile-title">{{ title }}</h2>
         <BaseButton variant="dark" size="icon" class="shrink-0" @click="close">
-          <PhX :size="20" />
+          <PhX class="size-5" />
         </BaseButton>
       </div>
       <div class="min-h-0 flex-1 overflow-y-auto px-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-5">

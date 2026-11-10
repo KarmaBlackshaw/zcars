@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { PhMessengerLogo } from "@phosphor-icons/vue";
 import { site } from "virtual:content";
+import PhMessengerLogo from "~icons/ph/messenger-logo";
 
 defineOptions({ name: "LayoutMainAction" });
 

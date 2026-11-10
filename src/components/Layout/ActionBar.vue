@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { PhPhone } from "@phosphor-icons/vue";
 import { site } from "virtual:content";
+import PhPhone from "~icons/ph/phone";
 
 defineOptions({ name: "LayoutActionBar" });
 

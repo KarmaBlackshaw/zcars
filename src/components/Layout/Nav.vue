@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { PhPhone } from "@phosphor-icons/vue";
 import { site } from "virtual:content";
 
 import { LOGO_PATH } from "@/constants/brand";
 import type { TNavLink } from "@/types";
+import PhPhone from "~icons/ph/phone";
 
 defineOptions({ name: "LayoutNav" });
 

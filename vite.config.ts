@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath, URL } from "node:url";
 
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import type { ViteSSGOptions } from "vite-ssg";
 
 import Vue from "@vitejs/plugin-vue";
@@ -10,8 +10,10 @@ import VueRouter from "unplugin-vue-router/vite";
 import VueDevTools from "vite-plugin-vue-devtools";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
-import content from "./plugins/content";
-import head from "./plugins/head";
+import content, { loadContent } from "./plugins/content";
+import head, { replaceServiceHead } from "./plugins/head";
+import sitemap from "./plugins/sitemap";
+import { getServicePath } from "./src/utils/service";
 
 const BARREL_DIRS = ["src/composables", "src/types", "src/utils"];
 
@@ -36,8 +38,23 @@ async function generateBarrel(directoryPath: string) {
   }
 }
 
-const ssgOptions: ViteSSGOptions = {
-  onBeforePageRender(_route, indexHTML) {
+const SERVICES_PARENT_ROUTE = "/services";
+const SERVICE_ROUTE = "/services/:slug";
+const SERVICE_PATH = /^\/services\/([^/]+)$/;
+
+const createSsgOptions = (env: Record<string, string>): ViteSSGOptions => ({
+  async includedRoutes(paths) {
+    const { services } = await loadContent(env);
+
+    return paths.flatMap((routePath) => {
+      if (routePath === SERVICE_ROUTE) {
+        return services.map(({ slug }) => getServicePath(slug));
+      }
+
+      return routePath === SERVICES_PARENT_ROUTE ? [] : [routePath];
+    });
+  },
+  async onBeforePageRender(route, indexHTML) {
     if (indexHTML.includes("%VITE_SITE_URL%")) {
       throw new Error(
         '[zcars] VITE_SITE_URL is not set. index.html uses it for og:image, og:url and JSON-LD, and Vite leaves an unset variable as the literal "%VITE_SITE_URL%", so link previews would break. Fix: run "cp .env.example .env.local" for local builds, or set VITE_SITE_URL=https://<your-domain> (no trailing slash) in the host\'s build environment. Not needed for `npm run dev`. See README "Deploy".'
@@ -50,11 +67,19 @@ const ssgOptions: ViteSSGOptions = {
       console.warn("[zcars] VITE_SITE_URL points at localhost. Fine for npm run preview; on the host set VITE_SITE_URL=https://<your-domain>.");
     }
 
-    return indexHTML;
-  },
-};
+    const slug = SERVICE_PATH.exec(route)?.[1];
 
-export default defineConfig({
+    if (slug == null) {
+      return indexHTML;
+    }
+
+    const content = await loadContent(env);
+
+    return replaceServiceHead({ html: indexHTML, content, slug, siteUrl: env.VITE_SITE_URL });
+  },
+});
+
+export default defineConfig(({ mode }) => ({
   plugins: [
     {
       name: "index-generator",
@@ -64,6 +89,7 @@ export default defineConfig({
     },
     content(),
     head(),
+    sitemap(),
     VueRouter({
       routesFolder: "src/pages",
     }),
@@ -99,5 +125,5 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
-  ssgOptions,
-});
+  ssgOptions: createSsgOptions(loadEnv(mode, process.cwd())),
+}));

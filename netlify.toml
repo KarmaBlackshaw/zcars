@@ -6,3 +6,8 @@
   VITE_SITE_URL = "https://zcars.jeash.me"
   VITE_SUPABASE_URL = "https://tmggonbqvkolagmzwtpe.supabase.co"
   VITE_SUPABASE_PUBLISHABLE_KEY = "sb_publishable_BM2q28zmT7H7uOx2a_MuHw_SLC5WQWL"
+
+[[redirects]]
+  from = "/services"
+  to = "/"
+  status = 301

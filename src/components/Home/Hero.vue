@@ -40,15 +40,17 @@ function openQuote() {
     >
       <div v-motion="enter()" class="desk:col-span-6 desk:self-end">
         <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
-          <BaseEyebrow>
+          <h1
+            class="inline-flex items-center gap-2 text-balance text-micro font-semibold uppercase leading-snug tracking-eyebrow text-accent-text [font-stretch:normal]"
+          >
             <PhMapPin class="shrink-0" />
-            {{ site.locality }}
-          </BaseEyebrow>
+            {{ home.hero_heading }}
+          </h1>
           <HomeHoursBadge />
         </div>
-        <h1 class="mt-4 max-w-[14ch] text-balance desk:mt-6">
+        <p class="mt-4 max-w-[14ch] text-balance text-h1 font-extrabold tracking-heading [font-stretch:125%] desk:mt-6">
           {{ home.hero_title }} <em v-if="home.hero_title_accent" class="not-italic text-accent-text">{{ home.hero_title_accent }}</em>
-        </h1>
+        </p>
       </div>
       <figure v-if="showcase" v-motion="enter(0.12)" class="desk:col-span-6 desk:col-start-7 desk:row-span-2 desk:row-start-1 desk:self-center">
         <BaseCompareSlider

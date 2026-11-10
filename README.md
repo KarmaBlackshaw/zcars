@@ -51,6 +51,13 @@ All content lives in the Supabase project `zcars` (`tmggonbqvkolagmzwtpe`). The 
 - Do not rename a service `slug` that a project lists in `services`; the build fails until the project is updated.
 - Rows are validated by zod at build time (`plugins/content.ts`); locally, restart `npm run dev` to see Supabase edits.
 
+### Search (SEO)
+
+- Each service gets its own page at `/services/<slug>`, titled "<Service> in <city> | <site name>". Its text comes from the `services` row: `page_description` (Google snippet, max 160 characters), `intro`, `includes` (bullet list) and `faqs` (a JSON list of `{"question", "answer"}`). Empty fields fall back to the `summary` or hide their section.
+- `home.hero_heading` is the page's main heading for Google. It shows as the small line above the big slogan, so keep a service and the city in it.
+- `site.city`, `region`, `postal_code`, `latitude`, `longitude` and `google_maps_url` feed the business details Google reads. Copy the pin from the shop's Google Maps listing.
+- The build writes `sitemap.xml` and `robots.txt`. Submit `https://<domain>/sitemap.xml` once in Google Search Console.
+
 ### Images
 
 Upload to the public `uploads` Storage bucket (webp, max 2048px), copy its public URL, paste it into the row. `src/assets/images/logo.webp` and `public/favicon.png` stay in code: replace the file and update `width`/`height` where the component lists them.

@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { httpsUrlSchema, optionalSchema, slugSchema, textSchema } from "./content";
+import { faqItemSchema } from "./faq";
 
 const serviceIconSchema = z.enum(["spray-bottle", "sparkle", "shield-check", "hammer", "paint-roller", "wrench", "sun-dim", "umbrella"]);
 
@@ -15,6 +16,10 @@ export const serviceSchema = z.object({
   photo: optionalSchema(httpsUrlSchema),
   icon: serviceIconSchema,
   position: z.number().int(),
+  page_description: optionalSchema(textSchema.max(160)),
+  intro: optionalSchema(textSchema),
+  includes: z.array(textSchema),
+  faqs: z.array(faqItemSchema),
 });
 
 export type TService = z.infer<typeof serviceSchema>;

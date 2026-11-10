@@ -23,6 +23,7 @@ const quoteDrawer = useQuoteDrawer();
 const hasImageError = ref(false);
 
 const iconComponent = computed(() => icons[service.icon]);
+const servicePath = computed(() => getServicePath(service.slug));
 const priceLabel = computed(() => (service.price_from != null ? `From ${formatPrice(service.price_from)}` : ""));
 
 function onImageError() {
@@ -50,7 +51,9 @@ function requestQuote() {
       </div>
     </div>
     <div class="flex min-w-0 flex-col gap-2 sm:flex-1">
-      <h3 class="text-h3">{{ service.title }}</h3>
+      <h3 class="text-h3">
+        <a :href="servicePath" class="hover:text-accent-text">{{ service.title }}</a>
+      </h3>
       <p class="line-clamp-2 text-small text-muted sm:line-clamp-none">{{ service.summary }}</p>
       <p v-if="priceLabel" class="font-semibold">{{ priceLabel }}</p>
       <p v-if="service.price_note" class="text-micro text-muted">{{ service.price_note }}</p>

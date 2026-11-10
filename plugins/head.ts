@@ -167,23 +167,33 @@ const renderServiceHead = (content: TContent, service: TService, siteUrl: string
   });
 };
 
+const renderNotFoundHead = ({ site }: TContent) =>
+  [HEAD_START, `<title>${escapeHtml(`Page not found | ${site.name}`)}</title>`, meta("name", "robots", "noindex"), HEAD_END].join("\n    ");
+
+const swapHead = (html: string, tags: string) => {
+  const start = html.indexOf(HEAD_START);
+  const end = html.indexOf(HEAD_END);
+
+  if (start < 0 || end < 0) {
+    throw new Error("[zcars] The built page is missing the generated head markers, so the page head cannot be replaced.");
+  }
+
+  return html.slice(0, start) + tags + html.slice(end + HEAD_END.length);
+};
+
 type TReplaceServiceHeadOptions = { html: string; content: TContent; slug: string; siteUrl: string };
 
 export const replaceServiceHead = ({ html, content, slug, siteUrl }: TReplaceServiceHeadOptions) => {
   const service = content.services.find((item) => item.slug === slug);
-  const start = html.indexOf(HEAD_START);
-  const end = html.indexOf(HEAD_END);
 
   if (service == null) {
     throw new Error(`[zcars] No service with slug "${slug}", so /services/${slug} cannot be prerendered.`);
   }
 
-  if (start < 0 || end < 0) {
-    throw new Error("[zcars] The built page is missing the generated head markers, so the service page head cannot be replaced.");
-  }
-
-  return html.slice(0, start) + renderServiceHead(content, service, siteUrl) + html.slice(end + HEAD_END.length);
+  return swapHead(html, renderServiceHead(content, service, siteUrl));
 };
+
+export const replaceNotFoundHead = (html: string, content: TContent) => swapHead(html, renderNotFoundHead(content));
 
 export default function head(): Plugin {
   let env: unknown;

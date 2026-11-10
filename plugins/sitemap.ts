@@ -1,5 +1,5 @@
 import type { Plugin } from "vite";
-import { getServicePath } from "../src/utils/service";
+import { getServicePath } from "../src/utils/service/getServicePath";
 import { loadContent } from "./content";
 
 export default function sitemap(): Plugin {

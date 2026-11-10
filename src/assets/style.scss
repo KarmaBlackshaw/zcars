@@ -4,15 +4,28 @@
 
 @layer base {
   :root {
-    --bg: 244 246 249;
+    --solidBlue: 33 104 242;
+    --brightAzure: 0 166 255;
+    --spaceBlack: 9 11 15;
+    --frostBlack: 23 27 33;
+    --sensationalYellow: 255 195 26;
+    --blackHaze: 245 247 249;
+    --pureSilicon: 219 222 227;
+    --seaGray: 154 159 166;
+    --lightGraphite: 89 94 102;
+    --bg: var(--blackHaze);
     --surface: 255 255 255;
-    --line: 221 226 234;
-    --fg: 15 20 28;
-    --muted: 74 84 102;
-    --accent: 37 99 235;
-    --accent-text: 29 78 216;
+    --fg: var(--spaceBlack);
+    --muted: var(--lightGraphite);
+    --link: var(--solidBlue);
+    --line: var(--pureSilicon);
+    --accent: var(--solidBlue);
+    --glow: var(--brightAzure);
+    --hot: var(--sensationalYellow);
     --danger: 185 28 28;
     --success: 21 128 61;
+    --shadow-tile: 0 1px 2px rgb(9 11 15 / 0.06), 0 8px 24px -12px rgb(9 11 15 / 0.18);
+    --shadow-lift: 0 24px 48px -20px rgb(33 104 242 / 0.45);
     color-scheme: light;
   }
 
@@ -29,25 +42,168 @@
     overflow: hidden;
   }
 
-  h1,
-  h2,
-  h3 {
-    @apply font-extrabold tracking-heading [font-stretch:125%];
-  }
-
   h1 {
-    @apply text-h1;
+    @apply text-balance font-display text-display uppercase italic;
   }
 
   h2 {
-    @apply text-h2;
+    @apply text-balance font-display text-h2 uppercase italic;
   }
 
   h3 {
-    @apply text-h3;
+    @apply font-display text-card-title uppercase italic;
   }
 
   :focus-visible {
-    @apply outline outline-2 outline-offset-[3px] outline-accent-text;
+    @apply outline outline-2 outline-offset-[3px] outline-accent;
+  }
+}
+
+@layer components {
+  .night {
+    --bg: var(--spaceBlack);
+    --surface: var(--frostBlack);
+    --fg: var(--blackHaze);
+    --muted: var(--seaGray);
+    --link: var(--brightAzure);
+    --line: var(--frostBlack);
+    --shadow-tile: 0 0 transparent;
+    color: rgb(var(--fg));
+  }
+
+  .streaks {
+    mix-blend-mode: screen;
+    background:
+      linear-gradient(115deg, transparent 54%, rgb(var(--brightAzure) / 0.55) 55%, transparent 57.5%),
+      linear-gradient(115deg, transparent 62%, rgb(var(--solidBlue) / 0.6) 62.6%, transparent 64%),
+      linear-gradient(115deg, transparent 69%, rgb(var(--brightAzure) / 0.3) 69.3%, transparent 70.2%);
+  }
+
+  .hero-fade {
+    background: linear-gradient(180deg, rgb(var(--spaceBlack) / 0.55) 0%, rgb(var(--spaceBlack) / 0.8) 50%, rgb(var(--spaceBlack)) 100%);
+
+    @screen desk {
+      background:
+        linear-gradient(0deg, rgb(var(--spaceBlack)), transparent 40%),
+        linear-gradient(90deg, rgb(var(--spaceBlack)) 0%, rgb(var(--spaceBlack) / 0.6) 25%, transparent 60%);
+    }
+  }
+
+  .ink-gradient {
+    background-image: linear-gradient(115deg, rgb(var(--spaceBlack)), rgb(var(--frostBlack)) 55%, rgb(var(--spaceBlack)));
+  }
+
+  .comet {
+    background: linear-gradient(90deg, transparent, rgb(var(--brightAzure) / 0.9));
+    mix-blend-mode: screen;
+    rotate: 115deg;
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .streak-drift {
+      animation:
+        streak-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both,
+        streak-drift 14s ease-in-out 1.5s 4 alternate;
+    }
+
+    .comet {
+      animation: comet var(--dur, 7s) linear var(--delay, 1.2s) 3 both;
+    }
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+@keyframes streak-in {
+  from {
+    transform: translateX(-6%);
+    opacity: 0.4;
+  }
+}
+
+@keyframes streak-drift {
+  to {
+    transform: translate3d(4%, 4%, 0);
+  }
+}
+
+@keyframes comet {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  30% {
+    transform: translateX(70vmin);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(70vmin);
+    opacity: 0;
+  }
+}
+
+@keyframes hero-exit {
+  to {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes hero-exit-fade {
+  to {
+    opacity: 0.45;
+  }
+}
+
+@keyframes hero-exit-content {
+  to {
+    transform: translateY(-48px);
+  }
+}
+
+@layer utilities {
+  .clip-slant {
+    clip-path: polygon(var(--slant, 10px) 0, 100% 0, calc(100% - var(--slant, 10px)) 100%, 0 100%);
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .reveal {
+        animation-name: reveal;
+        animation-fill-mode: both;
+        animation-timing-function: linear;
+        animation-timeline: view();
+        animation-range: entry 0% cover 25%;
+      }
+
+      .hero-exit,
+      .hero-exit-fade,
+      .hero-exit-content {
+        animation-fill-mode: both;
+        animation-timing-function: linear;
+        animation-timeline: view();
+        animation-range: exit 0% exit 100%;
+      }
+
+      .hero-exit {
+        animation-name: hero-exit;
+      }
+
+      .hero-exit-fade {
+        animation-name: hero-exit-fade;
+      }
+
+      .hero-exit-content {
+        animation-name: hero-exit-content;
+      }
+    }
   }
 }

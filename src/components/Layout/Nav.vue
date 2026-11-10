@@ -1,39 +1,69 @@
 <script setup lang="ts">
-import { PhMessengerLogo, PhPhone } from "@phosphor-icons/vue";
+import { PhPhone } from "@phosphor-icons/vue";
 import { site } from "virtual:content";
-import logo from "@/assets/images/logo.webp";
+
+import { LOGO_PATH } from "@/constants/brand";
+import type { TNavLink } from "@/types";
 
 defineOptions({ name: "LayoutNav" });
 
 const links = useNavLinks();
-const brandLabel = `${site.name}, home`;
-const callLabel = `Call ${site.phone_display}`;
+const route = useRoute();
+
+const ACTIVE_OFFSET = 96;
+const sectionIds = links.filter(({ href }) => href.startsWith("/#")).map(({ href }) => href.slice(2));
+const activeSection = useScrollSpy(sectionIds, ACTIVE_OFFSET);
+
+const [brand, ...rest] = site.name.split(" ");
+const tagline = rest.join(" ");
+
+const tabBaseClasses = "relative inline-flex h-full items-center px-3 min-[1100px]:px-4 font-display italic uppercase text-nav transition-colors hover:text-fg";
+const tabActiveClasses = `${tabBaseClasses} text-accent after:absolute after:inset-x-3 after:bottom-0 after:h-[3px] after:bg-accent`;
+const tabInactiveClasses = `${tabBaseClasses} text-muted`;
+
+function isActive(link: TNavLink) {
+  if (route.path === "/") {
+    return link.href === (activeSection.value ? `/#${activeSection.value}` : "/");
+  }
+
+  return link.href === "/#services" && route.path.startsWith("/services/");
+}
+
+function tabClass(link: TNavLink) {
+  return isActive(link) ? tabActiveClasses : tabInactiveClasses;
+}
 </script>
 
 <template>
-  <header class="sticky top-0 z-10 border-b border-line bg-bg/[.82] backdrop-blur-[14px]">
-    <BaseContainer class="flex h-nav items-center justify-between gap-4">
-      <a href="/" :aria-label="brandLabel" class="flex items-center gap-3 font-bold [font-stretch:115%]">
-        <img :src="logo" alt="" width="40" height="40" class="size-10 rounded-full" />
-        Zcars
-      </a>
-      <nav aria-label="Primary" class="hidden desk:block">
-        <ul class="flex gap-6">
-          <li v-for="link in links" :key="link.href">
-            <a :href="link.href" class="font-medium text-muted hover:text-fg">{{ link.label }}</a>
-          </li>
-        </ul>
-      </nav>
-      <div class="flex items-center gap-2">
-        <BaseButton variant="ghost" size="icon" :href="site.tel_href" :aria-label="callLabel" class="text-small min-[1100px]:w-auto min-[1100px]:px-4">
-          <PhPhone aria-hidden="true" class="shrink-0" />
-          <span class="hidden min-[1100px]:inline">Call {{ site.phone_display }}</span>
-        </BaseButton>
-        <BaseButton size="sm" :href="site.messenger_url" class="hidden desk:inline-flex">
-          <PhMessengerLogo class="shrink-0" />
-          Message us
+  <header class="sticky top-0 z-30 bg-surface desk:-top-[4.5rem]">
+    <BaseContainer>
+      <div class="flex h-[3.75rem] items-center justify-between gap-4 desk:h-[4.5rem]">
+        <a href="/" class="flex items-center gap-3">
+          <img :src="LOGO_PATH" alt="Zcars" width="40" height="40" class="size-10" />
+          <span>
+            <span class="block font-display text-tile-title uppercase italic">{{ brand }}</span>
+            <span v-if="tagline" class="hidden font-display text-label uppercase italic text-muted desk:block">{{ tagline }}</span>
+          </span>
+        </a>
+        <a :href="site.tel_href" class="hidden font-display text-card-title uppercase italic text-fg hover:text-accent desk:inline">
+          Call {{ site.phone_display }}
+        </a>
+        <BaseButton variant="dark" size="icon" :href="site.tel_href" class="desk:hidden">
+          <PhPhone class="shrink-0" />
         </BaseButton>
       </div>
     </BaseContainer>
+    <div class="hidden border-b border-line desk:block">
+      <BaseContainer>
+        <div class="flex h-[2.875rem] items-center justify-between">
+          <ul class="flex h-full">
+            <li v-for="link in links" :key="link.href" class="h-full">
+              <a :href="link.href" :class="tabClass(link)">{{ link.label }}</a>
+            </li>
+          </ul>
+          <LayoutMainAction size="sm" class="hidden desk:inline-flex" />
+        </div>
+      </BaseContainer>
+    </div>
   </header>
 </template>

@@ -1,8 +1,12 @@
 import type { Plugin } from "vite";
 import type { TContent } from "../src/types/content";
+import type { TFaqItem } from "../src/types/faq";
 import type { TService } from "../src/types/service";
+import { LOGO_PATH } from "../src/constants/brand";
+import { HERO_PHOTO } from "../src/constants/hero";
 import { WEEKDAY_NAMES } from "../src/utils/hours";
-import { getServicePath } from "../src/utils/service";
+import { getServicePath } from "../src/utils/service/getServicePath";
+import { getServiceShowcase } from "../src/utils/service/getServiceShowcase";
 import { loadContent } from "./content";
 
 const PLACEHOLDER = "<!--zcars-head-->";
@@ -15,6 +19,7 @@ type THeadTags = {
   description: string;
   url: string;
   image: string;
+  preload?: string;
   ogTitle: string;
   ogDescription: string;
   structuredData: object[];
@@ -25,14 +30,18 @@ const escapeHtml = (value: string) =>
 
 const meta = (attribute: "name" | "property", key: string, value: string) => `<meta ${attribute}="${key}" content="${escapeHtml(value)}" />`;
 
+const preloadImage = ({ href, srcset, sizes }: { href?: string; srcset?: string; sizes?: string }) =>
+  `<link rel="preload" as="image"${href == null ? "" : ` href="${escapeHtml(href)}"`}${srcset == null ? "" : ` imagesrcset="${escapeHtml(srcset)}"`}${sizes == null ? "" : ` imagesizes="${escapeHtml(sizes)}"`} fetchpriority="high" />`;
+
 const jsonLd = (data: object) => `<script type="application/ld+json">${JSON.stringify(data).replace(/</g, "\\u003c")}</script>`;
 
-const renderTags = ({ title, description, url, image, ogTitle, ogDescription, structuredData }: THeadTags) =>
+const renderTags = ({ title, description, url, image, preload, ogTitle, ogDescription, structuredData }: THeadTags) =>
   [
     HEAD_START,
     `<title>${escapeHtml(title)}</title>`,
     `<link rel="canonical" href="${escapeHtml(url)}" />`,
     `<link rel="preconnect" href="${new URL(image).origin}" />`,
+    ...(preload == null ? [] : [preload]),
     meta("name", "description", description),
     meta("property", "og:title", ogTitle),
     meta("property", "og:description", ogDescription),
@@ -45,12 +54,23 @@ const renderTags = ({ title, description, url, image, ogTitle, ogDescription, st
     HEAD_END,
   ].join("\n    ");
 
-const getBusiness = ({ site, seo }: TContent, siteUrl: string) => ({
+const getFaqPage = (items: TFaqItem[]) => ({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: items.map(({ question, answer }) => ({
+    "@type": "Question",
+    name: question,
+    acceptedAnswer: { "@type": "Answer", text: answer },
+  })),
+});
+
+const getBusiness = ({ site, seo, projects }: TContent, siteUrl: string) => ({
   "@type": "AutoBodyShop",
   "@id": `${siteUrl}/#business`,
   name: site.name,
   url: `${siteUrl}/`,
-  image: seo.og_image,
+  logo: `${siteUrl}${LOGO_PATH}`,
+  image: [seo.og_image, ...projects.slice(0, 3).map(({ photos }) => photos[0])],
   telephone: site.phone_e164,
   address: {
     "@type": "PostalAddress",
@@ -92,24 +112,15 @@ const renderHomeHead = (content: TContent) => {
 
   const website = { "@type": "WebSite", "@id": `${SITE_URL}/#website`, name: site.name, url, publisher: { "@id": business["@id"] } };
 
-  const faqPage = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqs.map(({ question, answer }) => ({
-      "@type": "Question",
-      name: question,
-      acceptedAnswer: { "@type": "Answer", text: answer },
-    })),
-  };
-
   return renderTags({
     title: seo.title,
     description: seo.description,
     url,
     image: seo.og_image,
+    preload: preloadImage({ href: HERO_PHOTO.src, srcset: HERO_PHOTO.srcset, sizes: HERO_PHOTO.sizes }),
     ogTitle: seo.og_title,
     ogDescription: seo.og_description,
-    structuredData: [{ "@context": "https://schema.org", "@graph": [business, website] }, ...(faqs.length > 0 ? [faqPage] : [])],
+    structuredData: [{ "@context": "https://schema.org", "@graph": [business, website] }, ...(faqs.length > 0 ? [getFaqPage(faqs)] : [])],
   });
 };
 
@@ -118,6 +129,7 @@ const renderServiceHead = (content: TContent, service: TService, siteUrl: string
   const url = `${siteUrl}${getServicePath(service.slug)}`;
   const title = `${service.title} in ${site.city} | ${site.name}`;
   const description = service.page_description ?? service.summary;
+  const { src } = getServiceShowcase(service, content.projects);
 
   const serviceNode = {
     "@type": "Service",
@@ -126,7 +138,7 @@ const renderServiceHead = (content: TContent, service: TService, siteUrl: string
     serviceType: service.title,
     description,
     url,
-    image: service.photo,
+    image: src,
     areaServed: { "@type": "City", name: site.city },
     provider: getBusiness(content, siteUrl),
     offers:
@@ -147,10 +159,11 @@ const renderServiceHead = (content: TContent, service: TService, siteUrl: string
     title,
     description,
     url,
-    image: service.photo ?? seo.og_image,
+    image: src ?? seo.og_image,
+    preload: src == null ? undefined : preloadImage({ href: src }),
     ogTitle: title,
     ogDescription: description,
-    structuredData: [{ "@context": "https://schema.org", "@graph": [serviceNode, breadcrumb] }],
+    structuredData: [{ "@context": "https://schema.org", "@graph": [serviceNode, breadcrumb] }, ...(service.faqs.length > 0 ? [getFaqPage(service.faqs)] : [])],
   });
 };
 

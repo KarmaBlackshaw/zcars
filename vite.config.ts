@@ -13,9 +13,9 @@ import Components from "unplugin-vue-components/vite";
 import content, { loadContent } from "./plugins/content";
 import head, { replaceServiceHead } from "./plugins/head";
 import sitemap from "./plugins/sitemap";
-import { getServicePath } from "./src/utils/service";
+import { getServicePath } from "./src/utils/service/getServicePath";
 
-const BARREL_DIRS = ["src/composables", "src/types", "src/utils"];
+const BARREL_DIRS = ["src/composables", "src/types"];
 
 async function generateBarrel(directoryPath: string) {
   if (!fs.existsSync(directoryPath)) {
@@ -96,7 +96,7 @@ export default defineConfig(({ mode }) => ({
     Vue(),
     VueDevTools(),
     AutoImport({
-      dirs: ["./src/composables", "./src/utils"],
+      dirs: ["./src/composables", "./src/utils/**"],
       include: [/\.[tj]sx?$/, /\.vue$/, /\.vue\?vue/, /\.md$/],
       imports: ["vue", "vue-router", "@vueuse/core"],
       vueTemplate: true,

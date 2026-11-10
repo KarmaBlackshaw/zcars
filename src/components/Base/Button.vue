@@ -7,42 +7,43 @@ const {
   size = "md",
 } = defineProps<{
   href?: string;
-  variant?: "primary" | "ghost";
+  variant?: "primary" | "light" | "dark" | "text";
   size?: "md" | "sm" | "icon";
 }>();
 
 const tag = computed(() => (href ? "a" : "button"));
 const buttonType = computed(() => (href ? undefined : "button"));
-const isExternal = computed(() => href?.startsWith("https://") ?? false);
-const target = computed(() => (isExternal.value ? "_blank" : undefined));
-const rel = computed(() => (isExternal.value ? "noopener" : undefined));
+const linkAttrs = computed(() => getLinkAttrs(href));
+
+const baseClasses =
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap transition-[transform,filter,color] duration-300 ease-settle aria-disabled:cursor-not-allowed aria-disabled:opacity-70 disabled:cursor-not-allowed disabled:opacity-70";
+
+const slantClasses = "clip-slant font-display italic uppercase text-button hover:brightness-110 motion-safe:active:translate-y-px";
 
 const variantClasses = {
-  primary: "bg-accent text-white hover:bg-brilliantBlue focus-visible:outline-fg",
-  ghost: "border border-muted/70 hover:border-fg",
+  primary: `${slantClasses} bg-accent text-white`,
+  light: `${slantClasses} bg-blackHaze text-night`,
+  dark: `${slantClasses} bg-night text-white`,
+  text: "text-link font-semibold underline-offset-4 hover:underline",
 };
 
 const sizeClasses = {
-  md: "min-h-12 px-[1.375rem] py-3.5",
-  sm: "min-h-11 px-4 py-2.5 text-small",
-  icon: "size-11 p-0",
+  md: "h-12 px-8",
+  sm: "h-10 px-6",
+  icon: "size-11 p-0 [--slant:8px]",
 };
+
+const textSizeClasses = {
+  md: "min-h-14",
+  sm: "min-h-11 text-small",
+  icon: "size-11",
+};
+
+const classes = computed(() => [baseClasses, variantClasses[variant], variant === "text" ? textSizeClasses[size] : sizeClasses[size]]);
 </script>
 
 <template>
-  <component
-    :is="tag"
-    :href="href"
-    :type="buttonType"
-    :target="target"
-    :rel="rel"
-    :class="[
-      'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-semibold transition-[transform,background-color,border-color] duration-300 ease-settle aria-disabled:cursor-not-allowed aria-disabled:opacity-70 motion-safe:hover:-translate-y-0.5 motion-safe:active:scale-[.98]',
-      variantClasses[variant],
-      sizeClasses[size],
-    ]"
-  >
+  <component :is="tag" :href="href" :type="buttonType" v-bind="linkAttrs" :class="classes">
     <slot></slot>
-    <span v-if="isExternal" class="sr-only"> (opens in new tab)</span>
   </component>
 </template>

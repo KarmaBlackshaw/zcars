@@ -1,101 +1,64 @@
 <script setup lang="ts">
-import { PhCheck, PhMessengerLogo, PhPhone } from "@phosphor-icons/vue";
+import { PhCheck } from "@phosphor-icons/vue";
 import { projects, services, site } from "virtual:content";
 
 defineOptions({ name: "ServicePage" });
 
 const route = useRoute("/services/[slug]");
-const quoteDrawer = useQuoteDrawer();
 
 const service = computed(() => services.find(({ slug }) => slug === route.params.slug));
-const heading = computed(() => `${service.value?.title} in ${site.city}`);
-const intro = computed(() => service.value?.intro ?? service.value?.summary);
-const priceLabel = computed(() => (service.value?.price_from != null ? `From ${formatPrice(service.value.price_from)}` : ""));
-const serviceProjects = computed(() => projects.filter((project) => project.services.includes(route.params.slug)));
+const showcase = computed(() => (service.value == null ? undefined : getServiceShowcase(service.value, projects)));
+const workProjects = computed(() => showcase.value?.workProjects ?? []);
+const compareProject = computed(() => showcase.value?.compareProject);
 
-const otherServices = computed(() =>
-  services.filter(({ slug }) => slug !== route.params.slug).map(({ slug, title }) => ({ title, href: getServicePath(slug) }))
-);
+const title = computed(() => service.value?.title ?? "");
+const lead = computed(() => service.value?.intro ?? service.value?.summary ?? "");
+const priceText = computed(() => (service.value?.price_from != null ? `From ${formatPrice(service.value.price_from)}` : ""));
 
-function openQuote() {
-  quoteDrawer.open(service.value?.title);
-}
+const heroImage = computed(() => {
+  const src = showcase.value?.src;
+
+  return src == null ? undefined : { src, alt: showcase.value?.project?.title ?? title.value };
+});
+const hasIncludes = computed(() => (service.value?.includes.length ?? 0) > 0);
+const bandTitle = computed(() => (hasIncludes.value ? `What ${toMidSentence(title.value)} includes` : `${title.value} results`));
+const accent = computed(() => `in ${site.city}.`);
+const workTitle = computed(() => `${title.value} jobs from our shop`);
+const faqTitle = computed(() => `${title.value} questions`);
+const visitTitle = `Visit the shop in ${site.locality}`;
 </script>
 
 <template>
-  <main id="main" tabindex="-1" class="focus:outline-none">
+  <main>
     <template v-if="service">
-      <section class="pb-12 pt-6 desk:py-16">
-        <BaseContainer class="grid gap-10 desk:grid-cols-12 desk:items-center desk:gap-12">
-          <div class="desk:col-span-7">
-            <p class="flex flex-wrap gap-2 text-small text-muted">
-              <a href="/" class="hover:text-fg">Home</a>
-              <span>/</span>
-              <span class="text-fg">{{ service.title }}</span>
-            </p>
-            <h1 class="mt-4 max-w-[16ch] text-balance text-h2">{{ heading }}</h1>
-            <p class="mt-5 max-w-[56ch] text-lead text-muted">{{ intro }}</p>
-            <p v-if="priceLabel" class="mt-4 font-semibold">{{ priceLabel }}</p>
-            <p v-if="service.price_note" class="text-small text-muted">{{ service.price_note }}</p>
-            <div id="hero-actions" class="mt-8 grid grid-cols-2 gap-3 desk:flex desk:flex-wrap">
-              <BaseButton :href="site.messenger_url">
-                <PhMessengerLogo class="shrink-0" />
-                Message us
-              </BaseButton>
-              <BaseButton variant="ghost" @click="openQuote">Get a quote</BaseButton>
-              <BaseButton variant="ghost" :href="site.tel_href" class="col-span-2 desk:col-span-1">
-                <PhPhone class="shrink-0" />
-                Call {{ site.phone_display }}
-              </BaseButton>
-            </div>
-          </div>
-          <img
-            v-if="service.photo"
-            :src="service.photo"
-            :alt="service.title"
-            fetchpriority="high"
-            class="aspect-[4/3] w-full rounded-card bg-surface object-cover desk:col-span-5"
-          />
-        </BaseContainer>
-      </section>
-      <section v-if="service.includes.length" aria-labelledby="included-title" class="border-t border-line py-12 desk:py-16">
-        <BaseContainer>
-          <BaseSectionHeading id="included-title" title="What's included" />
-          <ul role="list" class="mt-8 grid gap-3 sm:grid-cols-2 desk:grid-cols-3">
-            <li v-for="item in service.includes" :key="item" class="flex items-start gap-3 rounded-card bg-surface p-4">
-              <PhCheck :size="20" weight="bold" class="mt-0.5 shrink-0 text-accent-text" />
-              {{ item }}
-            </li>
-          </ul>
-        </BaseContainer>
-      </section>
-      <ServiceWork v-if="serviceProjects.length" :projects="serviceProjects" />
-      <section v-if="service.faqs.length" aria-labelledby="service-faq-title" class="border-t border-line py-12 desk:py-16">
-        <BaseContainer class="max-w-3xl">
-          <BaseSectionHeading id="service-faq-title" title="Common questions" />
-          <BaseFaqList :items="service.faqs" class="mt-8" />
-        </BaseContainer>
-      </section>
-      <section aria-labelledby="other-services-title" class="border-t border-line py-12 desk:py-16">
-        <BaseContainer>
-          <BaseSectionHeading id="other-services-title" title="Other services" />
-          <ul role="list" class="mt-8 flex flex-wrap gap-2">
-            <li v-for="other in otherServices" :key="other.href">
-              <a
-                :href="other.href"
-                class="inline-flex min-h-11 items-center rounded-full border border-line px-4 font-semibold transition-colors hover:border-muted"
-              >
-                {{ other.title }}
-              </a>
-            </li>
-          </ul>
-        </BaseContainer>
-      </section>
+      <SectionHero :heading="title" :accent="accent" :lead="lead" :image="heroImage" :quote-service="service.title">
+        <template #eyebrow>
+          <a href="/" class="hover:underline">Home</a>
+          / {{ service.title }}
+        </template>
+        <template #facts>
+          <p v-if="priceText">
+            <span class="font-display font-black italic">{{ priceText }}</span>
+            <span v-if="service.price_note" class="font-normal text-muted">{{ service.price_note }}</span>
+          </p>
+          <p>Free quote. We confirm the price before any work starts.</p>
+        </template>
+      </SectionHero>
+      <ServiceStrip :services="services" :active-slug="service.slug" />
+      <SectionBand v-if="hasIncludes || compareProject != null" :title="bandTitle" :project="compareProject">
+        <template v-if="hasIncludes" #default>
+          <SectionBandCard v-for="item in service.includes" :key="item" :icon="PhCheck" :title="item" />
+        </template>
+      </SectionBand>
+      <SectionWork :title="workTitle" :projects="workProjects" />
+      <SectionActions class="bg-surface" :quote-service="service.title" />
+      <SectionFaq :title="faqTitle" :items="service.faqs" />
+      <SectionVisit class="bg-surface" :title="visitTitle" />
     </template>
     <section v-else class="py-24">
       <BaseContainer>
-        <h1 class="text-h2">Service not found</h1>
-        <a href="/#services" class="mt-4 inline-flex min-h-11 items-center font-semibold text-accent-text hover:underline">See all services</a>
+        <h2>Service not found</h2>
+        <BaseButton variant="text" href="/#services" class="mt-4">See all services</BaseButton>
       </BaseContainer>
     </section>
   </main>

@@ -1,51 +1,52 @@
 <script setup lang="ts">
-import { PhMessengerLogo } from "@phosphor-icons/vue";
+import { PhPhone } from "@phosphor-icons/vue";
 import { site } from "virtual:content";
 
 defineOptions({ name: "LayoutActionBar" });
 
-const quoteDrawer = useQuoteDrawer();
+const bar = ref<HTMLElement>();
+const targets = ref<HTMLElement[]>([]);
+const visibleTargets = reactive(new Set<HTMLElement>());
+const hasReported = ref(false);
 
-const isHeroVisible = ref(true);
-const isContactVisible = ref(false);
-const heroActions = ref<HTMLElement>();
-const contact = ref<HTMLElement>();
+useIntersectionObserver(targets, (entries) => {
+  for (const { target, isIntersecting } of entries) {
+    if (!(target instanceof HTMLElement)) {
+      continue;
+    }
 
-useIntersectionObserver(heroActions, ([entry]) => {
-  isHeroVisible.value = entry?.isIntersecting ?? false;
+    if (isIntersecting) {
+      visibleTargets.add(target);
+    } else {
+      visibleTargets.delete(target);
+    }
+  }
+
+  hasReported.value = true;
 });
 
-useIntersectionObserver(contact, ([entry]) => {
-  isContactVisible.value = entry?.isIntersecting ?? false;
-});
-
-const isHidden = computed(() => isHeroVisible.value || isContactVisible.value);
+const isHidden = computed(() => !hasReported.value || visibleTargets.size > 0);
 const barClass = computed(() => (isHidden.value ? "translate-y-full motion-reduce:translate-y-0 motion-reduce:opacity-0" : ""));
 
 onMounted(() => {
-  heroActions.value = document.getElementById("hero-actions") ?? undefined;
-  contact.value = document.getElementById("contact") ?? undefined;
+  const pills = document.querySelectorAll("[data-main-action]");
+  targets.value = [...pills].flatMap((pill) => (pill instanceof HTMLElement && !bar.value?.contains(pill) ? pill : []));
+  hasReported.value = targets.value.length === 0;
 });
-
-function openQuote() {
-  quoteDrawer.open();
-}
 </script>
 
 <template>
-  <nav
-    aria-label="Quick contact"
-    :inert="isHidden"
-    :aria-hidden="isHidden"
+  <div
+    ref="bar"
     :class="barClass"
-    class="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-bg/90 backdrop-blur duration-300 ease-settle motion-safe:transition-transform motion-reduce:transition-opacity desk:hidden [@media(max-height:500px)]:hidden"
+    class="night fixed inset-x-0 bottom-0 z-20 flex h-[calc(4rem+env(safe-area-inset-bottom))] items-center gap-2 bg-night px-3 pb-[env(safe-area-inset-bottom)] duration-300 ease-settle motion-safe:transition-transform motion-reduce:transition-opacity desk:hidden [@media(max-height:500px)]:hidden"
   >
-    <div class="grid grid-cols-[3fr_2fr] gap-2 px-3 pb-[max(.5rem,env(safe-area-inset-bottom))] pt-2">
-      <BaseButton size="sm" :href="site.messenger_url" class="w-full">
-        <PhMessengerLogo class="shrink-0" />
-        Message us
-      </BaseButton>
-      <BaseButton variant="ghost" size="sm" class="w-full" @click="openQuote">Get a quote</BaseButton>
-    </div>
-  </nav>
+    <LayoutMainAction size="sm" class="min-w-0 flex-1">
+      <span class="max-[379px]:hidden">Send a photo on Messenger</span>
+      <span class="min-[380px]:hidden">Send a photo</span>
+    </LayoutMainAction>
+    <BaseButton variant="light" size="icon" :href="site.tel_href" class="shrink-0">
+      <PhPhone class="shrink-0" />
+    </BaseButton>
+  </div>
 </template>

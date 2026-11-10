@@ -18,7 +18,7 @@ const NOT_SURE = "Not sure";
 const serviceOptions = [NOT_SURE, ...services.map(({ title }) => title)];
 
 const photoButtonClasses =
-  "inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full border border-line px-4 py-2.5 text-small font-semibold transition-colors hover:border-muted peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-[3px] peer-focus-visible:outline-accent-text peer-aria-[invalid=true]:border-danger";
+  "inline-flex min-h-11 cursor-pointer items-center justify-center rounded-lg bg-surface ring-1 ring-line px-4 py-2.5 text-small font-semibold transition-colors hover:ring-fg/30 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-[3px] peer-focus-visible:outline-accent peer-aria-[invalid=true]:ring-danger";
 
 const isEnhanced = ref(false);
 const hasAttemptedSubmit = ref(false);
@@ -132,17 +132,44 @@ watch(quoteDrawer.isOpen, (isOpen) => {
         <PhMessengerLogo aria-hidden="true" class="shrink-0" />
         Message us
       </BaseButton>
-      <BaseButton variant="ghost" :href="site.tel_href">
+      <BaseButton variant="text" :href="site.tel_href">
         <PhPhone aria-hidden="true" class="shrink-0" />
         Call
       </BaseButton>
     </div>
-    <BaseButton variant="ghost" size="sm" @click="startNewRequest">Send another request</BaseButton>
+    <BaseButton variant="text" size="sm" @click="startNewRequest">Send another request</BaseButton>
   </div>
   <form v-else ref="formEl" name="quote" class="grid gap-5" :novalidate="isEnhanced" @submit.prevent="onSubmit">
     <p class="absolute -left-[9999px]" aria-hidden="true">
       <label>Company <input name="company" tabindex="-1" autocomplete="off" /></label>
     </p>
+    <HomeQuoteField id="quote-photo" label="Photo" :error="errors.photo">
+      <template #label="{ requirementText }">
+        <p class="font-semibold">
+          Photo of the car <span class="font-normal text-muted">{{ requirementText }}</span>
+        </p>
+      </template>
+      <template #default="{ describedBy }">
+        <div class="flex flex-wrap items-center gap-3">
+          <input
+            id="quote-photo"
+            ref="photoEl"
+            name="photo"
+            type="file"
+            accept="image/*"
+            class="peer sr-only"
+            :aria-invalid="isInvalid('photo')"
+            :aria-describedby="describedBy"
+            @change="onPhotoChange"
+          />
+          <label for="quote-photo" :class="photoButtonClasses">Add a photo (up to 7 MB)</label>
+          <template v-if="photoName">
+            <span class="min-w-0 break-all text-small text-muted">{{ photoName }}</span>
+            <BaseButton variant="text" size="sm" @click="removePhoto">Remove</BaseButton>
+          </template>
+        </div>
+      </template>
+    </HomeQuoteField>
     <HomeQuoteField v-slot="{ describedBy }" id="quote-name" label="Name" is-required :error="errors.name">
       <BaseInput
         id="quote-name"
@@ -188,38 +215,11 @@ watch(quoteDrawer.isOpen, (isOpen) => {
     <HomeQuoteField v-slot="{ describedBy }" id="quote-message" label="Message">
       <BaseTextarea id="quote-message" name="message" rows="3" placeholder="What does the car need?" :aria-describedby="describedBy" />
     </HomeQuoteField>
-    <HomeQuoteField id="quote-photo" label="Photo" :error="errors.photo">
-      <template #label="{ requirementText }">
-        <p class="font-semibold">
-          Photo <span class="font-normal text-muted">{{ requirementText }}</span>
-        </p>
-      </template>
-      <template #default="{ describedBy }">
-        <div class="flex flex-wrap items-center gap-3">
-          <input
-            id="quote-photo"
-            ref="photoEl"
-            name="photo"
-            type="file"
-            accept="image/*"
-            class="peer sr-only"
-            :aria-invalid="isInvalid('photo')"
-            :aria-describedby="describedBy"
-            @change="onPhotoChange"
-          />
-          <label for="quote-photo" :class="photoButtonClasses">Add a photo (up to 7 MB)</label>
-          <template v-if="photoName">
-            <span class="min-w-0 break-all text-small text-muted">{{ photoName }}</span>
-            <BaseButton variant="ghost" size="sm" @click="removePhoto">Remove</BaseButton>
-          </template>
-        </div>
-      </template>
-    </HomeQuoteField>
     <div class="grid gap-4">
       <p v-if="isSummaryShown" role="alert" class="text-danger">Please fix {{ errorCount }} {{ fieldWord }}</p>
       <div v-if="status === 'error'" role="alert" class="grid justify-items-start gap-3">
         <p class="text-danger">That did not send. Check your connection and try again, or message us.</p>
-        <BaseButton variant="ghost" size="sm" :href="site.messenger_url">Message us instead</BaseButton>
+        <BaseButton variant="text" size="sm" :href="site.messenger_url">Message us instead</BaseButton>
       </div>
       <BaseButton type="submit" :aria-disabled="isSubmitting" :aria-busy="isSubmitting" class="w-full">
         <template v-if="isSubmitting">

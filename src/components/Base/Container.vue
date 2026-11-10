@@ -3,7 +3,7 @@ defineOptions({ name: "BaseContainer" });
 </script>
 
 <template>
-  <div class="mx-auto max-w-[1240px] px-4 md:px-8">
+  <div class="mx-auto max-w-page px-6 desk:px-16">
     <slot></slot>
   </div>
 </template>

@@ -16,7 +16,7 @@ const sourceText = computed(() => sourceLabels[review.source]);
     <p class="mt-auto grid gap-1 text-small">
       <strong class="break-words font-display text-card-title uppercase italic">{{ review.name }}</strong>
       <span v-if="review.vehicle" class="text-muted">{{ review.vehicle }}</span>
-      <BaseExternalLink v-if="review.source_url" :href="review.source_url" class="text-link hover:underline">{{ sourceText }}</BaseExternalLink>
+      <BaseButton v-if="review.source_url" variant="text" size="sm" :href="review.source_url" class="justify-self-start">{{ sourceText }}</BaseButton>
     </p>
   </BaseTile>
 </template>

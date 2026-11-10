@@ -22,7 +22,7 @@ const isMapNear = useElementVisibility(mapFrame, { rootMargin: "200px", once: tr
           <div class="mt-8 flex items-start gap-3">
             <PhMapPin :size="22" class="mt-0.5 shrink-0 text-fg" />
             <div class="flex flex-col items-start gap-1">
-              <BaseExternalLink :href="site.map_directions_url" class="text-link underline-offset-4 hover:underline">{{ site.address }}</BaseExternalLink>
+              <BaseButton variant="text" :href="site.map_directions_url">{{ site.address }}</BaseButton>
               <BaseButton variant="text" :href="site.map_directions_url">Get directions</BaseButton>
             </div>
           </div>
@@ -38,7 +38,7 @@ const isMapNear = useElementVisibility(mapFrame, { rootMargin: "200px", once: tr
         <div ref="mapFrame" class="reveal relative h-80 overflow-hidden rounded-xl bg-surface desk:col-span-7 desk:h-auto desk:min-h-[560px]">
           <div class="absolute inset-0 grid place-content-center justify-items-center gap-2">
             <PhMapPin :size="32" class="text-fg" />
-            <BaseExternalLink :href="site.map_directions_url" class="text-muted underline">Open in Google Maps</BaseExternalLink>
+            <BaseButton variant="text" :href="site.map_directions_url">Open in Google Maps</BaseButton>
           </div>
           <iframe
             v-if="isMapNear"

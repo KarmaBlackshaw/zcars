@@ -16,9 +16,9 @@ const buttonType = computed(() => (href ? undefined : "button"));
 const linkAttrs = computed(() => getLinkAttrs(href));
 
 const baseClasses =
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap transition-[transform,filter,color] duration-300 ease-settle aria-disabled:cursor-not-allowed aria-disabled:opacity-70 disabled:cursor-not-allowed disabled:opacity-70";
+  "inline-flex items-center justify-center gap-2 transition-[transform,filter,color] duration-300 ease-settle aria-disabled:cursor-not-allowed aria-disabled:opacity-70 disabled:cursor-not-allowed disabled:opacity-70";
 
-const slantClasses = "clip-slant font-display italic uppercase text-button hover:brightness-110 motion-safe:active:translate-y-px";
+const slantClasses = "clip-slant whitespace-nowrap font-display italic uppercase text-button hover:brightness-110 motion-safe:active:translate-y-px";
 
 const variantClasses = {
   primary: `${slantClasses} bg-accent text-white`,

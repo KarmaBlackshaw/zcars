@@ -13,7 +13,7 @@ Prerendered one-page site for Zcars Auto Detailing Garage (Sagkahan, Tacloban Ci
 
 ```sh
 nvm use
-cp .env.example .env.local    # site URL + Supabase URL/key; npm install builds, so do this first
+cp .env.example .env.local    # then fill the Supabase URL/key from Netlify env vars; npm install builds, so do this first
 npm install                   # also generates types, barrels, d.ts
 npm run dev                   # http://localhost:5173
 ```
@@ -71,7 +71,7 @@ Upload to the public `uploads` Storage bucket (webp, max 2048px), copy its publi
 
 ## Deploy
 
-Netlify reads `netlify.toml` (build command, `dist`, `VITE_SITE_URL`, Supabase URL and publishable key), which overrides the dashboard build settings. Change the domain there if it moves. Other hosts:
+Netlify reads `netlify.toml` (build command, `dist`, redirects), which overrides the dashboard build settings. `VITE_SITE_URL` and the Supabase URL and publishable key are set in Netlify under Project configuration, Environment variables; change the domain there if it moves. Env values are never committed. Other hosts:
 
 - Build command: `npm run build`
 - Output directory: `dist`
@@ -87,7 +87,7 @@ Netlify reads `netlify.toml` (build command, `dist`, `VITE_SITE_URL`, Supabase U
 | `ENOENT ... auto-import.json` or `Cannot find module '@/types'`              | `npm run build-only`                                                    |
 | `VITE_SITE_URL is not set`                                                   | Quick start step 3 locally, or set it in the host env (see Deploy)      |
 | `Content is invalid`                                                         | Read the listed table and row, then fix it in the Supabase Table Editor |
-| `VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY are not set`            | Quick start step 2 locally; `netlify.toml` sets them on Netlify         |
+| `VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY are not set`            | Quick start step 2 locally; set them in Netlify env vars on Netlify     |
 | Added a file to `src/types`, `src/composables` or `src/utils` while dev runs | Restart `npm run dev`                                                   |
 
 ## Upgrading

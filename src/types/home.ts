@@ -4,6 +4,7 @@ import { httpsUrlSchema, optionalSchema, textSchema } from "./content";
 
 export const homeSchema = z.object({
   id: z.literal(true),
+  hero_heading: textSchema,
   hero_title: textSchema,
   hero_title_accent: optionalSchema(textSchema),
   hero_lead: textSchema.max(160),

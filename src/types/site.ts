@@ -34,6 +34,12 @@ export const siteSchema = z
     address: textSchema,
     locality: textSchema,
     map_query: textSchema,
+    city: textSchema,
+    region: textSchema,
+    postal_code: textSchema,
+    latitude: z.number().min(-90).max(90),
+    longitude: z.number().min(-180).max(180),
+    google_maps_url: httpsUrlSchema,
     hours_note: optionalSchema(textSchema),
     hours: z.array(openingHoursSchema),
   })

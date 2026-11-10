@@ -8,5 +8,6 @@ defineOptions({ name: "App" });
   <RouterView />
   <LayoutFooter />
   <LayoutActionBar />
+  <LayoutQuoteTab />
   <HomeQuoteDrawer />
 </template>

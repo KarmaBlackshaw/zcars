@@ -65,6 +65,7 @@ onBeforeUnmount(stopSweep);
       :before="before"
       :after="project.photos[0]"
       :alt="project.title"
+      sizes="(min-width: 900px) 34rem, 100vw"
       :focus="FOCUS"
       class="size-full"
       @pointerdown.once="stopSweep"

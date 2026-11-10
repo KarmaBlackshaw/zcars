@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { PhCaretLeft, PhCaretRight, PhX } from "@phosphor-icons/vue";
+import { images } from "virtual:content";
 
 import type { TProject } from "@/types";
 
@@ -8,6 +9,8 @@ defineOptions({ name: "SectionWorkLightbox" });
 const { projects } = defineProps<{ projects: TProject[] }>();
 
 const index = defineModel<number>();
+
+const PHOTO_SIZES = "(min-width: 900px) 64rem, 100vw";
 
 const dialogRef = useTemplateRef("dialogEl");
 const hasImageError = ref(false);
@@ -37,9 +40,10 @@ watch(
 
 function preload(at: number) {
   const neighbor = photos.value[at];
+  const image = neighbor == null ? undefined : images[neighbor];
 
-  if (neighbor) {
-    new Image().src = neighbor;
+  if (image != null) {
+    Object.assign(new Image(), { sizes: PHOTO_SIZES, srcset: image.srcset });
   }
 }
 
@@ -87,10 +91,11 @@ function onImageError() {
           <p v-if="hasImageError" class="grid size-full place-items-center p-6 text-center text-muted desk:aspect-[4/3] desk:h-[60dvh] desk:w-auto">
             {{ photoAlt }}
           </p>
-          <img
+          <BaseImage
             v-else-if="photo"
             :src="photo"
             :alt="photoAlt"
+            :sizes="PHOTO_SIZES"
             class="size-full object-contain desk:mx-auto desk:h-auto desk:max-h-[70dvh] desk:w-auto"
             @error="onImageError"
           />

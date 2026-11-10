@@ -12,7 +12,8 @@ import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import Icons from "unplugin-icons/vite";
 import content, { loadContent } from "./plugins/content";
-import head, { replaceServiceHead } from "./plugins/head";
+import head, { replaceNotFoundHead, replaceServiceHead } from "./plugins/head";
+import images from "./plugins/images";
 import sitemap from "./plugins/sitemap";
 import { getServicePath } from "./src/utils/service/getServicePath";
 
@@ -42,6 +43,8 @@ async function generateBarrel(directoryPath: string) {
 const SERVICES_PARENT_ROUTE = "/services";
 const SERVICE_ROUTE = "/services/:slug";
 const SERVICE_PATH = /^\/services\/([^/]+)$/;
+const NOT_FOUND_ROUTE = "/:path(.*)";
+const NOT_FOUND_PATH = "/404";
 
 const createSsgOptions = (env: Record<string, string>): ViteSSGOptions => ({
   async includedRoutes(paths) {
@@ -50,6 +53,10 @@ const createSsgOptions = (env: Record<string, string>): ViteSSGOptions => ({
     return paths.flatMap((routePath) => {
       if (routePath === SERVICE_ROUTE) {
         return services.map(({ slug }) => getServicePath(slug));
+      }
+
+      if (routePath === NOT_FOUND_ROUTE) {
+        return [NOT_FOUND_PATH];
       }
 
       return routePath === SERVICES_PARENT_ROUTE ? [] : [routePath];
@@ -66,6 +73,12 @@ const createSsgOptions = (env: Record<string, string>): ViteSSGOptions => ({
 
     if (isLocalhost) {
       console.warn("[zcars] VITE_SITE_URL points at localhost. Fine for npm run preview; on the host set VITE_SITE_URL=https://<your-domain>.");
+    }
+
+    if (route === NOT_FOUND_PATH) {
+      const content = await loadContent(env);
+
+      return replaceNotFoundHead(indexHTML, content);
     }
 
     const slug = SERVICE_PATH.exec(route)?.[1];
@@ -90,6 +103,7 @@ export default defineConfig(({ mode }) => ({
     },
     content(),
     head(),
+    images(),
     sitemap(),
     VueRouter({
       routesFolder: "src/pages",

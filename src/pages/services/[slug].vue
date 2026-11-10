@@ -55,11 +55,6 @@ const visitTitle = `Visit the shop in ${site.locality}`;
       <SectionFaq :title="faqTitle" :items="service.faqs" />
       <SectionVisit class="bg-surface" :title="visitTitle" />
     </template>
-    <section v-else class="py-24">
-      <BaseContainer>
-        <h2>Service not found</h2>
-        <BaseButton variant="text" href="/#services" class="mt-4">See all services</BaseButton>
-      </BaseContainer>
-    </section>
+    <SectionNotFound v-else />
   </main>
 </template>

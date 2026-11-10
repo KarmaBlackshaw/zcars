@@ -4,7 +4,7 @@ import PhCaretRightBold from "~icons/ph/caret-right-bold";
 
 defineOptions({ name: "BaseCompareSlider" });
 
-const { before, after, alt, focus = "50% 50%" } = defineProps<{ before: string; after: string; alt: string; focus?: string }>();
+const { before, after, alt, sizes, focus = "50% 50%" } = defineProps<{ before: string; after: string; alt: string; sizes?: string; focus?: string }>();
 
 const position = defineModel<number>("position", { default: 50 });
 
@@ -49,8 +49,8 @@ function stopDragging() {
     @pointerup="stopDragging"
     @pointercancel="stopDragging"
   >
-    <img :src="after" :alt="alt" loading="lazy" draggable="false" class="absolute inset-0 size-full object-cover" :style="imageStyle" />
-    <img :src="before" alt="" loading="lazy" draggable="false" class="absolute inset-0 size-full object-cover" :style="beforeStyle" />
+    <BaseImage :src="after" :alt="alt" :sizes="sizes" loading="lazy" draggable="false" class="absolute inset-0 size-full object-cover" :style="imageStyle" />
+    <BaseImage :src="before" alt="" :sizes="sizes" loading="lazy" draggable="false" class="absolute inset-0 size-full object-cover" :style="beforeStyle" />
     <BaseChip class="absolute left-3 top-3">Before</BaseChip>
     <BaseChip class="absolute right-3 top-3">After</BaseChip>
     <div class="pointer-events-none absolute inset-y-0 w-0.5 -translate-x-1/2 bg-accent" :style="handleStyle">

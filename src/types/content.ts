@@ -3,6 +3,7 @@ import { z } from "zod";
 import type { TFaq } from "./faq";
 import type { THiringRole } from "./hiring";
 import type { THome } from "./home";
+import type { TImage } from "./image";
 import type { TPartner } from "./partner";
 import type { TProject } from "./project";
 import type { TPromo } from "./promo";
@@ -31,4 +32,5 @@ export type TContent = {
   partners: TPartner[];
   stats: TStat[];
   hiringRoles: THiringRole[];
+  images: Partial<Record<string, TImage>>;
 };

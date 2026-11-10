@@ -1,11 +1,13 @@
 <script setup lang="ts">
+import { HERO_PHOTO } from "@/constants/hero";
+
 defineOptions({ name: "SectionHero" });
 
 const { heading, accent, lead, image, quoteService } = defineProps<{
   heading: string;
   accent?: string;
   lead: string;
-  image?: { src: string; srcset?: string; sizes?: string; alt: string };
+  image?: { src: string; alt: string };
   quoteService?: string;
 }>();
 
@@ -21,10 +23,9 @@ function openQuote() {
 <template>
   <section class="night relative isolate overflow-clip bg-night pb-24 pt-10 desk:pb-28 desk:pt-16">
     <div v-if="image" class="hero-exit absolute inset-0 overflow-clip desk:left-auto desk:w-[62%]">
-      <img
+      <BaseImage
         :src="image.src"
-        :srcset="image.srcset"
-        :sizes="image.sizes"
+        :sizes="HERO_PHOTO.sizes"
         :alt="image.alt"
         fetchpriority="high"
         decoding="async"

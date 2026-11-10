@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { PhMapPin, PhPhone } from "@phosphor-icons/vue";
 import { home, site } from "virtual:content";
 import { gridClasses, sectionClasses } from "@/constants/section";
+import PhMapPin from "~icons/ph/map-pin";
+import PhPhone from "~icons/ph/phone";
 
 defineOptions({ name: "SectionVisit" });
 
@@ -20,7 +21,7 @@ const isMapNear = useElementVisibility(mapFrame, { rootMargin: "200px", once: tr
         <BaseTile padding="lg" class="desk:col-span-5">
           <BaseSectionHeading :title="title" :lead="home.contact_lead" />
           <div class="mt-8 flex items-start gap-3">
-            <PhMapPin :size="22" class="mt-0.5 shrink-0 text-fg" />
+            <PhMapPin class="mt-0.5 size-[22px] shrink-0 text-fg" />
             <div class="flex flex-col items-start gap-1">
               <BaseExternalLink :href="site.map_directions_url" class="text-link underline-offset-4 hover:underline">{{ site.address }}</BaseExternalLink>
               <BaseButton variant="text" :href="site.map_directions_url">Get directions</BaseButton>
@@ -37,7 +38,7 @@ const isMapNear = useElementVisibility(mapFrame, { rootMargin: "200px", once: tr
         </BaseTile>
         <div ref="mapFrame" class="reveal relative h-80 overflow-hidden rounded-xl bg-surface desk:col-span-7 desk:h-auto desk:min-h-[560px]">
           <div class="absolute inset-0 grid place-content-center justify-items-center gap-2">
-            <PhMapPin :size="32" class="text-fg" />
+            <PhMapPin class="size-8 text-fg" />
             <BaseExternalLink :href="site.map_directions_url" class="text-muted underline">Open in Google Maps</BaseExternalLink>
           </div>
           <iframe

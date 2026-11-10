@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { PhCheck } from "@phosphor-icons/vue";
 import { projects, services, site } from "virtual:content";
+import PhCheck from "~icons/ph/check";
 
 defineOptions({ name: "ServicePage" });
 

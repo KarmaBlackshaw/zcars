@@ -78,7 +78,7 @@ const rules = {
     },
   ],
   "vue/attribute-hyphenation": ["error", "always", { ignore: [], ignoreTags: [] }],
-  "import/no-unresolved": ["error", { ignore: ["^virtual:"] }],
+  "import/no-unresolved": ["error", { ignore: ["^virtual:", "^~icons/"] }],
   "import/order": [
     "error",
     {

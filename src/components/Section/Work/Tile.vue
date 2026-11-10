@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { PhArrowRight, PhImages } from "@phosphor-icons/vue";
 import { services } from "virtual:content";
-
 import type { TProject } from "@/types";
+import PhArrowRight from "~icons/ph/arrow-right";
+import PhImages from "~icons/ph/images";
 
 defineOptions({ name: "SectionWorkTile" });
 
@@ -26,7 +26,7 @@ const badge = computed(() => services.find(({ slug }) => project.services.includ
       />
       <BaseChip v-if="badge" tone="accent" class="absolute left-3 top-3">{{ badge }}</BaseChip>
       <BaseChip v-if="hasMultiplePhotos" class="absolute right-3 top-3">
-        <PhImages :size="14" />
+        <PhImages class="size-3.5" />
         {{ project.gallery.length }}
       </BaseChip>
     </div>
@@ -35,7 +35,7 @@ const badge = computed(() => services.find(({ slug }) => project.services.includ
       <p class="text-small text-muted">{{ servicesText }}</p>
       <span class="mt-auto inline-flex items-center gap-1 pt-3 text-small font-semibold text-link">
         View photos
-        <PhArrowRight :size="14" />
+        <PhArrowRight class="size-3.5" />
       </span>
     </div>
   </BaseTile>

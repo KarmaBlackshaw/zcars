@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { PhCaretDown } from "@phosphor-icons/vue";
 import { controlClasses } from "@/constants/form";
+import PhCaretDown from "~icons/ph/caret-down";
 
 defineOptions({ name: "BaseSelect", inheritAttrs: false });
 

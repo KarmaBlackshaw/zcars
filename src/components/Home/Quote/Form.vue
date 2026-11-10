@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { PhCheckCircle, PhCircleNotch, PhMessengerLogo, PhPhone } from "@phosphor-icons/vue";
 import { services, site } from "virtual:content";
 import type { TQuoteField } from "@/types";
+import PhCheckCircleFill from "~icons/ph/check-circle-fill";
+import PhCircleNotch from "~icons/ph/circle-notch";
+import PhMessengerLogo from "~icons/ph/messenger-logo";
+import PhPhone from "~icons/ph/phone";
 
 defineOptions({ name: "HomeQuoteForm" });
 
@@ -125,7 +128,7 @@ watch(quoteDrawer.isOpen, (isOpen) => {
 
 <template>
   <div v-if="status === 'success'" ref="successEl" role="status" tabindex="-1" class="grid justify-items-start gap-5">
-    <PhCheckCircle :size="40" weight="fill" aria-hidden="true" class="text-success" />
+    <PhCheckCircleFill aria-hidden="true" class="size-10 text-success" />
     <p class="text-lead font-semibold">Got it. We will call or message you soon.</p>
     <div class="flex flex-wrap gap-3">
       <BaseButton :href="site.messenger_url">

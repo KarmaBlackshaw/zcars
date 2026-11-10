@@ -1,8 +1,14 @@
 <script setup lang="ts">
-import { PhHammer, PhPaintRoller, PhShieldCheck, PhSparkle, PhSprayBottle, PhSunDim, PhUmbrella, PhWrench } from "@phosphor-icons/vue";
 import type { Component } from "vue";
-
 import type { TService, TServiceIcon } from "@/types";
+import PhHammer from "~icons/ph/hammer";
+import PhPaintRoller from "~icons/ph/paint-roller";
+import PhShieldCheck from "~icons/ph/shield-check";
+import PhSparkle from "~icons/ph/sparkle";
+import PhSprayBottle from "~icons/ph/spray-bottle";
+import PhSunDim from "~icons/ph/sun-dim";
+import PhUmbrella from "~icons/ph/umbrella";
+import PhWrench from "~icons/ph/wrench";
 
 defineOptions({ name: "ServiceStrip" });
 
@@ -42,7 +48,7 @@ function iconClass(slug: string) {
       <ul class="mx-auto grid max-w-[76rem] grid-cols-2 gap-px overflow-hidden rounded-xl bg-line shadow-tile md:grid-cols-4 desk:grid-cols-8">
         <li v-for="service in services" :key="service.slug" class="bg-surface">
           <a :href="getServicePath(service.slug)" :class="tileClass(service.slug)">
-            <component :is="icons[service.icon]" :size="24" :class="iconClass(service.slug)" />
+            <component :is="icons[service.icon]" class="size-6" :class="iconClass(service.slug)" />
             <span class="font-display text-label uppercase italic">{{ service.title }}</span>
           </a>
         </li>

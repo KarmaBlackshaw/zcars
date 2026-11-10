@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { PhCaretLeft, PhCaretRight, PhX } from "@phosphor-icons/vue";
-
 import type { TProject } from "@/types";
+import PhCaretLeft from "~icons/ph/caret-left";
+import PhCaretRight from "~icons/ph/caret-right";
+import PhX from "~icons/ph/x";
 
 defineOptions({ name: "SectionWorkLightbox" });
 
@@ -80,7 +81,7 @@ function onImageError() {
   >
     <div v-if="project" class="flex h-full flex-col gap-4 p-4 desk:p-6">
       <BaseButton variant="light" size="icon" class="shrink-0 self-end" @click="close">
-        <PhX :size="20" />
+        <PhX class="size-5" />
       </BaseButton>
       <figure class="flex min-h-0 flex-1 flex-col gap-2 desk:flex-none">
         <div class="relative min-h-0 w-full flex-1 overflow-hidden rounded-xl bg-surface desk:flex-none">
@@ -104,10 +105,10 @@ function onImageError() {
         </div>
         <div v-if="hasMultiplePhotos" class="flex shrink-0 gap-2">
           <BaseButton variant="light" size="icon" :disabled="isFirst" @click="go(-1)">
-            <PhCaretLeft :size="20" />
+            <PhCaretLeft class="size-5" />
           </BaseButton>
           <BaseButton variant="light" size="icon" :disabled="isLast" @click="go(1)">
-            <PhCaretRight :size="20" />
+            <PhCaretRight class="size-5" />
           </BaseButton>
         </div>
       </div>

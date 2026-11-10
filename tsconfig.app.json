@@ -6,6 +6,7 @@
     "auto-imports.d.ts",
     "typed-router.d.ts",
     "node_modules/unplugin-vue-router/client.d.ts",
+    "node_modules/unplugin-icons/types/vue.d.ts",
     "src/**/*",
     "src/**/*.vue"
   ],

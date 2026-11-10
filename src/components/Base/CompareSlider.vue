@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { PhCaretLeft, PhCaretRight } from "@phosphor-icons/vue";
+import PhCaretLeftBold from "~icons/ph/caret-left-bold";
+import PhCaretRightBold from "~icons/ph/caret-right-bold";
 
 defineOptions({ name: "BaseCompareSlider" });
 
@@ -57,8 +58,8 @@ function stopDragging() {
         class="absolute left-1/2 top-1/2 flex size-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-accent text-white transition-transform duration-300 ease-settle"
         :class="{ 'scale-110': isDragging }"
       >
-        <PhCaretLeft :size="16" weight="bold" />
-        <PhCaretRight :size="16" weight="bold" />
+        <PhCaretLeftBold class="size-4" />
+        <PhCaretRightBold class="size-4" />
       </span>
     </div>
   </div>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { PhArrowRight } from "@phosphor-icons/vue";
 import { faqs, home, projects, services, site } from "virtual:content";
+import PhArrowRight from "~icons/ph/arrow-right";
 
 defineOptions({ name: "IndexPage" });
 

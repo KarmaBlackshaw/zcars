@@ -9,7 +9,7 @@ const {
 } = defineProps<{
   href?: string;
   as?: "div" | "li" | "button";
-  tone?: "surface" | "accent";
+  tone?: "surface" | "accent" | "night";
   padding?: "none" | "md" | "lg";
 }>();
 
@@ -21,25 +21,18 @@ const isInteractive = computed(() => href != null || as === "button");
 const toneClasses = {
   surface: "bg-surface shadow-tile",
   accent: "bg-accent text-white",
+  night: "night bg-night",
 };
 
-const interactiveClasses = {
-  surface: "hover:shadow-lift",
-  accent: "hover:shadow-lift hover:bg-accent-hover",
-};
+const interactiveClasses = "transition-[transform,box-shadow] duration-300 ease-settle motion-safe:hover:-translate-y-1 hover:shadow-lift";
 
 const paddingClasses = {
   none: "",
   md: "p-5 desk:p-7",
-  lg: "p-5 desk:p-10",
+  lg: "p-6 desk:p-8",
 };
 
-const classes = computed(() => [
-  "rounded-2xl overflow-hidden",
-  toneClasses[tone],
-  paddingClasses[padding],
-  isInteractive.value && ["transition-[box-shadow,background-color] duration-300 ease-settle", interactiveClasses[tone]],
-]);
+const classes = computed(() => ["rounded-xl overflow-hidden", toneClasses[tone], paddingClasses[padding], isInteractive.value && interactiveClasses]);
 </script>
 
 <template>

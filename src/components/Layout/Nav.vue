@@ -3,44 +3,67 @@ import { PhPhone } from "@phosphor-icons/vue";
 import { site } from "virtual:content";
 
 import { LOGO_PATH } from "@/constants/brand";
+import type { TNavLink } from "@/types";
 
 defineOptions({ name: "LayoutNav" });
 
 const links = useNavLinks();
-const isMounted = useMounted();
-const { y } = useWindowScroll();
+const route = useRoute();
 
-const isScrolled = computed(() => isMounted.value && y.value > 8);
-const surfaceClass = computed(() => (isScrolled.value ? "bg-night/88" : "bg-night/72"));
+const [brand, ...rest] = site.name.split(" ");
+const tagline = rest.join(" ");
 
-const linkClass =
-  "relative font-medium text-small text-fg after:absolute after:inset-x-0 after:-bottom-1 after:h-px after:origin-left after:scale-x-0 after:bg-fg after:transition-transform after:duration-300 after:ease-settle hover:after:scale-x-100";
+const tabBaseClasses = "relative inline-flex h-full items-center px-3 min-[1100px]:px-4 font-display italic uppercase text-nav transition-colors hover:text-fg";
+const tabActiveClasses = `${tabBaseClasses} text-accent after:absolute after:inset-x-3 after:bottom-0 after:h-[3px] after:bg-accent`;
+const tabInactiveClasses = `${tabBaseClasses} text-muted`;
+
+function isActive(link: TNavLink) {
+  if (link.href === "/") {
+    return route.path === "/";
+  }
+
+  if (link.href === "/#services") {
+    return route.path.startsWith("/services/");
+  }
+
+  return false;
+}
+
+function tabClass(link: TNavLink) {
+  return isActive(link) ? tabActiveClasses : tabInactiveClasses;
+}
 </script>
 
 <template>
-  <header
-    :class="[
-      'night fixed inset-x-3 top-3 z-20 h-14 rounded-full ring-1 ring-white/10 backdrop-blur-xl transition-colors duration-200 motion-reduce:transition-none desk:inset-x-4 desk:top-4 desk:rounded-2xl',
-      surfaceClass,
-    ]"
-  >
-    <div class="flex h-full items-center justify-between gap-4 px-3 desk:px-5">
-      <a href="/" class="flex items-center gap-2.5">
-        <img :src="LOGO_PATH" alt="Zcars" width="32" height="32" class="size-8 rounded-lg" />
-        <span class="text-lg font-[750] text-fg">Zcars</span>
-      </a>
-      <ul class="hidden gap-5 desk:flex min-[1100px]:gap-7">
-        <li v-for="link in links" :key="link.href">
-          <a :href="link.href" :class="linkClass">{{ link.label }}</a>
-        </li>
-      </ul>
-      <div class="flex items-center gap-2">
-        <BaseButton variant="ghost" size="icon" :href="site.tel_href" class="min-[1100px]:hidden">
+  <header class="sticky top-0 z-30 bg-surface desk:-top-[4.5rem]">
+    <BaseContainer>
+      <div class="flex h-[3.75rem] items-center justify-between gap-4 desk:h-[4.5rem]">
+        <a href="/" class="flex items-center gap-3">
+          <img :src="LOGO_PATH" alt="Zcars" width="40" height="40" class="size-10" />
+          <span>
+            <span class="block font-display text-tile-title uppercase italic">{{ brand }}</span>
+            <span v-if="tagline" class="hidden font-display text-label uppercase italic text-muted desk:block">{{ tagline }}</span>
+          </span>
+        </a>
+        <a :href="site.tel_href" class="hidden font-display text-card-title uppercase italic text-fg hover:text-accent desk:inline">
+          Call {{ site.phone_display }}
+        </a>
+        <BaseButton variant="dark" size="icon" :href="site.tel_href" class="desk:hidden">
           <PhPhone class="shrink-0" />
         </BaseButton>
-        <LayoutCallAction size="sm" class="hidden min-[1100px]:inline-flex" />
-        <LayoutMainAction size="sm" class="hidden desk:inline-flex" />
       </div>
+    </BaseContainer>
+    <div class="hidden border-b border-line desk:block">
+      <BaseContainer>
+        <div class="flex h-[2.875rem] items-center justify-between">
+          <ul class="flex h-full">
+            <li v-for="link in links" :key="link.href" class="h-full">
+              <a :href="link.href" :class="tabClass(link)">{{ link.label }}</a>
+            </li>
+          </ul>
+          <LayoutMainAction size="sm" class="hidden desk:inline-flex" />
+        </div>
+      </BaseContainer>
     </div>
   </header>
 </template>

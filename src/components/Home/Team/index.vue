@@ -10,9 +10,12 @@ defineOptions({ name: "HomeTeam" });
     <BaseContainer>
       <div :class="[gridClasses, 'desk:items-center']">
         <div class="order-2 desk:order-1 desk:col-span-5">
-          <BaseTile padding="none" class="reveal aspect-[4/5] max-desk:max-w-photo">
+          <div class="reveal relative aspect-[4/5] overflow-hidden rounded-2xl shadow-tile max-desk:max-w-photo">
             <img :src="home.team_image" :alt="home.team_title" loading="lazy" class="size-full object-cover" />
-          </BaseTile>
+            <BaseImageCaption v-if="home.team_caption">
+              <p class="font-display text-card-title uppercase italic">{{ home.team_caption }}</p>
+            </BaseImageCaption>
+          </div>
         </div>
         <div class="order-1 desk:order-2 desk:col-span-6 desk:col-start-7">
           <BaseSectionHeading :title="home.team_title" :lead="home.team_lead" />

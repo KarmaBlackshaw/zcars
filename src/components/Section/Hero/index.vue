@@ -1,9 +1,15 @@
 <script setup lang="ts">
 defineOptions({ name: "SectionHero" });
 
-const { heading, lead, quoteService } = defineProps<{ heading: string; lead: string; quoteService?: string }>();
+const { heading, accent, lead, image, quoteService } = defineProps<{
+  heading: string;
+  accent?: string;
+  lead: string;
+  image?: { src: string; srcset?: string; sizes?: string; alt: string };
+  quoteService?: string;
+}>();
 
-defineSlots<{ top?(): unknown; facts?(): unknown; bento?(): unknown }>();
+defineSlots<{ eyebrow?(): unknown; facts?(): unknown }>();
 
 const quoteDrawer = useQuoteDrawer();
 
@@ -13,29 +19,46 @@ function openQuote() {
 </script>
 
 <template>
-  <section class="night bg-night pb-12 pt-24 desk:pb-16 desk:pt-[7.5rem]">
-    <BaseContainer>
-      <div class="[--delay:0ms] motion-safe:animate-enter">
-        <slot name="top"></slot>
-        <h1>{{ heading }}</h1>
+  <section class="night relative isolate overflow-clip bg-night pb-24 pt-10 desk:pb-28 desk:pt-16">
+    <div v-if="image" class="hero-exit absolute inset-0 overflow-clip desk:left-auto desk:w-[62%]">
+      <img
+        :src="image.src"
+        :srcset="image.srcset"
+        :sizes="image.sizes"
+        :alt="image.alt"
+        fetchpriority="high"
+        decoding="async"
+        class="size-full object-cover object-[50%_45%] brightness-[.72] contrast-125 saturate-[.8]"
+      />
+      <div class="absolute inset-0 bg-accent/25 mix-blend-multiply"></div>
+      <div class="streaks streak-drift absolute inset-0"></div>
+      <div class="hero-fade absolute inset-0"></div>
+      <div class="hero-exit-fade absolute inset-0 bg-night opacity-0"></div>
+      <div class="streak-drift pointer-events-none absolute inset-0">
+        <span class="comet absolute right-[22%] top-[-4%] hidden h-[3px] w-[180px] motion-safe:block"></span>
+        <span class="comet absolute right-[48%] top-[-4%] hidden h-[3px] w-[180px] [--delay:3.4s] [--dur:9s] motion-safe:block"></span>
       </div>
-      <div class="mt-6 desk:mt-8 min-[1140px]:grid min-[1140px]:grid-cols-12 min-[1140px]:items-end min-[1140px]:gap-4">
-        <div class="[--delay:60ms] motion-safe:animate-enter min-[1140px]:col-span-5">
-          <p class="max-w-[46ch] text-lead text-muted">{{ lead }}</p>
-          <div v-if="$slots.facts" class="mt-5 min-h-[2.8125rem] text-small font-semibold desk:min-h-0">
-            <slot name="facts"></slot>
-          </div>
-        </div>
-        <div
-          class="mt-6 flex flex-wrap justify-between gap-3 [--delay:120ms] motion-safe:animate-enter desk:mt-8 desk:justify-start min-[1140px]:col-span-7 min-[1140px]:mt-0 min-[1140px]:justify-end min-[1140px]:justify-self-end"
+    </div>
+    <BaseContainer class="relative z-10">
+      <div class="hero-exit-content">
+        <p
+          v-if="$slots.eyebrow"
+          class="font-display text-eyebrow uppercase italic tracking-[.2em] text-glow [--delay:0ms] motion-safe:animate-slash desk:tracking-[.35em]"
         >
-          <LayoutMainAction class="w-full desk:w-auto" />
-          <LayoutCallAction class="desk:w-auto" />
-          <BaseButton variant="text" class="min-[1140px]:basis-full min-[1140px]:justify-end" @click="openQuote"> Or use the quote form </BaseButton>
+          <slot name="eyebrow"></slot>
+        </p>
+        <h1 class="mt-4 max-w-[60rem] [--delay:120ms] motion-safe:animate-slash">
+          {{ heading }} <span v-if="accent" class="block text-glow">{{ accent }}</span>
+        </h1>
+        <p class="mt-6 max-w-[34rem] text-lead text-fg/85 [--delay:250ms] motion-safe:animate-enter">{{ lead }}</p>
+        <div v-if="$slots.facts" class="mt-5 text-small font-semibold [--delay:250ms] motion-safe:animate-enter">
+          <slot name="facts"></slot>
         </div>
-      </div>
-      <div v-if="$slots.bento" class="mt-10 desk:mt-12">
-        <slot name="bento"></slot>
+        <div class="mt-8 flex flex-wrap items-center justify-between gap-3 [--delay:350ms] motion-safe:animate-enter md:justify-start desk:mt-10 desk:gap-4">
+          <LayoutMainAction class="w-full md:w-auto" />
+          <LayoutCallAction />
+          <BaseButton variant="text" @click="openQuote">Or use the quote form</BaseButton>
+        </div>
       </div>
     </BaseContainer>
   </section>

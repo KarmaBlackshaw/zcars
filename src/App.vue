@@ -3,6 +3,7 @@ defineOptions({ name: "App" });
 </script>
 
 <template>
+  <LayoutUtilityBar />
   <LayoutNav />
   <RouterView />
   <LayoutFooter />

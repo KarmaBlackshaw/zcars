@@ -26,7 +26,7 @@ useIntersectionObserver(targets, (entries) => {
 });
 
 const isHidden = computed(() => !hasReported.value || visibleTargets.size > 0);
-const barClass = computed(() => (isHidden.value ? "translate-y-[calc(100%+2rem)] motion-reduce:translate-y-0 motion-reduce:opacity-0" : ""));
+const barClass = computed(() => (isHidden.value ? "translate-y-full motion-reduce:translate-y-0 motion-reduce:opacity-0" : ""));
 
 onMounted(() => {
   const pills = document.querySelectorAll("[data-main-action]");
@@ -39,10 +39,13 @@ onMounted(() => {
   <div
     ref="bar"
     :class="barClass"
-    class="night fixed inset-x-3 bottom-[max(.75rem,env(safe-area-inset-bottom))] z-20 flex h-16 items-center gap-2 rounded-full bg-night/80 p-2 backdrop-blur-xl duration-300 ease-settle motion-safe:transition-transform motion-reduce:transition-opacity desk:hidden [@media(max-height:500px)]:hidden"
+    class="night fixed inset-x-0 bottom-0 z-20 flex h-[calc(4rem+env(safe-area-inset-bottom))] items-center gap-2 bg-night px-3 pb-[env(safe-area-inset-bottom)] duration-300 ease-settle motion-safe:transition-transform motion-reduce:transition-opacity desk:hidden [@media(max-height:500px)]:hidden"
   >
-    <LayoutMainAction size="sm" class="flex-1" />
-    <BaseButton variant="ghost" size="icon" :href="site.tel_href">
+    <LayoutMainAction size="sm" class="min-w-0 flex-1">
+      <span class="max-[379px]:hidden">Send a photo on Messenger</span>
+      <span class="min-[380px]:hidden">Send a photo</span>
+    </LayoutMainAction>
+    <BaseButton variant="light" size="icon" :href="site.tel_href" class="shrink-0">
       <PhPhone class="shrink-0" />
     </BaseButton>
   </div>

@@ -1,20 +1,12 @@
 <script setup lang="ts">
 defineOptions({ name: "BasePanel" });
-
-const { tone = "night" } = defineProps<{
-  tone?: "night" | "accent";
-}>();
-
-const toneClasses = {
-  night: "night bg-night",
-  accent: "bg-accent text-white",
-};
 </script>
 
 <template>
-  <section :class="['mx-3 scroll-mt-nav rounded-[2rem] desk:mx-4', toneClasses[tone]]">
-    <div class="mx-auto max-w-[88rem] px-3 desk:px-12">
+  <section class="night relative isolate scroll-mt-nav overflow-hidden bg-night">
+    <span class="streaks pointer-events-none absolute inset-y-0 left-0 w-1/3 opacity-15"></span>
+    <BaseContainer class="relative">
       <slot></slot>
-    </div>
+    </BaseContainer>
   </section>
 </template>

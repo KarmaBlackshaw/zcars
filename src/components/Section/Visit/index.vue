@@ -35,7 +35,7 @@ const isMapNear = useElementVisibility(mapFrame, { rootMargin: "200px", once: tr
           <SectionVisitHoursTable class="mt-3" />
           <LayoutMainAction class="mt-8 w-full desk:w-auto" />
         </BaseTile>
-        <div ref="mapFrame" class="reveal relative h-80 overflow-hidden rounded-2xl bg-surface desk:col-span-7 desk:h-auto desk:min-h-[560px]">
+        <div ref="mapFrame" class="reveal relative h-80 overflow-hidden rounded-xl bg-surface desk:col-span-7 desk:h-auto desk:min-h-[560px]">
           <div class="absolute inset-0 grid place-content-center justify-items-center gap-2">
             <PhMapPin :size="32" class="text-fg" />
             <BaseExternalLink :href="site.map_directions_url" class="text-muted underline">Open in Google Maps</BaseExternalLink>

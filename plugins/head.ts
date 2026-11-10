@@ -3,6 +3,7 @@ import type { TContent } from "../src/types/content";
 import type { TFaqItem } from "../src/types/faq";
 import type { TService } from "../src/types/service";
 import { LOGO_PATH } from "../src/constants/brand";
+import { HERO_PHOTO } from "../src/constants/hero";
 import { WEEKDAY_NAMES } from "../src/utils/hours";
 import { getServicePath } from "../src/utils/service/getServicePath";
 import { getServiceShowcase } from "../src/utils/service/getServiceShowcase";
@@ -18,6 +19,7 @@ type THeadTags = {
   description: string;
   url: string;
   image: string;
+  preload?: string;
   ogTitle: string;
   ogDescription: string;
   structuredData: object[];
@@ -28,14 +30,18 @@ const escapeHtml = (value: string) =>
 
 const meta = (attribute: "name" | "property", key: string, value: string) => `<meta ${attribute}="${key}" content="${escapeHtml(value)}" />`;
 
+const preloadImage = ({ href, srcset, sizes }: { href?: string; srcset?: string; sizes?: string }) =>
+  `<link rel="preload" as="image"${href == null ? "" : ` href="${escapeHtml(href)}"`}${srcset == null ? "" : ` imagesrcset="${escapeHtml(srcset)}"`}${sizes == null ? "" : ` imagesizes="${escapeHtml(sizes)}"`} fetchpriority="high" />`;
+
 const jsonLd = (data: object) => `<script type="application/ld+json">${JSON.stringify(data).replace(/</g, "\\u003c")}</script>`;
 
-const renderTags = ({ title, description, url, image, ogTitle, ogDescription, structuredData }: THeadTags) =>
+const renderTags = ({ title, description, url, image, preload, ogTitle, ogDescription, structuredData }: THeadTags) =>
   [
     HEAD_START,
     `<title>${escapeHtml(title)}</title>`,
     `<link rel="canonical" href="${escapeHtml(url)}" />`,
     `<link rel="preconnect" href="${new URL(image).origin}" />`,
+    ...(preload == null ? [] : [preload]),
     meta("name", "description", description),
     meta("property", "og:title", ogTitle),
     meta("property", "og:description", ogDescription),
@@ -111,6 +117,7 @@ const renderHomeHead = (content: TContent) => {
     description: seo.description,
     url,
     image: seo.og_image,
+    preload: preloadImage({ href: HERO_PHOTO.src, srcset: HERO_PHOTO.srcset, sizes: HERO_PHOTO.sizes }),
     ogTitle: seo.og_title,
     ogDescription: seo.og_description,
     structuredData: [{ "@context": "https://schema.org", "@graph": [business, website] }, ...(faqs.length > 0 ? [getFaqPage(faqs)] : [])],
@@ -153,6 +160,7 @@ const renderServiceHead = (content: TContent, service: TService, siteUrl: string
     description,
     url,
     image: src ?? seo.og_image,
+    preload: src == null ? undefined : preloadImage({ href: src }),
     ogTitle: title,
     ogDescription: description,
     structuredData: [{ "@context": "https://schema.org", "@graph": [serviceNode, breadcrumb] }, ...(service.faqs.length > 0 ? [getFaqPage(service.faqs)] : [])],

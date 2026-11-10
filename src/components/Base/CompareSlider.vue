@@ -48,10 +48,10 @@ function stopDragging() {
     @pointerup="stopDragging"
     @pointercancel="stopDragging"
   >
-    <img :src="after" :alt="alt" fetchpriority="high" draggable="false" class="absolute inset-0 size-full object-cover" :style="imageStyle" />
-    <img :src="before" alt="" draggable="false" class="absolute inset-0 size-full object-cover" :style="beforeStyle" />
-    <BaseChip size="sm" class="absolute left-3 top-3">Before</BaseChip>
-    <BaseChip size="sm" class="absolute right-3 top-3">After</BaseChip>
+    <img :src="after" :alt="alt" loading="lazy" draggable="false" class="absolute inset-0 size-full object-cover" :style="imageStyle" />
+    <img :src="before" alt="" loading="lazy" draggable="false" class="absolute inset-0 size-full object-cover" :style="beforeStyle" />
+    <BaseChip class="absolute left-3 top-3">Before</BaseChip>
+    <BaseChip class="absolute right-3 top-3">After</BaseChip>
     <div class="pointer-events-none absolute inset-y-0 w-0.5 -translate-x-1/2 bg-accent" :style="handleStyle">
       <span
         class="absolute left-1/2 top-1/2 flex size-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-accent text-white transition-transform duration-300 ease-settle"

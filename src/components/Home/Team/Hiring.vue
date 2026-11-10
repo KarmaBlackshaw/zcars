@@ -10,11 +10,11 @@ defineOptions({ name: "HomeTeamHiring" });
     <h3>Open roles at Zcars</h3>
     <ul class="mt-4 flex flex-wrap gap-2">
       <li v-for="role in hiringRoles" :key="role.id">
-        <BaseChip size="md">{{ role.name }}, {{ role.level }}</BaseChip>
+        <BaseChip>{{ role.name }}, {{ role.level }}</BaseChip>
       </li>
     </ul>
     <p v-if="home.hiring_text" class="mt-4 text-muted">{{ home.hiring_text }}</p>
-    <BaseButton variant="text" :href="site.messenger_url">
+    <BaseButton variant="dark" :href="site.messenger_url" class="mt-6">
       <PhMessengerLogo class="shrink-0" />
       Apply on Messenger
     </BaseButton>

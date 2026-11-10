@@ -18,7 +18,7 @@ const NOT_SURE = "Not sure";
 const serviceOptions = [NOT_SURE, ...services.map(({ title }) => title)];
 
 const photoButtonClasses =
-  "inline-flex min-h-11 cursor-pointer items-center justify-center rounded-xl bg-surface ring-1 ring-fg/15 px-4 py-2.5 text-small font-semibold transition-colors hover:ring-fg/30 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-[3px] peer-focus-visible:outline-accent peer-aria-[invalid=true]:ring-danger";
+  "inline-flex min-h-11 cursor-pointer items-center justify-center rounded-lg bg-surface ring-1 ring-line px-4 py-2.5 text-small font-semibold transition-colors hover:ring-fg/30 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-[3px] peer-focus-visible:outline-accent peer-aria-[invalid=true]:ring-danger";
 
 const isEnhanced = ref(false);
 const hasAttemptedSubmit = ref(false);

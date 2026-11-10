@@ -46,11 +46,9 @@ All content lives in the Supabase project `zcars` (`tmggonbqvkolagmzwtpe`). The 
 | `stats`, `hiring_roles`          | `stats` is no longer shown; open roles (no rows hides the roles block)                                                 |
 | `quotes`                         | Quote requests from the site. Photos are in the `quote-photos` bucket (`photo_path`)                                   |
 
-- The hero before/after slider shows the newest project with a `before_photo`. Other before/after projects appear in the work grid instead.
-- A service page's hero picture is the newest project tagged with that service: its before/after compare panel when it has a `before_photo`, otherwise its first photo. With no tagged project it uses the service's own `photo`. The hero project is not repeated in that page's work grid.
-- The first project after the hero pair is the large tile of the work grid; set `completed_on` on a project to choose which one leads.
-- Each service's hover thumbnail on the services list is the first photo of its newest tagged project (a service with no tagged project, like PMS, has none).
-- Only the first active promo (lowest `position`) shows, as the price tile in the hero and the blue promo panel. Other active promos are not shown.
+- The home process band's before/after card shows the newest project with a `before_photo`. Other before/after projects appear in the work grid instead.
+- A service page's hero is the full-width photo of the newest project tagged with that service (its first photo; with no tagged project, the service's own `photo`). The next tagged project that has a `before_photo` is that page's before/after card in the band and is not repeated in its work grid.
+- The first active promo (lowest `position`) shows as the gold line in the top bar and as the promo card, the 4th card in the work grid. Other active promos are not shown.
 - A bad edit fails the build and the live site keeps the last good version. The build log names the table and the row.
 - Do not rename a service `slug` that a project lists in `services`; the build fails until the project is updated.
 - Rows are validated by zod at build time (`plugins/content.ts`); locally, restart `npm run dev` to see Supabase edits.
@@ -61,13 +59,13 @@ All content lives in the Supabase project `zcars` (`tmggonbqvkolagmzwtpe`). The 
 ### Search (SEO)
 
 - Each service gets its own page at `/services/<slug>`, titled "<Service> in <city> | <site name>". Its text comes from the `services` row: `page_description` (Google snippet, max 160 characters), `intro`, `includes` (bullet list) and `faqs` (a JSON list of `{"question", "answer"}`). Empty fields fall back to the `summary` or hide their section.
-- `home.hero_heading` is the page's main heading for Google and the big headline on the page, so keep a service and the city in it. `home.hero_title` and `home.hero_title_accent` form the one-line closing message at the bottom of the page.
+- `home.hero_title` and `home.hero_title_accent` are the home page's main heading (the accent on its own blue line). `home.hero_heading`, `home.services_title` and `home.services_lead` are not shown on the page.
 - `site.city`, `region`, `postal_code`, `latitude`, `longitude` and `google_maps_url` feed the business details Google reads. Copy the pin from the shop's Google Maps listing.
 - The build writes `sitemap.xml` and `robots.txt`. Submit `https://<domain>/sitemap.xml` once in Google Search Console.
 
 ### Images
 
-Upload to the public `uploads` Storage bucket (webp, max 2048px), copy its public URL, paste it into the row. The logo lives at `public/logo.webp` (served at `/logo.webp`; the nav, footer and business structured data use it). `public/favicon.png` and `src/assets/images/polish.webp` (the desktop hero tile, hidden on phones) stay in code: replace the file and update `width`/`height` where the component lists them.
+Upload to the public `uploads` Storage bucket (webp, max 2048px), copy its public URL, paste it into the row. The logo lives at `public/logo.webp` (served at `/logo.webp`; the nav, footer and business structured data use it). `public/favicon.png` stays in code. The home hero photo is a local copy of the Terra photo in `public/images/hero/` (`terra-800.webp` and `terra-1200.webp`), chosen in `src/constants/hero.ts`; to change it, replace both files and the constant. `site.tagline` is the giant wordmark in the footer, the first word of `site.name` is the header wordmark, and each service's `icon` picks its icon in the service strip.
 
 ### One-time setup (owner)
 

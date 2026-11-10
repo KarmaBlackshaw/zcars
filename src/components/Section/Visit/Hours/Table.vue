@@ -25,7 +25,7 @@ function labelClass(label: string) {
 <template>
   <div v-if="site.hours.length">
     <table class="w-full text-small">
-      <tbody class="divide-y divide-fg/10">
+      <tbody class="divide-y divide-line">
         <tr v-for="row in schedule" :key="row.day" :class="rowClass(row.day)">
           <th scope="row" class="h-11 px-3 py-3 text-left font-[inherit]">
             {{ WEEKDAY_NAMES[row.day] }}

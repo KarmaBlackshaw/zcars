@@ -3,7 +3,7 @@ import { faqs, projects, reviews, services } from "virtual:content";
 import type { TNavLink } from "@/types";
 
 export function useNavLinks() {
-  const links: TNavLink[] = [];
+  const links: TNavLink[] = [{ label: "Home", href: "/" }];
 
   if (services.length > 0) {
     links.push({ label: "Services", href: "/#services" });

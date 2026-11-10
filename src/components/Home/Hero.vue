@@ -1,75 +1,118 @@
 <script setup lang="ts">
-import { PhMapPin, PhMessengerLogo, PhPhone, PhStar } from "@phosphor-icons/vue";
-import { home, reviews, services, site } from "virtual:content";
-
-import logo from "@/assets/images/logo.webp";
+import { PhArrowRight, PhMapPin, PhMessengerLogo, PhPhone, PhStar } from "@phosphor-icons/vue";
+import { home, projects, reviews, services, site, stats } from "virtual:content";
 
 defineOptions({ name: "HomeHero" });
 
-const CHIP_LIMIT = 8;
+const quoteDrawer = useQuoteDrawer();
+const { activePromos } = usePromos();
 
-const chips = services.slice(0, CHIP_LIMIT).map((service) => ({ href: `#service-${service.slug}`, title: service.title }));
+const pairs = projects.filter((project) => project.before_photo != null);
+const hasMultiplePairs = pairs.length > 1;
+const pairThumbnails = pairs.map(({ photos, title }) => ({ src: photos[0], alt: title }));
+const sliderHeightClass = hasMultiplePairs ? "desk:max-h-[calc(100dvh-theme(spacing.nav)-10rem)]" : "desk:max-h-[calc(100dvh-theme(spacing.nav)-5rem)]";
+const selectedPair = ref(0);
+
+const showcase = computed(() => pairs[selectedPair.value] ?? projects[0]);
+
+const showcaseCaption = computed(() => {
+  const showcaseServices = services
+    .filter((service) => showcase.value?.services.includes(service.slug))
+    .map((service) => service.title)
+    .join(", ");
+
+  return showcaseServices ? `${showcase.value?.vehicle} · ${showcaseServices}` : showcase.value?.vehicle;
+});
 
 const averageRating = getAverageRating(reviews.map((review) => review.rating));
+
+const promo = computed(() => activePromos.value[0]);
+
+function openQuote() {
+  quoteDrawer.open();
+}
 </script>
 
 <template>
   <section>
-    <BaseContainer class="grid gap-10 pb-12 pt-10 desk:min-h-[calc(100dvh-theme(spacing.nav))] desk:grid-cols-12 desk:gap-8 desk:py-10">
-      <div class="flex min-w-0 flex-col desk:col-span-7 desk:pr-8">
-        <div class="desk:my-auto">
-          <div class="flex min-h-6 flex-wrap items-center gap-x-4 gap-y-2">
-            <BaseEyebrow v-motion="enter()">
-              <PhMapPin aria-hidden="true" class="shrink-0" />
-              {{ site.locality }}
-            </BaseEyebrow>
-            <HomeHoursBadge />
-          </div>
-          <h1 v-motion="enter(0.09)" class="mt-6 max-w-[13ch] text-balance">
-            {{ home.hero.title }} <em class="not-italic text-accent-text">{{ home.hero.title_accent }}</em>
-          </h1>
-          <p v-motion="enter(0.18)" class="mt-6 max-w-[48ch] text-lead text-muted">{{ home.hero.lead }}</p>
-          <div id="hero-actions" v-motion="enter(0.27)" class="mt-9 grid grid-cols-2 gap-3 desk:flex desk:flex-wrap">
-            <BaseButton :href="site.tel_href">
-              <PhPhone aria-hidden="true" class="shrink-0" />
-              <span class="desk:hidden">Call</span>
-              <span class="hidden desk:inline">Call {{ site.phone_display }}</span>
-            </BaseButton>
-            <BaseButton :href="site.messenger_url">
-              <PhMessengerLogo aria-hidden="true" class="shrink-0" />
-              Message
-            </BaseButton>
-            <BaseButton variant="ghost" href="#quote" class="col-span-2 desk:col-span-1">Get a quote</BaseButton>
-          </div>
-          <p v-if="averageRating" v-motion="enter(0.3)" class="mt-4 flex items-center gap-1.5 text-small text-muted">
-            <PhStar weight="fill" aria-hidden="true" class="text-accent-text" />
-            {{ averageRating }} from {{ reviews.length }} reviews
-          </p>
+    <BaseContainer
+      class="grid grid-cols-1 gap-x-12 gap-y-6 pb-12 pt-6 desk:min-h-[calc(100dvh-theme(spacing.nav))] desk:grid-cols-12 desk:grid-rows-2 desk:py-10"
+    >
+      <div v-motion="enter()" class="desk:col-span-6 desk:self-end">
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
+          <BaseEyebrow>
+            <PhMapPin class="shrink-0" />
+            {{ site.locality }}
+          </BaseEyebrow>
+          <HomeHoursBadge />
         </div>
-        <ul v-if="chips.length" role="list" aria-label="Jump to a service" v-motion="enter(0.36)" class="mt-10 hidden flex-wrap gap-2 desk:flex">
-          <li v-for="chip in chips" :key="chip.href">
-            <a :href="chip.href" class="inline-flex min-h-11 items-center whitespace-nowrap rounded-full border border-muted px-4 text-small hover:border-fg">{{
-              chip.title
-            }}</a>
+        <h1 class="mt-4 max-w-[14ch] text-balance desk:mt-6">
+          {{ home.hero_title }} <em v-if="home.hero_title_accent" class="not-italic text-accent-text">{{ home.hero_title_accent }}</em>
+        </h1>
+      </div>
+      <figure v-if="showcase" v-motion="enter(0.12)" class="desk:col-span-6 desk:col-start-7 desk:row-span-2 desk:row-start-1 desk:self-center">
+        <BaseCompareSlider
+          v-if="showcase.before_photo"
+          :before="showcase.before_photo"
+          :after="showcase.photos[0]"
+          :alt="showcase.title"
+          class="aspect-[4/3] rounded-card bg-surface desk:aspect-[4/5] desk:w-full"
+          :class="sliderHeightClass"
+        />
+        <img
+          v-else
+          :src="showcase.photos[0]"
+          :alt="showcase.title"
+          fetchpriority="high"
+          class="aspect-[4/3] w-full rounded-card bg-surface object-cover desk:aspect-[4/5] desk:max-h-[calc(100dvh-theme(spacing.nav)-5rem)]"
+        />
+        <figcaption class="mt-2 flex items-center justify-between gap-4 text-micro text-muted">
+          <span>{{ showcaseCaption }}</span>
+          <span v-if="showcase.before_photo" class="shrink-0">Drag to compare</span>
+        </figcaption>
+        <BaseThumbnails v-if="hasMultiplePairs" v-model="selectedPair" :items="pairThumbnails" class="mt-3" />
+      </figure>
+      <div v-motion="enter(0.06)" class="desk:col-span-6 desk:row-start-2 desk:self-start">
+        <p class="max-w-[46ch] text-lead text-muted">{{ home.hero_lead }}</p>
+        <div id="hero-actions" class="mt-6 grid grid-cols-2 gap-3 desk:mt-8 desk:flex desk:flex-wrap">
+          <BaseButton :href="site.messenger_url">
+            <PhMessengerLogo class="shrink-0" />
+            Message us
+          </BaseButton>
+          <BaseButton variant="ghost" :href="site.tel_href">
+            <PhPhone class="shrink-0" />
+            <span class="desk:hidden">Call</span>
+            <span class="hidden desk:inline">Call {{ site.phone_display }}</span>
+          </BaseButton>
+        </div>
+        <button type="button" class="mt-4 inline-flex min-h-11 items-center gap-1.5 font-semibold text-accent-text hover:underline" @click="openQuote">
+          Or send photos for a quote
+          <PhArrowRight class="shrink-0" />
+        </button>
+        <a
+          v-if="promo"
+          href="#promos"
+          class="mt-4 flex max-w-md items-center gap-3 rounded-xl border border-line bg-surface p-2 pr-4 transition-colors hover:border-muted"
+        >
+          <span class="shrink-0 rounded-lg bg-accent px-2.5 py-1.5 text-micro font-bold uppercase text-white">Promo</span>
+          <span class="min-w-0 flex-1 truncate text-small font-semibold">{{ promo.title }}</span>
+          <span v-if="promo.price_label" class="shrink-0 font-bold tabular-nums text-accent-text">{{ promo.price_label }}</span>
+          <PhArrowRight class="shrink-0 text-muted" />
+        </a>
+        <ul class="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-small text-muted">
+          <li v-if="averageRating">
+            <a href="#reviews" class="inline-flex items-center gap-1.5 hover:text-fg">
+              <PhStar weight="fill" class="text-accent-text" />
+              <strong class="font-semibold text-fg">{{ averageRating }}</strong>
+              from {{ reviews.length }} reviews
+            </a>
+          </li>
+          <li v-for="stat in stats" :key="stat.id">
+            <strong class="font-semibold text-fg">{{ stat.value }}</strong>
+            {{ stat.label }}
           </li>
         </ul>
       </div>
-      <figure
-        v-motion="enter(0.18)"
-        class="relative aspect-[4/5] max-h-[80dvh] overflow-hidden rounded-card bg-surface desk:col-span-5 desk:aspect-auto desk:max-h-none"
-      >
-        <img :src="home.hero.image" :alt="site.name" fetchpriority="high" class="absolute inset-0 size-full object-cover" />
-        <div
-          aria-hidden="true"
-          class="absolute inset-x-4 bottom-4 flex items-center gap-3 rounded-xl border border-white/10 bg-inkBlack/65 p-3 text-sportyWhite shadow-[inset_0_1px_0_theme(colors.white/10%)] backdrop-blur-md"
-        >
-          <img :src="logo" alt="" width="40" height="40" class="size-10 rounded-full" />
-          <div class="leading-tight">
-            <strong class="block text-small font-semibold">{{ site.name }}</strong>
-            <span class="text-micro text-ghost">{{ site.locality }}</span>
-          </div>
-        </div>
-      </figure>
     </BaseContainer>
   </section>
 </template>

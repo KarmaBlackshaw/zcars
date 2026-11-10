@@ -21,7 +21,7 @@ export function useNavLinks() {
     links.push({ label: "FAQ", href: "#faq" });
   }
 
-  links.push({ label: "Visit", href: "#visit" });
+  links.push({ label: "Contact", href: "#contact" });
 
   return links;
 }

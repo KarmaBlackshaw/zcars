@@ -8,11 +8,9 @@ const { promo, isFeatured = false } = defineProps<{
   isFeatured?: boolean;
 }>();
 
-const quoteService = useQuoteService();
+const quoteDrawer = useQuoteDrawer();
 const hasImageError = ref(false);
 
-const ctaLabel = computed(() => `Get this promo: ${promo.title}`);
-const href = computed(() => (promo.serviceTitle == null ? "#quote" : undefined));
 const validity = computed(() => formatPromoValidity(promo.starts_on, promo.ends_on));
 const hasPhoto = computed(() => promo.photo != null && !hasImageError.value);
 
@@ -40,10 +38,7 @@ function onImageError() {
 }
 
 function requestPromo() {
-  if (promo.serviceTitle != null) {
-    quoteService.select(promo.serviceTitle);
-    quoteService.jumpToField();
-  }
+  quoteDrawer.open(promo.serviceTitle);
 }
 </script>
 
@@ -57,15 +52,7 @@ function requestPromo() {
       <h3 :class="titleClass">{{ promo.title }}</h3>
       <p :class="textClass">{{ promo.text }}</p>
       <p v-if="validity" class="text-micro font-semibold text-muted">{{ validity }}</p>
-      <BaseButton
-        :href="href"
-        :size="isFeatured ? 'md' : 'sm'"
-        :aria-label="ctaLabel"
-        :class="['self-start', isFeatured ? 'mt-4' : 'mt-auto']"
-        @click="requestPromo"
-      >
-        Get this promo
-      </BaseButton>
+      <BaseButton :size="isFeatured ? 'md' : 'sm'" :class="['self-start', isFeatured ? 'mt-4' : 'mt-auto']" @click="requestPromo">Get this promo</BaseButton>
     </div>
   </article>
 </template>

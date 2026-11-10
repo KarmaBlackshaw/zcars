@@ -27,7 +27,7 @@ export default {
       fontFamily: { sans: ["Archivo Variable", "Archivo", "system-ui", "sans-serif"] },
       screens: { desk: "900px" },
       fontSize: {
-        h1: ["clamp(2.5rem, 5.4vw, 4.75rem)", { lineHeight: ".98" }],
+        h1: ["clamp(2.25rem, 4.4vw, 4rem)", { lineHeight: "1" }],
         h2: ["clamp(2rem, 3.8vw, 3.25rem)", { lineHeight: "1.02" }],
         h3: ["1.25rem", { lineHeight: "1.2" }],
         lead: "1.0625rem",
@@ -37,8 +37,11 @@ export default {
       letterSpacing: { heading: "-0.02em", eyebrow: ".14em" },
       transitionTimingFunction: { settle },
       transitionDuration: { 800: "800ms" },
-      keyframes: { marquee: { to: { transform: "translateX(-50%)" } } },
-      animation: { marquee: "marquee 45s linear infinite" },
+      keyframes: {
+        marquee: { to: { transform: "translateX(-50%)" } },
+        "drawer-in": { from: { transform: "translateX(100%)" } },
+      },
+      animation: { marquee: "marquee 45s linear infinite", "drawer-in": `drawer-in .4s ${settle}` },
     },
   },
   plugins: [],

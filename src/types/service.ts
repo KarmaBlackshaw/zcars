@@ -1,27 +1,20 @@
 import { z } from "zod";
 
-import { textSchema } from "./content";
-import { imagePathSchema } from "./image";
+import { httpsUrlSchema, optionalSchema, slugSchema, textSchema } from "./content";
 
 const serviceIconSchema = z.enum(["spray-bottle", "sparkle", "shield-check", "hammer", "paint-roller", "wrench", "sun-dim", "umbrella"]);
 
 export type TServiceIcon = z.infer<typeof serviceIconSchema>;
 
-const optionalNumber = z
-  .number()
-  .int()
-  .min(0)
-  .nullish()
-  .transform((value) => value ?? undefined);
-
-export const serviceSchema = z.strictObject({
+export const serviceSchema = z.object({
+  slug: slugSchema,
   title: textSchema,
-  summary: textSchema.max(120),
-  price_from: optionalNumber,
-  price_note: textSchema.optional(),
-  photo: imagePathSchema.nullish().transform((photo) => photo ?? undefined),
+  summary: textSchema.max(140),
+  price_from: optionalSchema(z.number().int().min(0)),
+  price_note: optionalSchema(textSchema),
+  photo: optionalSchema(httpsUrlSchema),
   icon: serviceIconSchema,
-  order: z.number().int(),
+  position: z.number().int(),
 });
 
 export type TService = z.infer<typeof serviceSchema>;

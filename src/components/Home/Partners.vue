@@ -3,9 +3,6 @@ import { home, partners } from "virtual:content";
 
 defineOptions({ name: "HomePartners" });
 
-const names = partners.map((partner) => partner.name);
-const sentence = `We work with products from ${new Intl.ListFormat("en", { type: "conjunction" }).format(names)}.`;
-
 const copies = [
   { id: 1, isDuplicate: false },
   { id: 2, isDuplicate: true },
@@ -13,12 +10,11 @@ const copies = [
 </script>
 
 <template>
-  <section v-if="partners.length" aria-label="Products we use" class="border-y border-line py-10 desk:py-14">
-    <BaseContainer class="mb-6 flex flex-wrap items-end justify-between gap-x-8 gap-y-2">
-      <BaseEyebrow v-if="home.partners.eyebrow">{{ home.partners.eyebrow }}</BaseEyebrow>
-      <p class="max-w-[60ch] text-small text-muted">{{ sentence }}</p>
+  <section v-if="partners.length" aria-label="Products we use" class="border-y border-line bg-surface py-6">
+    <BaseContainer v-if="home.partners_title">
+      <p class="text-micro font-semibold text-muted">{{ home.partners_title }}</p>
     </BaseContainer>
-    <div class="group overflow-hidden bg-surface py-5 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
+    <div class="group mt-3 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
       <div
         class="flex w-max items-center group-hover:[animation-play-state:paused] motion-safe:animate-marquee motion-reduce:w-auto motion-reduce:flex-wrap motion-reduce:justify-center"
       >
@@ -35,7 +31,7 @@ const copies = [
             :src="partner.logo"
             :alt="partner.name"
             loading="lazy"
-            class="mx-8 h-12 w-40 object-contain desk:h-14 desk:w-48"
+            class="mx-8 h-10 w-32 object-contain opacity-80 grayscale transition hover:opacity-100 hover:grayscale-0 desk:h-12 desk:w-40"
           />
         </div>
       </div>

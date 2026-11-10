@@ -1,14 +1,14 @@
 import { z } from "zod";
 
-import { textSchema } from "./content";
-import { imagePathSchema } from "./image";
+import { httpsUrlSchema, textSchema } from "./content";
 
-export const seoSchema = z.strictObject({
+export const seoSchema = z.object({
+  id: z.literal(true),
   title: textSchema,
   description: textSchema.max(160),
   og_title: textSchema,
   og_description: textSchema.max(200),
-  og_image: imagePathSchema,
+  og_image: httpsUrlSchema,
 });
 
 export type TSeo = z.infer<typeof seoSchema>;

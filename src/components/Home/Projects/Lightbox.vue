@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { PhCaretLeft, PhCaretRight, PhX } from "@phosphor-icons/vue";
 
-import type { TEntry, TProject } from "@/types";
+import type { TProject } from "@/types";
 
 defineOptions({ name: "HomeProjectsLightbox" });
 
 const { projects, returnFocusTo, fallbackFocusTo } = defineProps<{
-  projects: TEntry<TProject>[];
+  projects: TProject[];
   returnFocusTo?: HTMLElement;
   fallbackFocusTo?: HTMLElement | null;
 }>();
@@ -21,7 +21,7 @@ let isBackdropPress = false;
 const photoIndex = ref(0);
 
 const project = computed(() => (index.value != null ? projects[index.value] : undefined));
-const photos = computed(() => project.value?.photos ?? []);
+const photos = computed(() => project.value?.gallery ?? []);
 const photo = computed(() => photos.value[photoIndex.value]);
 const hasMultiplePhotos = computed(() => photos.value.length > 1);
 const positionText = computed(() => `${photoIndex.value + 1} of ${photos.value.length}`);

@@ -6,7 +6,7 @@ import type { TQuoteField } from "@/types";
 defineOptions({ name: "HomeQuoteForm" });
 
 const form = useQuoteForm();
-const quoteService = useQuoteService();
+const quoteDrawer = useQuoteDrawer();
 const { status, errors, errorCount } = form;
 
 const formRef = useTemplateRef("formEl");
@@ -21,19 +21,17 @@ const photoButtonClasses =
   "inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full border border-line px-4 py-2.5 text-small font-semibold transition-colors hover:border-muted peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-[3px] peer-focus-visible:outline-accent-text peer-aria-[invalid=true]:border-danger";
 
 const isEnhanced = ref(false);
-const minDate = ref<string>();
 const hasAttemptedSubmit = ref(false);
 const photoName = ref<string>();
 const touchedFields = new Set<TQuoteField>();
 
 const isSubmitting = computed(() => status.value === "submitting");
-const serviceValue = computed(() => quoteService.selectedService.value || NOT_SURE);
+const serviceValue = computed(() => quoteDrawer.service.value || NOT_SURE);
 const fieldWord = computed(() => (errorCount.value === 1 ? "field" : "fields"));
 const isSummaryShown = computed(() => hasAttemptedSubmit.value && errorCount.value > 0);
 
 onMounted(() => {
   isEnhanced.value = true;
-  minDate.value = getTodayInManila();
 });
 
 function isInvalid(field: TQuoteField) {
@@ -64,7 +62,7 @@ function onBlur(field: TQuoteField) {
 
 function onServiceChange(event: Event) {
   if (event.target instanceof HTMLSelectElement) {
-    quoteService.select(event.target.value);
+    quoteDrawer.selectService(event.target.value);
   }
 }
 
@@ -104,46 +102,44 @@ async function onSubmit() {
   }
 }
 
-async function startNewRequest() {
+function resetForm() {
   form.reset();
-  quoteService.select("");
   touchedFields.clear();
   hasAttemptedSubmit.value = false;
   photoName.value = undefined;
+}
+
+async function startNewRequest() {
+  resetForm();
+  quoteDrawer.selectService("");
   await nextTick();
   nameRef.value?.focus();
 }
+
+watch(quoteDrawer.isOpen, (isOpen) => {
+  if (isOpen && status.value === "success") {
+    resetForm();
+  }
+});
 </script>
 
 <template>
-  <div v-if="status === 'success'" ref="successEl" role="status" tabindex="-1" class="grid scroll-mt-nav justify-items-start gap-5">
+  <div v-if="status === 'success'" ref="successEl" role="status" tabindex="-1" class="grid justify-items-start gap-5">
     <PhCheckCircle :size="40" weight="fill" aria-hidden="true" class="text-success" />
-    <p class="text-lead font-semibold">Got it, we'll call or message you soon.</p>
+    <p class="text-lead font-semibold">Got it. We will call or message you soon.</p>
     <div class="flex flex-wrap gap-3">
-      <BaseButton :href="site.tel_href">
+      <BaseButton :href="site.messenger_url">
+        <PhMessengerLogo aria-hidden="true" class="shrink-0" />
+        Message us
+      </BaseButton>
+      <BaseButton variant="ghost" :href="site.tel_href">
         <PhPhone aria-hidden="true" class="shrink-0" />
         Call
-      </BaseButton>
-      <BaseButton variant="ghost" :href="site.messenger_url">
-        <PhMessengerLogo aria-hidden="true" class="shrink-0" />
-        Message
       </BaseButton>
     </div>
     <BaseButton variant="ghost" size="sm" @click="startNewRequest">Send another request</BaseButton>
   </div>
-  <form
-    v-else
-    ref="formEl"
-    name="quote"
-    method="POST"
-    data-netlify="true"
-    netlify-honeypot="company"
-    enctype="multipart/form-data"
-    class="grid gap-6"
-    :novalidate="isEnhanced"
-    @submit.prevent="onSubmit"
-  >
-    <input type="hidden" name="form-name" value="quote" />
+  <form v-else ref="formEl" name="quote" class="grid gap-5" :novalidate="isEnhanced" @submit.prevent="onSubmit">
     <p class="absolute -left-[9999px]" aria-hidden="true">
       <label>Company <input name="company" tabindex="-1" autocomplete="off" /></label>
     </p>
@@ -189,11 +185,8 @@ async function startNewRequest() {
     <HomeQuoteField v-slot="{ describedBy }" id="quote-service" label="Service">
       <BaseSelect id="quote-service" name="service" :options="serviceOptions" :value="serviceValue" :aria-describedby="describedBy" @change="onServiceChange" />
     </HomeQuoteField>
-    <HomeQuoteField v-slot="{ describedBy }" id="quote-date" label="Preferred date">
-      <BaseInput id="quote-date" name="preferred_date" type="date" :min="minDate" :aria-describedby="describedBy" />
-    </HomeQuoteField>
     <HomeQuoteField v-slot="{ describedBy }" id="quote-message" label="Message">
-      <BaseTextarea id="quote-message" name="message" rows="4" :aria-describedby="describedBy" />
+      <BaseTextarea id="quote-message" name="message" rows="3" placeholder="What does the car need?" :aria-describedby="describedBy" />
     </HomeQuoteField>
     <HomeQuoteField id="quote-photo" label="Photo" :error="errors.photo">
       <template #label="{ requirementText }">
@@ -209,12 +202,12 @@ async function startNewRequest() {
             name="photo"
             type="file"
             accept="image/*"
-            class="peer sr-only scroll-mt-nav"
+            class="peer sr-only"
             :aria-invalid="isInvalid('photo')"
             :aria-describedby="describedBy"
             @change="onPhotoChange"
           />
-          <label for="quote-photo" :class="photoButtonClasses">Add a photo (optional, up to 7 MB)</label>
+          <label for="quote-photo" :class="photoButtonClasses">Add a photo (up to 7 MB)</label>
           <template v-if="photoName">
             <span class="min-w-0 break-all text-small text-muted">{{ photoName }}</span>
             <BaseButton variant="ghost" size="sm" @click="removePhoto">Remove</BaseButton>
@@ -222,13 +215,13 @@ async function startNewRequest() {
         </div>
       </template>
     </HomeQuoteField>
-    <div class="grid justify-items-start gap-4">
+    <div class="grid gap-4">
       <p v-if="isSummaryShown" role="alert" class="text-danger">Please fix {{ errorCount }} {{ fieldWord }}</p>
       <div v-if="status === 'error'" role="alert" class="grid justify-items-start gap-3">
-        <p class="text-danger">That did not send. Check your connection and try again, or call us.</p>
-        <BaseButton variant="ghost" size="sm" :href="site.tel_href">Call us instead</BaseButton>
+        <p class="text-danger">That did not send. Check your connection and try again, or message us.</p>
+        <BaseButton variant="ghost" size="sm" :href="site.messenger_url">Message us instead</BaseButton>
       </div>
-      <BaseButton type="submit" :aria-disabled="isSubmitting" :aria-busy="isSubmitting">
+      <BaseButton type="submit" :aria-disabled="isSubmitting" :aria-busy="isSubmitting" class="w-full">
         <template v-if="isSubmitting">
           <PhCircleNotch aria-hidden="true" class="shrink-0 motion-safe:animate-spin" />
           Sending

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { httpsUrlSchema, textSchema } from "./content";
+import { httpsUrlSchema, optionalSchema, textSchema } from "./content";
 
 const weekdaySchema = z.enum(["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]);
 
@@ -11,16 +11,20 @@ const timeSchema = z
   .regex(/^([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?$/)
   .transform((value) => value.slice(0, 5));
 
-const hoursEntrySchema = z.strictObject({
-  days: z.array(weekdaySchema).min(1),
-  opens: timeSchema,
-  closes: timeSchema,
-});
+export const openingHoursSchema = z
+  .object({
+    id: z.number().int(),
+    day: weekdaySchema,
+    opens: timeSchema,
+    closes: timeSchema,
+  })
+  .transform(({ day, opens, closes }) => ({ days: [day], opens, closes }));
 
-export type THoursEntry = z.infer<typeof hoursEntrySchema>;
+export type THoursEntry = z.infer<typeof openingHoursSchema>;
 
 export const siteSchema = z
-  .strictObject({
+  .object({
+    id: z.literal(true),
     name: textSchema,
     tagline: textSchema,
     phone_display: textSchema,
@@ -30,8 +34,8 @@ export const siteSchema = z
     address: textSchema,
     locality: textSchema,
     map_query: textSchema,
-    hours: z.array(hoursEntrySchema).default([]),
-    hours_note: textSchema.optional(),
+    hours_note: optionalSchema(textSchema),
+    hours: z.array(openingHoursSchema),
   })
   .transform((site) => {
     const query = encodeURIComponent(site.map_query);

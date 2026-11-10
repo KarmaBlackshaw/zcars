@@ -12,7 +12,6 @@ const gridClasses = {
   many: "grid grid-cols-2 gap-4 sm:grid-cols-3",
 };
 
-const copy = home.projects;
 const gridId = useId();
 const heading = useTemplateRef("heading");
 const visibleCount = ref(PAGE_SIZE);
@@ -47,10 +46,10 @@ function toggleVisible() {
 </script>
 
 <template>
-  <section v-if="projects.length" id="work" aria-labelledby="work-title" class="scroll-mt-nav py-24 desk:py-32">
+  <section v-if="projects.length" id="work" aria-labelledby="work-title" class="scroll-mt-nav py-16 desk:py-24">
     <BaseContainer>
       <div ref="heading" v-motion="reveal()" tabindex="-1" class="scroll-mt-nav">
-        <BaseSectionHeading id="work-title" :title="copy.title" :eyebrow="copy.eyebrow" :lead="copy.lead" />
+        <BaseSectionHeading id="work-title" :title="home.work_title" :lead="home.work_lead" />
       </div>
       <ul :id="gridId" role="list" :class="['mt-12', gridClass]">
         <li v-for="(project, index) in visibleProjects" :key="project.slug" v-motion="revealAt(index)">

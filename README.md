@@ -13,8 +13,8 @@ Prerendered one-page site for Zcars Auto Detailing Garage (Sagkahan, Tacloban Ci
 
 ```sh
 nvm use
+cp .env.example .env.local    # site URL + Supabase URL/key; npm install builds, so do this first
 npm install                   # also generates types, barrels, d.ts
-cp .env.example .env.local    # VITE_SITE_URL for local builds
 npm run dev                   # http://localhost:5173
 ```
 
@@ -33,48 +33,55 @@ npm run dev                   # http://localhost:5173
 - `prepare` runs on `npm install` and builds into `node_modules/.cache/zcars-prepare` only to generate types; only `npm run build` output is deployable. It runs a full vite build, so invalid content also fails `npm ci`.
 - The pre-commit hook runs a full `type-check` (~10 s), then lint-staged.
 
-## Content: use /admin
+## Content: Supabase
 
-The owner edits the site at `https://<domain>/admin/`: log in with GitHub, edit, save. Each save commits to `master` and Netlify publishes in about 1 to 2 minutes.
+All content lives in the Supabase project `zcars` (`tmggonbqvkolagmzwtpe`). The owner edits rows in the Table Editor. Each save triggers a Netlify rebuild, live in about 1 to 2 minutes.
 
-- A bad edit fails the build and the live site keeps the last good version. The build log names the file and the field.
-- Deleting a service that a project still uses fails the build. Remove it from the project first.
-- Do not rename slugs (file names) after creating an entry.
-- Content lives as JSON in `src/content/`, validated by zod at build time (`plugins/content.ts`).
+| Table                            | What it holds                                                                        |
+| -------------------------------- | ------------------------------------------------------------------------------------ |
+| `site`, `opening_hours`, `seo`   | Name, phone, Messenger/Facebook links, address, hours, page title and link preview   |
+| `home`                           | Page copy: headline, section titles and leads, contact text, warranty, team blurb    |
+| `services`, `projects`, `promos` | Service cards, recent work, promos (`ends_on` hides a promo after that date)         |
+| `reviews`, `faqs`, `partners`    | Reviews, questions, brand logos                                                      |
+| `stats`, `hiring_roles`          | Hero proof numbers; open roles (no rows hides "We're hiring")                        |
+| `quotes`                         | Quote requests from the site. Photos are in the `quote-photos` bucket (`photo_path`) |
+
+- The hero before/after slider shows the newest project with a `before_photo`. With two or more such projects, a thumbnail strip under it switches between them.
+- A bad edit fails the build and the live site keeps the last good version. The build log names the table and the row.
+- Do not rename a service `slug` that a project lists in `services`; the build fails until the project is updated.
+- Rows are validated by zod at build time (`plugins/content.ts`); locally, restart `npm run dev` to see Supabase edits.
+
+### Images
+
+Upload to the public `uploads` Storage bucket (webp, max 2048px), copy its public URL, paste it into the row. `src/assets/images/logo.webp` and `public/favicon.png` stay in code: replace the file and update `width`/`height` where the component lists them.
 
 ### One-time setup (owner)
 
-1. Create a GitHub OAuth App with callback URL `https://api.netlify.com/auth/done`.
-2. In Netlify, go to Site settings, Access control, OAuth, GitHub, and add the OAuth App.
-3. Invite the client as a collaborator on `KarmaBlackshaw/zcars`.
-4. In Netlify, go to Site configuration, Forms, and choose Enable form detection. Then go to Deploys and choose Trigger deploy so Netlify registers the prerendered `quote` form. Without this, submissions are silently dropped.
-5. Under Forms, Form notifications, add an email notification for the `quote` form.
-6. Check the Forms plan limits: monthly submissions, and Netlify's 8 MB per-submission cap, which is why the quote form accepts photos up to 7 MB.
-7. Confirm the Messenger link opens the page chat.
-
-## Images
-
-Images are uploaded in the CMS to `public/uploads/` (converted to webp, max 2048px). `src/assets/images/logo.webp` and `public/favicon.png` stay in code: replace the file and update `width`/`height` where the component lists them.
+1. In Netlify, go to Site configuration, Build & deploy, Build hooks, and add a hook for `master`. Copy its URL.
+2. In Supabase, open the SQL editor and run `select vault.create_secret('<build hook URL>', 'netlify_build_hook');`. Until then, content edits only go live on the next deploy.
+3. Check new requests in the `quotes` table. Nothing emails you yet.
+4. Confirm the Messenger link opens the page chat.
 
 ## Deploy
 
-Netlify reads `netlify.toml` (build command, `dist`, `VITE_SITE_URL`), which overrides the dashboard build settings. Change the domain there if it moves. Other hosts:
+Netlify reads `netlify.toml` (build command, `dist`, `VITE_SITE_URL`, Supabase URL and publishable key), which overrides the dashboard build settings. Change the domain there if it moves. Other hosts:
 
 - Build command: `npm run build`
 - Output directory: `dist`
-- Environment: `VITE_SITE_URL=https://<your-domain>` (no trailing slash)
+- Environment: `VITE_SITE_URL=https://<your-domain>` (no trailing slash), `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`
 - Node version: from `.nvmrc`
 - devDependencies must be installed at build time: no `--omit=dev` and no `NODE_ENV=production` during install.
 - Never copy `.env.example` on the host; set `VITE_SITE_URL` in the host's build environment.
 
 ## Troubleshooting
 
-| Symptom                                                                      | Fix                                                                |
-| ---------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| `ENOENT ... auto-import.json` or `Cannot find module '@/types'`              | `npm run build-only`                                               |
-| `VITE_SITE_URL is not set`                                                   | Quick start step 3 locally, or set it in the host env (see Deploy) |
-| `Content is invalid`                                                         | Read the listed file and field, then fix it in `/admin`            |
-| Added a file to `src/types`, `src/composables` or `src/utils` while dev runs | Restart `npm run dev`                                              |
+| Symptom                                                                      | Fix                                                                     |
+| ---------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `ENOENT ... auto-import.json` or `Cannot find module '@/types'`              | `npm run build-only`                                                    |
+| `VITE_SITE_URL is not set`                                                   | Quick start step 3 locally, or set it in the host env (see Deploy)      |
+| `Content is invalid`                                                         | Read the listed table and row, then fix it in the Supabase Table Editor |
+| `VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY are not set`            | Quick start step 2 locally; `netlify.toml` sets them on Netlify         |
+| Added a file to `src/types`, `src/composables` or `src/utils` while dev runs | Restart `npm run dev`                                                   |
 
 ## Upgrading
 

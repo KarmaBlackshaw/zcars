@@ -12,6 +12,7 @@ import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import content, { loadContent } from "./plugins/content";
 import head, { replaceServiceHead } from "./plugins/head";
+import images from "./plugins/images";
 import sitemap from "./plugins/sitemap";
 import { getServicePath } from "./src/utils/service/getServicePath";
 
@@ -89,6 +90,7 @@ export default defineConfig(({ mode }) => ({
     },
     content(),
     head(),
+    images(),
     sitemap(),
     VueRouter({
       routesFolder: "src/pages",

@@ -21,4 +21,5 @@ declare module "virtual:content" {
   export const partners: TContent["partners"];
   export const stats: TContent["stats"];
   export const hiringRoles: TContent["hiringRoles"];
+  export const images: TContent["images"];
 }

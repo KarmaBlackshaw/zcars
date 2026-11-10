@@ -18,9 +18,10 @@ const badge = computed(() => services.find(({ slug }) => project.services.includ
 <template>
   <BaseTile as="button" padding="none" class="group flex size-full flex-col text-left" @click="$emit('open')">
     <div class="relative aspect-[4/5] w-full overflow-hidden">
-      <img
+      <BaseImage
         :src="project.photos[0]"
         :alt="project.title"
+        sizes="(min-width: 900px) 25vw, (min-width: 768px) 33vw, 50vw"
         loading="lazy"
         class="size-full object-cover transition-transform duration-[600ms] ease-settle motion-safe:group-hover:scale-[1.04]"
       />

@@ -14,7 +14,7 @@ import { seoSchema } from "../src/types/seo";
 import { serviceSchema } from "../src/types/service";
 import { siteSchema } from "../src/types/site";
 import { statSchema } from "../src/types/stat";
-import { getTodayInManila } from "../src/utils/date";
+import { getTodayInManila } from "../src/utils/date/getTodayInManila";
 import { resizeImages } from "./images";
 
 const VIRTUAL_ID = "virtual:content";

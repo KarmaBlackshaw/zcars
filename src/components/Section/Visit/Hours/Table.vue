@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { site } from "virtual:content";
 
+import { WEEKDAY_NAMES } from "@/constants/hours";
+
 import type { TWeekday } from "@/types";
 
 defineOptions({ name: "SectionVisitHoursTable" });
@@ -17,8 +19,8 @@ function rowClass(day: TWeekday) {
   return isToday(day) ? "font-semibold" : "";
 }
 
-function labelClass(label: string) {
-  return label === "Closed" ? "text-muted" : "";
+function labelClass(isClosed: boolean) {
+  return isClosed ? "text-muted" : "";
 }
 </script>
 
@@ -31,7 +33,7 @@ function labelClass(label: string) {
             {{ WEEKDAY_NAMES[row.day] }}
             <span v-if="isToday(row.day)" class="ml-2 text-micro text-muted">Today</span>
           </th>
-          <td class="px-3 py-3" :class="labelClass(row.label)">{{ row.label }}</td>
+          <td class="px-3 py-3" :class="labelClass(row.isClosed)">{{ row.label }}</td>
         </tr>
       </tbody>
     </table>

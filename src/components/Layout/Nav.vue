@@ -10,6 +10,10 @@ defineOptions({ name: "LayoutNav" });
 const links = useNavLinks();
 const route = useRoute();
 
+const ACTIVE_OFFSET = 96;
+const sectionIds = links.filter(({ href }) => href.startsWith("/#")).map(({ href }) => href.slice(2));
+const activeSection = useScrollSpy(sectionIds, ACTIVE_OFFSET);
+
 const [brand, ...rest] = site.name.split(" ");
 const tagline = rest.join(" ");
 
@@ -18,15 +22,11 @@ const tabActiveClasses = `${tabBaseClasses} text-accent after:absolute after:ins
 const tabInactiveClasses = `${tabBaseClasses} text-muted`;
 
 function isActive(link: TNavLink) {
-  if (link.href === "/") {
-    return route.path === "/";
+  if (route.path === "/") {
+    return link.href === (activeSection.value ? `/#${activeSection.value}` : "/");
   }
 
-  if (link.href === "/#services") {
-    return route.path.startsWith("/services/");
-  }
-
-  return false;
+  return link.href === "/#services" && route.path.startsWith("/services/");
 }
 
 function tabClass(link: TNavLink) {

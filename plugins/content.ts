@@ -51,7 +51,7 @@ async function fetchContent(env: unknown): Promise<TContent> {
 
   if (!parsedEnv.success) {
     throw new Error(
-      "[zcars] VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY are not set. Locally: copy them from .env.example into .env.local. On Netlify: netlify.toml sets them."
+      "[zcars] VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY are not set. Locally: add them to .env.local (values are in Netlify: Project configuration, Environment variables). On Netlify: set them there."
     );
   }
 

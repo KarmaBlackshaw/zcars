@@ -29,7 +29,8 @@ dist-ssr
 *.map
 *.tsbuildinfo
 
-.env
+.env*
+!.env.example
 
 # Auto-generated type declarations
 auto-import.json

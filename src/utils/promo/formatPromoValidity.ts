@@ -1,7 +1,3 @@
-const manilaDate = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Manila" });
-
-export const getTodayInManila = (date = new Date()) => manilaDate.format(date);
-
 const shortDate = new Intl.DateTimeFormat("en-PH", { month: "short", day: "numeric", timeZone: "UTC" });
 const shortDateWithYear = new Intl.DateTimeFormat("en-PH", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
 

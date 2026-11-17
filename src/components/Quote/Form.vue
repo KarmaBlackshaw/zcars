@@ -3,7 +3,7 @@ import { PhCheckCircle, PhCircleNotch, PhMessengerLogo, PhPhone } from "@phospho
 import { services, site } from "virtual:content";
 import type { TQuoteField } from "@/types";
 
-defineOptions({ name: "HomeQuoteForm" });
+defineOptions({ name: "QuoteForm" });
 
 const form = useQuoteForm();
 const quoteDrawer = useQuoteDrawer();
@@ -143,7 +143,7 @@ watch(quoteDrawer.isOpen, (isOpen) => {
     <p class="absolute -left-[9999px]" aria-hidden="true">
       <label>Company <input name="company" tabindex="-1" autocomplete="off" /></label>
     </p>
-    <HomeQuoteField id="quote-photo" label="Photo" :error="errors.photo">
+    <QuoteField id="quote-photo" label="Photo" :error="errors.photo">
       <template #label="{ requirementText }">
         <p class="font-semibold">
           Photo of the car <span class="font-normal text-muted">{{ requirementText }}</span>
@@ -169,8 +169,8 @@ watch(quoteDrawer.isOpen, (isOpen) => {
           </template>
         </div>
       </template>
-    </HomeQuoteField>
-    <HomeQuoteField v-slot="{ describedBy }" id="quote-name" label="Name" is-required :error="errors.name">
+    </QuoteField>
+    <QuoteField v-slot="{ describedBy }" id="quote-name" label="Name" is-required :error="errors.name">
       <BaseInput
         id="quote-name"
         ref="nameEl"
@@ -182,8 +182,8 @@ watch(quoteDrawer.isOpen, (isOpen) => {
         @input="onInput('name')"
         @blur="onBlur('name')"
       />
-    </HomeQuoteField>
-    <HomeQuoteField v-slot="{ describedBy }" id="quote-phone" label="Phone" is-required helper="We will call or text this number." :error="errors.phone">
+    </QuoteField>
+    <QuoteField v-slot="{ describedBy }" id="quote-phone" label="Phone" is-required helper="We will call or text this number." :error="errors.phone">
       <BaseInput
         id="quote-phone"
         name="phone"
@@ -196,8 +196,8 @@ watch(quoteDrawer.isOpen, (isOpen) => {
         @input="onInput('phone')"
         @blur="onBlur('phone')"
       />
-    </HomeQuoteField>
-    <HomeQuoteField v-slot="{ describedBy }" id="quote-vehicle" label="Vehicle" is-required :error="errors.vehicle">
+    </QuoteField>
+    <QuoteField v-slot="{ describedBy }" id="quote-vehicle" label="Vehicle" is-required :error="errors.vehicle">
       <BaseInput
         id="quote-vehicle"
         name="vehicle"
@@ -208,13 +208,13 @@ watch(quoteDrawer.isOpen, (isOpen) => {
         @input="onInput('vehicle')"
         @blur="onBlur('vehicle')"
       />
-    </HomeQuoteField>
-    <HomeQuoteField v-slot="{ describedBy }" id="quote-service" label="Service">
+    </QuoteField>
+    <QuoteField v-slot="{ describedBy }" id="quote-service" label="Service">
       <BaseSelect id="quote-service" name="service" :options="serviceOptions" :value="serviceValue" :aria-describedby="describedBy" @change="onServiceChange" />
-    </HomeQuoteField>
-    <HomeQuoteField v-slot="{ describedBy }" id="quote-message" label="Message">
+    </QuoteField>
+    <QuoteField v-slot="{ describedBy }" id="quote-message" label="Message">
       <BaseTextarea id="quote-message" name="message" rows="3" placeholder="What does the car need?" :aria-describedby="describedBy" />
-    </HomeQuoteField>
+    </QuoteField>
     <div class="grid gap-4">
       <p v-if="isSummaryShown" role="alert" class="text-danger">Please fix {{ errorCount }} {{ fieldWord }}</p>
       <div v-if="status === 'error'" role="alert" class="grid justify-items-start gap-3">

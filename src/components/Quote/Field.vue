@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { PhWarningCircle } from "@phosphor-icons/vue";
 
-defineOptions({ name: "HomeQuoteField" });
+defineOptions({ name: "QuoteField" });
 
 const {
   id,

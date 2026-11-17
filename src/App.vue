@@ -9,5 +9,5 @@ defineOptions({ name: "App" });
   <LayoutFooter />
   <LayoutActionBar />
   <LayoutQuoteTab />
-  <HomeQuoteDrawer />
+  <QuoteDrawer />
 </template>

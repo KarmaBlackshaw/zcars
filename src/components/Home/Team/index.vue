@@ -6,21 +6,18 @@ defineOptions({ name: "HomeTeam" });
 </script>
 
 <template>
-  <section id="team" :class="sectionClasses">
+  <section id="team" class="kit-mesh" :class="sectionClasses" data-qa="team">
     <BaseContainer>
-      <div :class="[gridClasses, 'desk:items-center']">
+      <div :class="[gridClasses, 'gap-y-12 desk:items-center']">
         <div class="order-2 desk:order-1 desk:col-span-5">
-          <div class="reveal relative aspect-[4/5] overflow-hidden rounded-2xl shadow-tile max-desk:max-w-photo">
+          <div class="relative aspect-[4/5] overflow-clip rounded-lg max-desk:max-w-photo">
             <BaseImage
               :src="home.team_image"
               :alt="home.team_title"
               sizes="(min-width: 900px) 40vw, (min-width: 540px) 540px, 100vw"
               loading="lazy"
-              class="size-full object-cover"
+              class="absolute inset-0 size-full object-cover"
             />
-            <BaseImageCaption v-if="home.team_caption">
-              <p class="font-display text-card-title uppercase italic">{{ home.team_caption }}</p>
-            </BaseImageCaption>
           </div>
         </div>
         <div class="order-1 desk:order-2 desk:col-span-6 desk:col-start-7">

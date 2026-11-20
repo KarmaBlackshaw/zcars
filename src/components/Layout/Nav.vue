@@ -9,6 +9,7 @@ defineOptions({ name: "LayoutNav" });
 
 const links = useNavLinks();
 const route = useRoute();
+const { y } = useWindowScroll();
 
 const ACTIVE_OFFSET = 96;
 const sectionIds = links.filter(({ href }) => href.startsWith("/#")).map(({ href }) => href.slice(2));
@@ -17,53 +18,49 @@ const activeSection = useScrollSpy(sectionIds, ACTIVE_OFFSET);
 const [brand, ...rest] = site.name.split(" ");
 const tagline = rest.join(" ");
 
-const tabBaseClasses = "relative inline-flex h-full items-center px-3 min-[1100px]:px-4 font-display italic uppercase text-nav transition-colors hover:text-fg";
-const tabActiveClasses = `${tabBaseClasses} text-accent after:absolute after:inset-x-3 after:bottom-0 after:h-[3px] after:bg-accent`;
-const tabInactiveClasses = `${tabBaseClasses} text-muted`;
+const isScrolled = computed(() => y.value > 40);
+
+const linkBaseClasses =
+  "relative inline-flex h-full items-center px-3 text-nav font-semibold transition-colors after:absolute after:inset-x-3 after:bottom-0 after:h-[3px] after:transition-colors min-[1100px]:px-4";
+const linkActiveClasses = `${linkBaseClasses} text-coveGray after:bg-blueGrotto`;
+const linkInactiveClasses = `${linkBaseClasses} text-indigoOcean after:bg-transparent hover:text-coveGray hover:after:bg-bluishWhite`;
 
 function isActive(link: TNavLink) {
   if (route.path === "/") {
-    return link.href === (activeSection.value ? `/#${activeSection.value}` : "/");
+    return activeSection.value != null && link.href === `/#${activeSection.value}`;
   }
 
   return link.href === "/#services" && route.path.startsWith("/services/");
 }
 
-function tabClass(link: TNavLink) {
-  return isActive(link) ? tabActiveClasses : tabInactiveClasses;
+function linkClass(link: TNavLink) {
+  return isActive(link) ? linkActiveClasses : linkInactiveClasses;
 }
 </script>
 
 <template>
-  <header class="sticky top-0 z-30 bg-surface desk:-top-[4.5rem]">
+  <header class="kit-away sticky top-0 z-30 border-b border-bluishWhite transition-shadow duration-300" :class="{ 'shadow-float': isScrolled }">
     <BaseContainer>
-      <div class="flex h-[3.75rem] items-center justify-between gap-4 desk:h-[4.5rem]">
-        <a href="/" class="flex items-center gap-3">
-          <img :src="LOGO_PATH" alt="Zcars" width="40" height="40" class="size-10" />
+      <div class="flex h-[3.75rem] items-center justify-between gap-6 desk:h-nav">
+        <a href="/" class="flex shrink-0 items-center gap-3" data-qa="nav-crest">
+          <img :src="LOGO_PATH" alt="Zcars" width="44" height="44" class="size-10 desk:size-11" />
           <span>
-            <span class="block font-display text-tile-title uppercase italic">{{ brand }}</span>
-            <span v-if="tagline" class="hidden font-display text-label uppercase italic text-muted desk:block">{{ tagline }}</span>
+            <span class="block font-display text-[1.625rem] font-black uppercase leading-none">{{ brand }}</span>
+            <span v-if="tagline" class="name-line mt-1 hidden text-indigoOcean xl:block">{{ tagline }}</span>
           </span>
         </a>
-        <a :href="site.tel_href" class="hidden font-display text-card-title uppercase italic text-fg hover:text-accent desk:inline">
-          Call {{ site.phone_display }}
-        </a>
-        <BaseButton variant="dark" size="icon" :href="site.tel_href" class="desk:hidden">
-          <PhPhone class="shrink-0" />
+        <nav class="hidden h-full lg:block">
+          <ul class="flex h-full">
+            <li v-for="link in links" :key="link.href" class="h-full">
+              <a :href="link.href" :class="linkClass(link)" :data-qa="`nav-link-${link.href.slice(2)}`">{{ link.label }}</a>
+            </li>
+          </ul>
+        </nav>
+        <LayoutMainAction size="sm" class="hidden desk:inline-flex" />
+        <BaseButton variant="navy" size="icon" :href="site.tel_href" class="desk:hidden" data-qa="nav-call">
+          <PhPhone :size="20" class="shrink-0" />
         </BaseButton>
       </div>
     </BaseContainer>
-    <div class="hidden border-b border-line desk:block">
-      <BaseContainer>
-        <div class="flex h-[2.875rem] items-center justify-between">
-          <ul class="flex h-full">
-            <li v-for="link in links" :key="link.href" class="h-full">
-              <a :href="link.href" :class="tabClass(link)">{{ link.label }}</a>
-            </li>
-          </ul>
-          <LayoutMainAction size="sm" class="hidden desk:inline-flex" />
-        </div>
-      </BaseContainer>
-    </div>
   </header>
 </template>

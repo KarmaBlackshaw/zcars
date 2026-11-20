@@ -9,21 +9,25 @@ const targets = ref<HTMLElement[]>([]);
 const visibleTargets = reactive(new Set<HTMLElement>());
 const hasReported = ref(false);
 
-useIntersectionObserver(targets, (entries) => {
-  for (const { target, isIntersecting } of entries) {
-    if (!(target instanceof HTMLElement)) {
-      continue;
+useIntersectionObserver(
+  targets,
+  (entries) => {
+    for (const { target, intersectionRatio } of entries) {
+      if (!(target instanceof HTMLElement)) {
+        continue;
+      }
+
+      if (intersectionRatio >= 1) {
+        visibleTargets.add(target);
+      } else {
+        visibleTargets.delete(target);
+      }
     }
 
-    if (isIntersecting) {
-      visibleTargets.add(target);
-    } else {
-      visibleTargets.delete(target);
-    }
-  }
-
-  hasReported.value = true;
-});
+    hasReported.value = true;
+  },
+  { threshold: 1 }
+);
 
 const isHidden = computed(() => !hasReported.value || visibleTargets.size > 0);
 const barClass = computed(() => (isHidden.value ? "translate-y-full motion-reduce:translate-y-0 motion-reduce:opacity-0" : ""));
@@ -39,14 +43,12 @@ onMounted(() => {
   <div
     ref="bar"
     :class="barClass"
-    class="night fixed inset-x-0 bottom-0 z-20 flex h-[calc(4rem+env(safe-area-inset-bottom))] items-center gap-2 bg-night px-3 pb-[env(safe-area-inset-bottom)] duration-300 ease-settle motion-safe:transition-transform motion-reduce:transition-opacity desk:hidden [@media(max-height:500px)]:hidden"
+    data-qa="action-bar"
+    class="kit-navy fixed inset-x-0 bottom-0 z-20 flex h-[calc(4rem+env(safe-area-inset-bottom))] items-center gap-2 px-3 pb-[env(safe-area-inset-bottom)] shadow-float duration-300 ease-settle motion-safe:transition-transform motion-reduce:transition-opacity desk:hidden [@media(max-height:500px)]:hidden"
   >
-    <LayoutMainAction size="sm" class="min-w-0 flex-1">
-      <span class="max-[379px]:hidden">Send a photo on Messenger</span>
-      <span class="min-[380px]:hidden">Send a photo</span>
-    </LayoutMainAction>
-    <BaseButton variant="light" size="icon" :href="site.tel_href" class="shrink-0">
-      <PhPhone class="shrink-0" />
+    <LayoutMainAction class="min-w-0 flex-1" />
+    <BaseButton variant="blue" size="icon" :href="site.tel_href" class="shrink-0" data-qa="action-bar-call">
+      <PhPhone :size="20" class="shrink-0" />
     </BaseButton>
   </div>
 </template>

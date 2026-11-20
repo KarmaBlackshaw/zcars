@@ -3,7 +3,7 @@ import type { TContent } from "../src/types/content";
 import type { TFaqItem } from "../src/types/faq";
 import type { TService } from "../src/types/service";
 import { LOGO_PATH } from "../src/constants/brand";
-import { HERO_PHOTO } from "../src/constants/hero";
+import { HERO_PHOTO, SERVICE_PHOTO_SIZES } from "../src/constants/hero";
 import { WEEKDAY_NAMES } from "../src/utils/hours";
 import { getServicePath } from "../src/utils/service/getServicePath";
 import { getServiceShowcase } from "../src/utils/service/getServiceShowcase";
@@ -90,12 +90,21 @@ const getBusiness = ({ site, seo, projects }: TContent, siteUrl: string) => ({
       : undefined,
 });
 
-const preloadHeroImage = (images: TContent["images"], src?: string) => {
+const preloadHeroImage = (images: TContent["images"], sizes: string, src?: string) => {
   const image = src == null ? undefined : images[src];
 
   return image == null
     ? undefined
-    : `<link rel="preload" as="image" href="${escapeHtml(image.src)}" imagesrcset="${escapeHtml(image.srcset)}" imagesizes="${escapeHtml(HERO_PHOTO.sizes)}" fetchpriority="high" />`;
+    : `<link rel="preload" as="image" href="${escapeHtml(image.src)}" imagesrcset="${escapeHtml(image.srcset)}" imagesizes="${escapeHtml(sizes)}" fetchpriority="high" />`;
+};
+
+const getPromoOffer = ({ promos, builtOn }: TContent) => {
+  const promo = promos.find(({ starts_on }) => starts_on == null || starts_on <= builtOn);
+  const price = Number(promo?.price_label?.replace(/[^\d.]/g, ""));
+
+  return promo == null || !(price > 0)
+    ? undefined
+    : { "@type": "Offer", name: promo.title, price, priceCurrency: "PHP", itemOffered: { "@type": "Service", name: promo.title } };
 };
 
 const renderHomeHead = (content: TContent) => {
@@ -105,6 +114,7 @@ const renderHomeHead = (content: TContent) => {
 
   const business = {
     ...getBusiness(content, SITE_URL),
+    makesOffer: getPromoOffer(content),
     hasOfferCatalog: {
       "@type": "OfferCatalog",
       name: "Car services",
@@ -122,7 +132,7 @@ const renderHomeHead = (content: TContent) => {
     description: seo.description,
     url,
     image: seo.og_image,
-    preload: preloadHeroImage(images, heroProject?.photos[0]),
+    preload: preloadHeroImage(images, HERO_PHOTO.sizes, heroProject?.photos[0]),
     ogTitle: seo.og_title,
     ogDescription: seo.og_description,
     structuredData: [{ "@context": "https://schema.org", "@graph": [business, website] }, ...(faqs.length > 0 ? [getFaqPage(faqs)] : [])],
@@ -143,7 +153,7 @@ const renderServiceHead = (content: TContent, service: TService, siteUrl: string
     serviceType: service.title,
     description,
     url,
-    image: src,
+    image: src ?? seo.og_image,
     areaServed: { "@type": "City", name: site.city },
     provider: getBusiness(content, siteUrl),
     offers:
@@ -165,7 +175,7 @@ const renderServiceHead = (content: TContent, service: TService, siteUrl: string
     description,
     url,
     image: src ?? seo.og_image,
-    preload: preloadHeroImage(content.images, src),
+    preload: preloadHeroImage(content.images, SERVICE_PHOTO_SIZES, src),
     ogTitle: title,
     ogDescription: description,
     structuredData: [{ "@context": "https://schema.org", "@graph": [serviceNode, breadcrumb] }, ...(service.faqs.length > 0 ? [getFaqPage(service.faqs)] : [])],

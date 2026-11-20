@@ -24,6 +24,7 @@ const photos = computed(() => project.value?.gallery ?? []);
 const photo = computed(() => photos.value[photoIndex.value]);
 const hasMultiplePhotos = computed(() => photos.value.length > 1);
 const positionText = computed(() => `${photoIndex.value + 1} of ${photos.value.length}`);
+const counterText = computed(() => `Photo ${positionText.value}`);
 const photoAlt = computed(() => (hasMultiplePhotos.value ? `${project.value?.title}, photo ${positionText.value}` : project.value?.title));
 const isFirst = computed(() => photoIndex.value === 0);
 const isLast = computed(() => photoIndex.value === photos.value.length - 1);
@@ -76,44 +77,49 @@ function onImageError() {
 <template>
   <dialog
     ref="dialogEl"
-    class="night m-0 h-dvh max-h-none w-screen max-w-none overscroll-contain bg-bg p-0 text-fg shadow-2xl backdrop:bg-night/80 desk:m-auto desk:h-auto desk:max-h-[90dvh] desk:w-auto desk:max-w-5xl desk:rounded-2xl"
+    class="kit-away m-0 h-dvh max-h-none w-screen max-w-none overscroll-contain p-0 shadow-float backdrop:bg-coveGray/90 desk:m-auto desk:h-auto desk:max-h-[92dvh] desk:w-auto desk:max-w-5xl desk:rounded-lg"
+    data-qa="lightbox"
     @close="onClose"
     @pointerdown="onPointerdown"
     @click="onClick"
     @keydown="onKeydown"
   >
-    <div v-if="project" class="flex h-full flex-col gap-4 p-4 desk:p-6">
-      <BaseButton variant="light" size="icon" class="shrink-0 self-end" @click="close">
-        <PhX :size="20" />
-      </BaseButton>
-      <figure class="flex min-h-0 flex-1 flex-col gap-2 desk:flex-none">
-        <div class="relative min-h-0 w-full flex-1 overflow-hidden rounded-xl bg-surface desk:flex-none">
-          <p v-if="hasImageError" class="grid size-full place-items-center p-6 text-center text-muted desk:aspect-[4/3] desk:h-[60dvh] desk:w-auto">
-            {{ photoAlt }}
-          </p>
-          <BaseImage
-            v-else-if="photo"
-            :src="photo"
-            :alt="photoAlt"
-            :sizes="PHOTO_SIZES"
-            class="size-full object-contain desk:mx-auto desk:h-auto desk:max-h-[70dvh] desk:w-auto"
-            @error="onImageError"
-          />
-        </div>
-      </figure>
-      <div class="flex items-center justify-between gap-4">
-        <div>
-          <h2 class="text-card-title">{{ project.title }}</h2>
-          <p class="text-muted">{{ project.vehicle }}</p>
-          <p v-if="hasMultiplePhotos" class="text-small text-muted">{{ positionText }}</p>
-        </div>
-        <div v-if="hasMultiplePhotos" class="flex shrink-0 gap-2">
-          <BaseButton variant="light" size="icon" :disabled="isFirst" @click="go(-1)">
-            <PhCaretLeft :size="20" />
-          </BaseButton>
-          <BaseButton variant="light" size="icon" :disabled="isLast" @click="go(1)">
-            <PhCaretRight :size="20" />
-          </BaseButton>
+    <div v-if="project" class="flex h-full flex-col">
+      <div class="rib shrink-0"></div>
+      <div class="flex min-h-0 flex-1 flex-col gap-4 p-4 desk:p-6">
+        <BaseButton variant="ghost" size="icon" class="absolute right-4 top-6 z-10 desk:right-6 desk:top-8" data-qa="lightbox-close" @click="close">
+          <PhX :size="20" />
+        </BaseButton>
+        <figure class="flex min-h-0 flex-1 flex-col desk:flex-none">
+          <div class="relative min-h-0 w-full flex-1 overflow-clip rounded-lg bg-americanDiamond desk:flex-none">
+            <p v-if="hasImageError" class="grid size-full place-items-center p-6 text-center text-muted desk:aspect-[4/3] desk:h-[60dvh] desk:w-auto">
+              {{ photoAlt }}
+            </p>
+            <BaseImage
+              v-else-if="photo"
+              :src="photo"
+              :alt="photoAlt"
+              :sizes="PHOTO_SIZES"
+              class="size-full object-contain desk:mx-auto desk:h-auto desk:max-h-[72dvh] desk:w-auto"
+              data-qa="lightbox-photo"
+              @error="onImageError"
+            />
+          </div>
+        </figure>
+        <div class="flex items-end justify-between gap-4">
+          <div class="grid gap-2">
+            <h2 class="text-h3" data-qa="lightbox-vehicle">{{ project.vehicle }}</h2>
+            <SectionWorkTags :project="project" />
+            <p v-if="hasMultiplePhotos" class="name-line text-muted" data-qa="lightbox-counter">{{ counterText }}</p>
+          </div>
+          <div v-if="hasMultiplePhotos" class="flex shrink-0 gap-2">
+            <BaseButton variant="ghost" size="icon" :disabled="isFirst" data-qa="lightbox-prev" @click="go(-1)">
+              <PhCaretLeft :size="20" />
+            </BaseButton>
+            <BaseButton variant="ghost" size="icon" :disabled="isLast" data-qa="lightbox-next" @click="go(1)">
+              <PhCaretRight :size="20" />
+            </BaseButton>
+          </div>
         </div>
       </div>
     </div>

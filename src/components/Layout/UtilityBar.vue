@@ -17,7 +17,7 @@ const deskText = computed(() => {
 
   const title = toMidSentence(promo.title);
 
-  return promo.price_label != null ? `${promo.price_label} ${title}` : title;
+  return promo.price_label != null ? `${promo.price_label} ${title} promo` : `${title} promo`;
 });
 
 const phoneText = computed(() => {
@@ -28,21 +28,21 @@ const phoneText = computed(() => {
 </script>
 
 <template>
-  <div class="night h-8 bg-night text-micro desk:h-9">
-    <BaseContainer class="flex h-full items-center justify-between gap-4">
-      <div class="flex items-center gap-4">
+  <div class="kit-navy h-8 text-small desk:h-9">
+    <BaseContainer class="flex h-full items-center justify-between gap-3">
+      <div class="flex items-center gap-5">
         <HoursStatus />
-        <span class="hidden desk:inline">{{ site.locality }}</span>
-        <a :href="site.tel_href" class="hidden hover:text-glow desk:inline">Call {{ site.phone_display }}</a>
+        <span class="hidden whitespace-nowrap text-blueCream xl:inline">{{ site.locality }}</span>
+        <a :href="site.tel_href" class="hidden whitespace-nowrap text-blueCream transition-colors hover:text-white xl:inline" data-qa="utility-call"
+          >Call {{ site.phone_display }}</a
+        >
       </div>
-      <a
-        v-if="featuredPromo != null"
-        :href="`/#${PROMO_ANCHOR}`"
-        class="inline-flex items-center gap-1 font-display font-black uppercase italic text-hot hover:brightness-110"
-      >
-        <span class="hidden desk:inline">{{ deskText }}</span>
-        <span class="desk:hidden">{{ phoneText }}</span>
-        <PhArrowRight :size="12" class="shrink-0" />
+      <a v-if="featuredPromo != null" :href="`/#${PROMO_ANCHOR}`" class="group shrink-0" data-qa="utility-promo">
+        <BasePatch tone="accent">
+          <span class="hidden xl:inline">{{ deskText }}</span>
+          <span class="xl:hidden">{{ phoneText }}</span>
+          <PhArrowRight :size="11" weight="bold" class="shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" />
+        </BasePatch>
       </a>
     </BaseContainer>
   </div>

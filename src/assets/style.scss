@@ -2,31 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
+@mixin home-vars {
+  --bg: var(--blueGrotto);
+  --fg: 255 255 255;
+  --muted: 255 255 255;
+  --line: 255 255 255;
+  --line-alpha: 0.22;
+  --link: 255 255 255;
+  --press: var(--coveGray);
+  --btn-bg: 255 255 255;
+  --btn-fg: var(--coveGray);
+  --btn-hover: var(--americanDiamond);
+  color: rgb(var(--fg));
+}
+
+@mixin away-vars {
+  --bg: 255 255 255;
+  --fg: var(--coveGray);
+  --muted: var(--indigoOcean);
+  --line: var(--bluishWhite);
+  --line-alpha: 1;
+  --link: var(--blueGrotto);
+  --press: var(--blueGrotto);
+  --btn-bg: var(--blueGrotto);
+  --btn-fg: 255 255 255;
+  --btn-hover: var(--mediumElectricBlue);
+  color: rgb(var(--fg));
+}
+
 @layer base {
   :root {
-    --solidBlue: 33 104 242;
-    --brightAzure: 0 166 255;
-    --spaceBlack: 9 11 15;
-    --frostBlack: 23 27 33;
-    --sensationalYellow: 255 195 26;
-    --blackHaze: 245 247 249;
-    --pureSilicon: 219 222 227;
-    --seaGray: 154 159 166;
-    --lightGraphite: 89 94 102;
-    --bg: var(--blackHaze);
+    --blueGrotto: 0 104 212;
+    --mediumElectricBlue: 0 71 154;
+    --brilliantAzure: 47 140 255;
+    --coveGray: 0 24 88;
+    --blueCream: 207 226 250;
+    --indigoOcean: 74 88 120;
+    --americanDiamond: 242 245 250;
+    --bluishWhite: 213 221 234;
+    --electrifyingChartreuse: 212 245 60;
+    --rose: 210 43 43;
     --surface: 255 255 255;
-    --fg: var(--spaceBlack);
-    --muted: var(--lightGraphite);
-    --link: var(--solidBlue);
-    --line: var(--pureSilicon);
-    --accent: var(--solidBlue);
-    --glow: var(--brightAzure);
-    --hot: var(--sensationalYellow);
-    --danger: 185 28 28;
-    --success: 21 128 61;
-    --shadow-tile: 0 1px 2px rgb(9 11 15 / 0.06), 0 8px 24px -12px rgb(9 11 15 / 0.18);
-    --shadow-lift: 0 24px 48px -20px rgb(33 104 242 / 0.45);
+    @include away-vars;
     color-scheme: light;
+    scrollbar-color: rgb(var(--blueGrotto)) rgb(var(--americanDiamond));
   }
 
   html {
@@ -36,174 +55,139 @@
 
   body {
     @apply bg-bg font-sans text-base leading-[1.6] text-fg antialiased;
+    caret-color: rgb(var(--blueGrotto));
   }
 
   body:has(dialog[open]) {
     overflow: hidden;
   }
 
+  ::selection {
+    background-color: rgb(var(--blueCream));
+    color: rgb(var(--coveGray));
+  }
+
   h1 {
-    @apply text-balance font-display text-display uppercase italic;
+    @apply text-balance font-display text-display font-black uppercase;
+    text-shadow: 0.055em 0.055em 0 rgb(var(--press));
   }
 
   h2 {
-    @apply text-balance font-display text-h2 uppercase italic;
+    @apply text-balance font-display text-h2 font-extrabold uppercase;
   }
 
   h3 {
-    @apply font-display text-card-title uppercase italic;
+    @apply font-display text-h3 font-extrabold uppercase;
   }
 
   :focus-visible {
-    @apply outline outline-2 outline-offset-[3px] outline-accent;
+    @apply outline outline-2 outline-offset-[3px] outline-link;
   }
 }
 
 @layer components {
-  .night {
-    --bg: var(--spaceBlack);
-    --surface: var(--frostBlack);
-    --fg: var(--blackHaze);
-    --muted: var(--seaGray);
-    --link: var(--brightAzure);
-    --line: var(--frostBlack);
-    --shadow-tile: 0 0 transparent;
-    color: rgb(var(--fg));
+  .kit-away {
+    @include away-vars;
+    background-color: rgb(var(--bg));
   }
 
-  .streaks {
-    mix-blend-mode: screen;
-    background:
-      linear-gradient(115deg, transparent 54%, rgb(var(--brightAzure) / 0.55) 55%, transparent 57.5%),
-      linear-gradient(115deg, transparent 62%, rgb(var(--solidBlue) / 0.6) 62.6%, transparent 64%),
-      linear-gradient(115deg, transparent 69%, rgb(var(--brightAzure) / 0.3) 69.3%, transparent 70.2%);
+  .kit-mesh {
+    @include away-vars;
+    --bg: var(--americanDiamond);
+    background-color: rgb(var(--bg));
   }
 
-  .hero-fade {
-    background: linear-gradient(180deg, rgb(var(--spaceBlack) / 0.55) 0%, rgb(var(--spaceBlack) / 0.8) 50%, rgb(var(--spaceBlack)) 100%);
+  .kit-navy {
+    @include home-vars;
+    --bg: var(--coveGray);
+    --press: var(--blueGrotto);
+    background-color: rgb(var(--bg));
+  }
 
-    @screen desk {
-      background:
-        linear-gradient(0deg, rgb(var(--spaceBlack)), transparent 40%),
-        linear-gradient(90deg, rgb(var(--spaceBlack)) 0%, rgb(var(--spaceBlack) / 0.6) 25%, transparent 60%);
+  .kit-home {
+    @include home-vars;
+    position: relative;
+    isolation: isolate;
+    background-color: rgb(var(--blueGrotto));
+    background-image:
+      repeating-linear-gradient(60deg, rgb(255 255 255 / 0.045) 0 2px, transparent 2px 22px),
+      repeating-linear-gradient(-60deg, rgb(var(--coveGray) / 0.1) 0 2px, transparent 2px 22px),
+      linear-gradient(160deg, rgb(var(--mediumElectricBlue)) 0%, rgb(var(--blueGrotto)) 50% 75%, rgb(var(--brilliantAzure)) 140%);
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background: radial-gradient(circle, rgb(255 255 255 / 0.1) 1.2px, transparent 1.6px) 0 0 / 9px 9px;
+      mask-image: linear-gradient(100deg, transparent 30%, black 75%);
+    }
+
+    h2 {
+      text-shadow: 0.04em 0.04em 0 rgb(var(--press));
     }
   }
 
-  .ink-gradient {
-    background-image: linear-gradient(115deg, rgb(var(--spaceBlack)), rgb(var(--frostBlack)) 55%, rgb(var(--spaceBlack)));
+  .rib {
+    height: 14px;
+    background: linear-gradient(
+      to bottom,
+      rgb(var(--coveGray)) 0 4px,
+      white 4px 6px,
+      rgb(var(--blueGrotto)) 6px 10px,
+      white 10px 12px,
+      rgb(var(--coveGray)) 12px
+    );
   }
 
-  .comet {
-    background: linear-gradient(90deg, transparent, rgb(var(--brightAzure) / 0.9));
-    mix-blend-mode: screen;
-    rotate: 115deg;
-    opacity: 0;
+  .name-line {
+    @apply text-name font-bold uppercase;
+    font-stretch: 125%;
+  }
+
+  .stitch {
+    outline: 1px dashed rgb(var(--coveGray) / 0.45);
+    outline-offset: -3px;
+  }
+
+  .numeral {
+    @apply relative isolate inline-block font-display font-black tabular-nums text-white;
+    -webkit-text-stroke: 0.035em rgb(var(--coveGray));
+    paint-order: stroke fill;
+
+    &::after {
+      content: attr(data-num);
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      color: rgb(var(--press));
+      -webkit-text-stroke-color: rgb(var(--press));
+      transform: translate(0.06em, 0.06em);
+    }
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .streak-drift {
-      animation:
-        streak-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both,
-        streak-drift 14s ease-in-out 1.5s 4 alternate;
+    .numeral-press-load::after {
+      animation: press 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
     }
 
-    .comet {
-      animation: comet var(--dur, 7s) linear var(--delay, 1.2s) 3 both;
+    @supports (animation-timeline: view()) {
+      .numeral-press-scroll {
+        view-timeline-name: --press;
+      }
+
+      .numeral-press-scroll::after {
+        animation: press linear both;
+        animation-timeline: --press;
+        animation-range: entry 10% cover 35%;
+      }
     }
   }
 }
 
-@keyframes reveal {
+@keyframes press {
   from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-}
-
-@keyframes streak-in {
-  from {
-    transform: translateX(-6%);
-    opacity: 0.4;
-  }
-}
-
-@keyframes streak-drift {
-  to {
-    transform: translate3d(4%, 4%, 0);
-  }
-}
-
-@keyframes comet {
-  0% {
-    transform: translateX(0);
-    opacity: 0;
-  }
-  8% {
-    opacity: 1;
-  }
-  30% {
-    transform: translateX(70vmin);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(70vmin);
-    opacity: 0;
-  }
-}
-
-@keyframes hero-exit {
-  to {
-    transform: scale(1.08);
-  }
-}
-
-@keyframes hero-exit-fade {
-  to {
-    opacity: 0.45;
-  }
-}
-
-@keyframes hero-exit-content {
-  to {
-    transform: translateY(-48px);
-  }
-}
-
-@layer utilities {
-  .clip-slant {
-    clip-path: polygon(var(--slant, 10px) 0, 100% 0, calc(100% - var(--slant, 10px)) 100%, 0 100%);
-  }
-
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      .reveal {
-        animation-name: reveal;
-        animation-fill-mode: both;
-        animation-timing-function: linear;
-        animation-timeline: view();
-        animation-range: entry 0% cover 25%;
-      }
-
-      .hero-exit,
-      .hero-exit-fade,
-      .hero-exit-content {
-        animation-fill-mode: both;
-        animation-timing-function: linear;
-        animation-timeline: view();
-        animation-range: exit 0% exit 100%;
-      }
-
-      .hero-exit {
-        animation-name: hero-exit;
-      }
-
-      .hero-exit-fade {
-        animation-name: hero-exit-fade;
-      }
-
-      .hero-exit-content {
-        animation-name: hero-exit-content;
-      }
-    }
+    transform: translate(0, 0);
   }
 }

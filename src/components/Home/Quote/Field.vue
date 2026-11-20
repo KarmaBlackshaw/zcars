@@ -36,7 +36,7 @@ const describedBy = computed(() => {
       >
     </slot>
     <slot :described-by="describedBy"></slot>
-    <p v-if="helper" :id="helperId" class="text-micro text-muted">{{ helper }}</p>
+    <p v-if="helper" :id="helperId" class="text-small text-muted">{{ helper }}</p>
     <p v-if="error" :id="errorId" class="flex items-center gap-1.5 text-small text-danger">
       <PhWarningCircle aria-hidden="true" class="shrink-0" />
       {{ error }}

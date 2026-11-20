@@ -8,15 +8,13 @@ const { title, items } = defineProps<{ title: string; items: TFaqItem[] }>();
 </script>
 
 <template>
-  <section v-if="items.length > 0" id="faq" :class="sectionClasses">
+  <section v-if="items.length > 0" id="faq" class="kit-away" :class="sectionClasses" data-qa="faq">
     <BaseContainer>
-      <div :class="gridClasses">
+      <div :class="[gridClasses, 'gap-y-10']">
         <div class="desk:col-span-4">
-          <div class="desk:sticky desk:top-28">
-            <BaseSectionHeading :title="title" />
-          </div>
+          <h2 class="desk:sticky desk:top-28">{{ title }}</h2>
         </div>
-        <div class="desk:col-span-7 desk:col-start-6">
+        <div class="desk:col-span-8">
           <BaseFaqList :items="items" />
         </div>
       </div>

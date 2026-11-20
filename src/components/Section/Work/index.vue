@@ -6,9 +6,13 @@ defineOptions({ name: "SectionWork" });
 
 const { title, projects } = defineProps<{ title: string; projects: TProject[] }>();
 
-defineSlots<{ action?(): unknown; feature?(): unknown }>();
+const slots = defineSlots<{ action?(): unknown; feature?(): unknown }>();
 
 const openIndex = ref<number>();
+
+const gridClass = computed(() =>
+  slots.feature == null && projects.length <= 2 ? "md:grid-cols-2 desk:max-w-[56rem]" : "md:grid-flow-dense md:grid-cols-3 desk:grid-cols-4"
+);
 
 function cellOrder(index: number) {
   if (index < 2) {
@@ -20,15 +24,15 @@ function cellOrder(index: number) {
 </script>
 
 <template>
-  <section v-if="projects.length > 0 || $slots.feature" id="work" :class="sectionClasses">
+  <section v-if="projects.length > 0 || $slots.feature" id="work" class="kit-mesh" :class="sectionClasses" data-qa="work">
     <BaseContainer>
       <BaseSectionHeading :title="title" layout="split">
         <template v-if="$slots.action" #action><slot name="action"></slot></template>
       </BaseSectionHeading>
       <div :class="sectionBodyClasses">
-        <ul class="grid grid-cols-2 gap-3 md:grid-cols-3 desk:grid-cols-4 desk:gap-5">
-          <li v-if="$slots.feature" class="order-1 col-span-2 md:col-span-1"><slot name="feature"></slot></li>
-          <li v-for="(project, index) in projects" :key="project.slug" :class="['reveal', cellOrder(index)]">
+        <ul :class="gridClass" class="grid grid-cols-2 gap-3 desk:gap-5">
+          <li v-if="$slots.feature" class="order-1 col-span-2 desk:col-span-1"><slot name="feature"></slot></li>
+          <li v-for="(project, index) in projects" :key="project.slug" :class="cellOrder(index)">
             <SectionWorkTile :project="project" @open="openIndex = index" />
           </li>
         </ul>

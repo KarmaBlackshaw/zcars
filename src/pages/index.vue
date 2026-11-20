@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PhArrowRight } from "@phosphor-icons/vue";
+import { PhArrowUpRight } from "@phosphor-icons/vue";
 import { faqs, home, projects, services, site } from "virtual:content";
 
 defineOptions({ name: "IndexPage" });
@@ -11,12 +11,12 @@ const { featuredPromo } = usePromos();
 <template>
   <main>
     <HomeHero :project="heroProject" />
-    <ServiceStrip :services="services" />
+    <ServiceRoster :services="services" />
     <SectionWork :title="home.work_title" :projects="workProjects">
       <template #action>
-        <BaseButton variant="text" size="sm" :href="site.facebook_url">
+        <BaseButton variant="text" :href="site.facebook_url" data-qa="work-facebook">
           See more on Facebook
-          <PhArrowRight class="shrink-0" />
+          <PhArrowUpRight :size="16" weight="bold" class="shrink-0" />
         </BaseButton>
       </template>
       <template v-if="featuredPromo" #feature>
@@ -24,11 +24,10 @@ const { featuredPromo } = usePromos();
       </template>
     </SectionWork>
     <HomeProcess :project="compareProject" />
-    <HomePartners class="bg-surface" />
-    <SectionActions />
-    <HomeReviews class="bg-surface" />
-    <SectionVisit class="bg-surface" :title="home.contact_title" />
+    <HomePartners />
+    <HomeReviews />
+    <HomeTeam />
     <SectionFaq :title="home.faq_title" :items="faqs" />
-    <HomeTeam class="bg-surface" />
+    <SectionVisit :title="home.contact_title" />
   </main>
 </template>

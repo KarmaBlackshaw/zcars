@@ -11,11 +11,11 @@ const visibleReviews = linkedReviews.slice(0, VISIBLE_LIMIT);
 </script>
 
 <template>
-  <section v-if="linkedReviews.length" id="reviews" :class="sectionClasses">
+  <section v-if="linkedReviews.length" id="reviews" class="kit-away" :class="sectionClasses">
     <BaseContainer>
       <BaseSectionHeading :title="home.reviews_title" />
       <ul :class="[sectionBodyClasses, gridClasses]">
-        <HomeReviewsCard v-for="review in visibleReviews" :key="review.id" :review="review" class="reveal desk:col-span-4" />
+        <HomeReviewsCard v-for="review in visibleReviews" :key="review.id" :review="review" class="desk:col-span-4" />
       </ul>
     </BaseContainer>
   </section>

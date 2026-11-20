@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { PhCamera, PhChatText, PhMapPin, PhPaintRoller } from "@phosphor-icons/vue";
 import type { TProject } from "@/types";
 
 defineOptions({ name: "HomeProcess" });
@@ -8,22 +7,18 @@ const { project } = defineProps<{ project?: TProject }>();
 
 const steps = [
   {
-    icon: PhCamera,
     title: "Send a photo of your car",
     text: "Message it on Messenger, or attach it to the quote form. The quote is free.",
   },
   {
-    icon: PhChatText,
     title: "Get a price from us",
     text: "We reply with a price for the work your car needs.",
   },
   {
-    icon: PhMapPin,
     title: "Bring the car to Sagkahan",
     text: "We check the car and confirm the price before any work starts.",
   },
   {
-    icon: PhPaintRoller,
     title: "Prep first, then paint or coat",
     text: "We sand and prime before paint, and correct the paint before a ceramic coat, so the finish lasts.",
   },
@@ -31,7 +26,30 @@ const steps = [
 </script>
 
 <template>
-  <SectionBand id="process" title="How we quote and do the work" lead="Every job starts with a photo and ends with a price you agreed to." :project="project">
-    <SectionBandCard v-for="step in steps" :key="step.title" :icon="step.icon" :title="step.title" :text="step.text" />
-  </SectionBand>
+  <section id="process" class="kit-home scroll-mt-nav" data-qa="process">
+    <div class="rib"></div>
+    <BaseContainer>
+      <div class="grid gap-12 py-16 desk:grid-cols-12 desk:items-center desk:gap-8 desk:py-28">
+        <div class="desk:col-span-6">
+          <BaseSectionHeading title="How a Zcars quote works" lead="Every job starts with a photo and ends with a price you agreed to." />
+          <ol class="mt-10 border-t border-line desk:mt-12">
+            <li
+              v-for="(step, index) in steps"
+              :key="step.title"
+              class="grid gap-2 border-b border-line py-5 desk:grid-cols-[7rem_1fr] desk:gap-6"
+              :data-qa="`process-step-${index + 1}`"
+            >
+              <p class="name-line pt-1.5">Step {{ index + 1 }}</p>
+              <div>
+                <h3>{{ step.title }}</h3>
+                <p class="mt-1.5 max-w-[48ch]">{{ step.text }}</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+        <SectionCompareCard v-if="project != null" :project="project" class="max-desk:max-w-photo desk:col-span-5 desk:col-start-8" />
+      </div>
+    </BaseContainer>
+    <div class="rib"></div>
+  </section>
 </template>

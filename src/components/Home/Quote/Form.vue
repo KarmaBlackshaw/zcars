@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PhCheckCircle, PhCircleNotch, PhMessengerLogo, PhPhone } from "@phosphor-icons/vue";
+import { PhCircleNotch, PhMessengerLogo, PhPhone } from "@phosphor-icons/vue";
 import { services, site } from "virtual:content";
 import type { TQuoteField } from "@/types";
 
@@ -15,10 +15,14 @@ const photoRef = useTemplateRef("photoEl");
 const nameRef = useTemplateRef("nameEl");
 
 const NOT_SURE = "Not sure";
-const serviceOptions = [NOT_SURE, ...services.map(({ title }) => title)];
+
+const serviceOptions = [
+  { value: NOT_SURE, label: NOT_SURE },
+  ...services.map(({ title, position }) => ({ value: title, label: `${formatServiceNumber(position)} ${title}` })),
+];
 
 const photoButtonClasses =
-  "inline-flex min-h-11 cursor-pointer items-center justify-center rounded-lg bg-surface ring-1 ring-line px-4 py-2.5 text-small font-semibold transition-colors hover:ring-fg/30 peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-[3px] peer-focus-visible:outline-accent peer-aria-[invalid=true]:ring-danger";
+  "inline-flex min-h-12 cursor-pointer items-center justify-center rounded border-1.5 border-dashed border-blueGrotto bg-americanDiamond px-4 font-bold text-blueGrotto transition-colors hover:bg-white peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-[3px] peer-focus-visible:outline-blueGrotto peer-aria-[invalid=true]:border-rose";
 
 const isEnhanced = ref(false);
 const hasAttemptedSubmit = ref(false);
@@ -125,19 +129,19 @@ watch(quoteDrawer.isOpen, (isOpen) => {
 
 <template>
   <div v-if="status === 'success'" ref="successEl" role="status" tabindex="-1" class="grid justify-items-start gap-5">
-    <PhCheckCircle :size="40" weight="fill" aria-hidden="true" class="text-success" />
-    <p class="text-lead font-semibold">Got it. We will call or message you soon.</p>
+    <BasePatch tone="accent" class="-rotate-3" data-qa="quote-sent">Sent</BasePatch>
+    <p class="text-lead font-semibold" data-qa="quote-success">Your quote request is in. We call or text you on the number you gave.</p>
     <div class="flex flex-wrap gap-3">
-      <BaseButton :href="site.messenger_url">
+      <BaseButton :href="site.messenger_url" data-qa="quote-success-messenger">
         <PhMessengerLogo aria-hidden="true" class="shrink-0" />
         Message us
       </BaseButton>
-      <BaseButton variant="text" :href="site.tel_href">
+      <BaseButton variant="text" :href="site.tel_href" data-qa="quote-success-call">
         <PhPhone aria-hidden="true" class="shrink-0" />
         Call
       </BaseButton>
     </div>
-    <BaseButton variant="text" size="sm" @click="startNewRequest">Send another request</BaseButton>
+    <BaseButton variant="text" size="sm" data-qa="quote-new" @click="startNewRequest">Send another request</BaseButton>
   </div>
   <form v-else ref="formEl" name="quote" class="grid gap-5" :novalidate="isEnhanced" @submit.prevent="onSubmit">
     <p class="absolute -left-[9999px]" aria-hidden="true">
@@ -162,10 +166,10 @@ watch(quoteDrawer.isOpen, (isOpen) => {
             :aria-describedby="describedBy"
             @change="onPhotoChange"
           />
-          <label for="quote-photo" :class="photoButtonClasses">Add a photo (up to 7 MB)</label>
+          <label for="quote-photo" :class="photoButtonClasses" data-qa="quote-photo-button">Add a photo, up to 7 MB</label>
           <template v-if="photoName">
             <span class="min-w-0 break-all text-small text-muted">{{ photoName }}</span>
-            <BaseButton variant="text" size="sm" @click="removePhoto">Remove</BaseButton>
+            <BaseButton variant="text" size="sm" data-qa="quote-photo-remove" @click="removePhoto">Remove</BaseButton>
           </template>
         </div>
       </template>
@@ -173,6 +177,7 @@ watch(quoteDrawer.isOpen, (isOpen) => {
     <HomeQuoteField v-slot="{ describedBy }" id="quote-name" label="Name" is-required :error="errors.name">
       <BaseInput
         id="quote-name"
+        data-qa="quote-name"
         ref="nameEl"
         name="name"
         required
@@ -183,9 +188,10 @@ watch(quoteDrawer.isOpen, (isOpen) => {
         @blur="onBlur('name')"
       />
     </HomeQuoteField>
-    <HomeQuoteField v-slot="{ describedBy }" id="quote-phone" label="Phone" is-required helper="We will call or text this number." :error="errors.phone">
+    <HomeQuoteField v-slot="{ describedBy }" id="quote-phone" label="Phone" is-required helper="We call or text this number." :error="errors.phone">
       <BaseInput
         id="quote-phone"
+        data-qa="quote-phone"
         name="phone"
         type="tel"
         inputmode="tel"
@@ -200,6 +206,7 @@ watch(quoteDrawer.isOpen, (isOpen) => {
     <HomeQuoteField v-slot="{ describedBy }" id="quote-vehicle" label="Vehicle" is-required :error="errors.vehicle">
       <BaseInput
         id="quote-vehicle"
+        data-qa="quote-vehicle"
         name="vehicle"
         required
         placeholder="e.g. 2019 Toyota Vios"
@@ -210,10 +217,18 @@ watch(quoteDrawer.isOpen, (isOpen) => {
       />
     </HomeQuoteField>
     <HomeQuoteField v-slot="{ describedBy }" id="quote-service" label="Service">
-      <BaseSelect id="quote-service" name="service" :options="serviceOptions" :value="serviceValue" :aria-describedby="describedBy" @change="onServiceChange" />
+      <BaseSelect
+        id="quote-service"
+        data-qa="quote-service"
+        name="service"
+        :options="serviceOptions"
+        :value="serviceValue"
+        :aria-describedby="describedBy"
+        @change="onServiceChange"
+      />
     </HomeQuoteField>
     <HomeQuoteField v-slot="{ describedBy }" id="quote-message" label="Message">
-      <BaseTextarea id="quote-message" name="message" rows="3" placeholder="What does the car need?" :aria-describedby="describedBy" />
+      <BaseTextarea id="quote-message" data-qa="quote-message" name="message" rows="3" placeholder="What does the car need?" :aria-describedby="describedBy" />
     </HomeQuoteField>
     <div class="grid gap-4">
       <p v-if="isSummaryShown" role="alert" class="text-danger">Please fix {{ errorCount }} {{ fieldWord }}</p>
@@ -221,7 +236,7 @@ watch(quoteDrawer.isOpen, (isOpen) => {
         <p class="text-danger">That did not send. Check your connection and try again, or message us.</p>
         <BaseButton variant="text" size="sm" :href="site.messenger_url">Message us instead</BaseButton>
       </div>
-      <BaseButton type="submit" :aria-disabled="isSubmitting" :aria-busy="isSubmitting" class="w-full">
+      <BaseButton type="submit" :aria-disabled="isSubmitting" :aria-busy="isSubmitting" class="w-full" data-qa="quote-submit">
         <template v-if="isSubmitting">
           <PhCircleNotch aria-hidden="true" class="shrink-0 motion-safe:animate-spin" />
           Sending

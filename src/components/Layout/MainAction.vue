@@ -4,12 +4,12 @@ import { site } from "virtual:content";
 
 defineOptions({ name: "LayoutMainAction" });
 
-const { size = "md", variant = "primary" } = defineProps<{ size?: "md" | "sm"; variant?: "primary" | "light" }>();
+const { size = "md" } = defineProps<{ size?: "lg" | "md" | "sm" }>();
 </script>
 
 <template>
-  <BaseButton data-main-action :href="site.messenger_url" :size="size" :variant="variant">
-    <PhMessengerLogo class="shrink-0" />
-    <slot>Send a photo on Messenger</slot>
+  <BaseButton data-main-action data-qa="main-action" :href="site.messenger_url" :size="size">
+    <PhMessengerLogo :size="20" class="shrink-0" />
+    Send a photo on Messenger
   </BaseButton>
 </template>

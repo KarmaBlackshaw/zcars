@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { PhCheck } from "@phosphor-icons/vue";
 import { projects, services, site } from "virtual:content";
 
 defineOptions({ name: "ServicePage" });
@@ -12,17 +11,13 @@ const workProjects = computed(() => showcase.value?.workProjects ?? []);
 const compareProject = computed(() => showcase.value?.compareProject);
 
 const title = computed(() => service.value?.title ?? "");
+const numeral = computed(() => (service.value == null ? "" : formatServiceNumber(service.value.position)));
 const lead = computed(() => service.value?.intro ?? service.value?.summary ?? "");
 const priceText = computed(() => (service.value?.price_from != null ? `From ${formatPrice(service.value.price_from)}` : ""));
-
-const heroImage = computed(() => {
-  const src = showcase.value?.src;
-
-  return src == null ? undefined : { src, alt: showcase.value?.project?.title ?? title.value };
-});
-const hasIncludes = computed(() => (service.value?.includes.length ?? 0) > 0);
-const bandTitle = computed(() => (hasIncludes.value ? `What ${toMidSentence(title.value)} includes` : `${title.value} results`));
-const accent = computed(() => `in ${site.city}.`);
+const includes = computed(() => service.value?.includes ?? []);
+const hasIncludesSection = computed(() => includes.value.length > 0 || compareProject.value != null);
+const includesTitle = computed(() => (includes.value.length > 0 ? `What ${toMidSentence(title.value)} includes` : `${title.value} results`));
+const accent = `in ${site.city}`;
 const workTitle = computed(() => `${title.value} jobs from our shop`);
 const faqTitle = computed(() => `${title.value} questions`);
 const visitTitle = `Visit the shop in ${site.locality}`;
@@ -31,29 +26,20 @@ const visitTitle = `Visit the shop in ${site.locality}`;
 <template>
   <main>
     <template v-if="service">
-      <SectionHero :heading="title" :accent="accent" :lead="lead" :image="heroImage" :quote-service="service.title">
-        <template #eyebrow>
-          <a href="/" class="hover:underline">Home</a>
-          / {{ service.title }}
-        </template>
+      <SectionHero :heading="title" :accent="accent" :lead="lead" :project="showcase?.project" :numeral="numeral" :quote-service="service.title">
         <template #facts>
           <p v-if="priceText">
-            <span class="font-display font-black italic">{{ priceText }}</span>
-            <span v-if="service.price_note" class="font-normal text-muted">{{ service.price_note }}</span>
+            <span class="font-display text-h3 font-black">{{ priceText }}</span>
+            <span v-if="service.price_note">{{ service.price_note }}</span>
           </p>
-          <p>Free quote. We confirm the price before any work starts.</p>
+          <p>Free quote from a photo. We confirm the price before any work starts.</p>
         </template>
       </SectionHero>
-      <ServiceStrip :services="services" :active-slug="service.slug" />
-      <SectionBand v-if="hasIncludes || compareProject != null" :title="bandTitle" :project="compareProject">
-        <template v-if="hasIncludes" #default>
-          <SectionBandCard v-for="item in service.includes" :key="item" :icon="PhCheck" :title="item" />
-        </template>
-      </SectionBand>
+      <ServiceIncludes v-if="hasIncludesSection" :title="includesTitle" :items="includes" :project="compareProject" />
       <SectionWork :title="workTitle" :projects="workProjects" />
-      <SectionActions class="bg-surface" :quote-service="service.title" />
       <SectionFaq :title="faqTitle" :items="service.faqs" />
-      <SectionVisit class="bg-surface" :title="visitTitle" />
+      <ServiceRoster title="Other services at Zcars" :services="services" :active-slug="service.slug" class="border-t border-bluishWhite" />
+      <SectionVisit :title="visitTitle" :quote-service="service.title" />
     </template>
     <SectionNotFound v-else />
   </main>
